@@ -42,6 +42,9 @@ public class HomeController {
                 PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()));
                 model.addAttribute("recentPost", memberRecentPostDto);
             }
+            List<Member> members = memberService.findAll();
+            List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
+            model.addAttribute("allMembers", memberDtos);
         } else {
             model.addAttribute("check", false);
         }
@@ -67,6 +70,9 @@ public class HomeController {
                 PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()));
                 model.addAttribute("recentPost", memberRecentPostDto);
             }
+            List<Member> members = memberService.findAll();
+            List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
+            model.addAttribute("allMembers", memberDtos);
         } else {
             model.addAttribute("check", false);
         }
@@ -92,6 +98,9 @@ public class HomeController {
                 PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()));
                 model.addAttribute("recentPost", memberRecentPostDto);
             }
+            List<Member> members = memberService.findAll();
+            List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
+            model.addAttribute("allMembers", memberDtos);
         } else {
             model.addAttribute("check", false);
         }
@@ -187,6 +196,23 @@ public class HomeController {
             this.memberName = comment.getMember().getName();
             this.memberImg = comment.getMember().getImage();
             this.memberId = comment.getMember().getId();
+        }
+    }
+
+    @Data
+    static class MemberDto {
+
+        // member info
+        private Long id;
+        private String name;
+        private Image image;
+        private StudyState state;
+
+        public MemberDto(Member member) {
+            this.id = member.getId();
+            this.name = member.getName();
+            this.image = member.getImage();
+            this.state = member.getState();
         }
     }
 

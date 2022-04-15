@@ -255,6 +255,24 @@
                 <div class="card-body" th:if="${!check}"> 로그인이 필요해요!</div>
                 <div class="card-body" th:if="${check and recentPost == null}"> 현재 작성 중인 글이 없습니다</div>
             </div>
+
+            <!-- All Members-->
+            <div class="card mb-4">
+                <div class="card-header"> All Members </div>
+                <div class="card-body">
+                    <div class="row" th:each="otherMember: ${allMembers}">
+                        <div class="card-text row-l" style="margin: 3px 0px 5px 3px;">
+                            <div class="profile_img_box2 row-c">
+                                <img th:if="${otherMember.image != null}"
+                                     th:src="${otherMember.image.imgSrc}" alt="profile">
+                                <img th:if="${otherMember.image == null}" src="/images/profile.png">
+                            </div>
+                            <div style="display:inline-block; margin-left: 3px" th:text="${otherMember.name}"></div>
+                            <div style="margin-left: 10px"><div class="badge bg-dark" style="display:inline-block;" th:text="${otherMember.state}"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
