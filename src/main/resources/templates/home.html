@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>SeMoGong</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/origin/styles.css" rel="stylesheet"/>
+    <link href="/css/origin/modal.css" rel="stylesheet"/>
+    <link href="/css/origin/main.css" rel="stylesheet"/>
+    <!-- Bootstrap core CSS-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+</head>
+<body>
+<!-- Responsive navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">SeMoGong</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li th:if="${check}" class="nav-item"><span class="nav-link" href="/">Join</span></li>
+                <li th:if="${!check}" class="nav-item"><a class="nav-link" href="/members/signup">Join</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Today</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Page header with logo and tagline-->
+<header class="py-5 bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">Welcome to SeMoGong!</h1>
+            <p class="lead mb-0">Share what you studied today</p>
+        </div>
+    </div>
+</header>
+
+
+<!-- Page content-->
+<div class="container">
+    <div class="row">
+
+        <!-- Blog entries-->
+        <div class="col-lg-8">
+            <!-- Featured blog post-->
+            <!-- Nested row for non-featured blog posts-->
+            <div class="row">
+                <div class="col-lg-6" th:if="${posts != null}" th:each="post:${posts}">
+                    <!-- Blog post-->
+                    <div class="card mb-4" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${post.id}">
+                        <div class="content_title_img_box">
+                            <img th:if="${post.postImg != null}" class="card-img-top content_title_img"
+                                 th:src="${post.postImg?.imgSrc}" alt="..."
+                                 style="border: solid lightgray 1px;"/>
+                        </div>
+                        <div class="card_box">
+                            <h2 class="card-title h5 col-c" th:text="${post.title}"
+                                style="font-size: 20px; font-weight: bold; color: gray; height: 40px;">Post Title</h2>
+                            <div class="card-text make-align row-l" style="margin: 3px 0px 5px 3px;">
+                                <div class="profile_img_box2 row-c">
+                                    <img th:if="${post.memberImg != null}"
+                                         th:src="${post.memberImg?.imgSrc}" alt="profile">
+                                    <img th:if="${post.memberImg == null}" src="/images/profile.png">
+                                </div>
+                                <div style="display:inline-block;" th:text="${post.memberName}"></div>
+                            </div>
+                            <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                                <p class="badge bg-secondary" style="margin: 3px"
+                                   th:text="${post.memberDesiredJob}"></p>
+                            </div>
+                            <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                                <p class="badge" style="margin: 3px; background-color: #86b7fe;"
+                                   th:text="${post.state}">공부 중</p>
+                            </div>
+                            <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                                <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
+                                   th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
+                                    <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
+                                        20:00
+                                    </th:block>
+                                </p>
+                                <p th:if="${#lists.size(post.times)%2!=0}" class="badge"
+                                   style="margin: 1px; background-color: #dfc2c4;">
+                                    <th:block th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'"> 19:00 ~
+                                    </th:block>
+                                </p>
+                            </div>
+                            <div class="card-text" style="margin: 10px 0px 0px 0px;">
+                                <p class="small" style="margin: 3px" th:text="${post.introduce}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination-->
+            <nav aria-label="Pagination">
+                <hr class="my-0"/>
+                <ul class="pagination justify-content-center my-4">
+                    <li class="page-item"><a class="page-link" href="/" tabindex="-1" aria-disabled="true">Newer</a>
+                    </li>
+                    <li th:each="i: ${#numbers.sequence(1, 5)}" aria-current="page"
+                        th:class="${page == i}? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:href="@{/{page} (page=${i})}" th:text="${i}">#</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" th:href="@{/{page} (page=${6})}">Older</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Side widgets-->
+        <div class="col-lg-4">
+            <!-- Member widget-->
+            <div class="card mb-4">
+                <!-- Profile (if member did Log in) -->
+                <div class="card-header row-s" th:if="${check}">
+                    <div style="margin-top: 5px" class="input-group">
+                        <div class="badge rounded-pill btn-dark" th:text="${member.state}"> 공부중</div>
+                    </div>
+                    <div class="row-c">
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id})}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-gear" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                            </svg>
+                        </a>
+                        <a class="btn btn-outline-dark btn-sm" href="/members/logout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                <path fill-rule="evenodd"
+                                      d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body" th:if="${check}" th:object="${member}">
+                    <div class="row-c">
+                        <div class="row-c profile_img_box1">
+                            <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
+                                 alt="profile img">
+                            <img th:if="${member.image == null}" src="/images/profile.png">
+                        </div>
+                    </div>
+                    <div class="row-c" th:text="*{name}" style="font-weight: bold; font-size: 20px; margin-top: 10px;">
+                        NONE
+                    </div>
+                    <div class="row-c" th:text="*{desiredJob}"
+                         style="font-weight: bold; font-size: 15px; color: gray;"></div>
+                    <div class="row-c">
+                        <div class="input-group btn-group" role="group" aria-label="Basic mixed styles example"
+                             style="margin-top: 10px;">
+                            <a class="btn btn-success" href="/studying">STUDY</a>
+                            <a class="btn btn-warning" href="/breaking">BREAK</a>
+                            <a class="btn btn-secondary" href="/end">END</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login (if member did not Log in) -->
+                <div class="card-header" th:if="${!check}">Log In</div>
+                <div class="card-body" th:if="${!check}">
+                    <form action="/member/login" method="post">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Id">
+                            <label for="username">Id</label>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="Password">
+                            <label for="password">Password</label>
+                        </div>
+                        <!--                        <div class="checkbox mb-3">-->
+                        <!--                            <label>-->
+                        <!--                                <input type="checkbox" value="remember-me"> Remember me-->
+                        <!--                            </label>-->
+                        <!--                        </div>-->
+                        <p id="valid" th:if="${error}" th:text="${exception}" class="alert alert-danger mb-2"></p>
+                        <button class="w-100 btn btn-lg btn-primary" type="submit">LOG IN</button>
+                    </form>
+                    <a style="margin-top: 5px" class="w-100 btn btn-lg btn-primary" href="/members/signup">SIGN UP</a>
+                </div>
+            </div>
+
+            <!-- My Post widget-->
+            <div class="card mb-4">
+                <div class="card-header">My Post</div>
+                <div class="card-body" th:if="${recentPost != null}">
+                    <!-- My post-->
+                    <div class="temp">
+                        <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal"
+                             th:attr="data-bs-target='#recentPost'">
+                            <div class="content_title_img_box">
+                                <img th:if="${recentPost.postImg != null}" class="card-img-top content_title_img"
+                                     th:src="${recentPost.postImg?.imgSrc}" alt="..."
+                                     style="border: solid lightgray 1px;"/>
+                            </div>
+                            <div class="card_box">
+                                <h2 class="card-title h5 col-c" th:text="${recentPost.title}"
+                                    style="font-size: 20px; font-weight: bold; color: gray; height: 40px;">Post
+                                    Title</h2>
+                                <div class="card-text make-align row-l" style="margin: 3px 0px 5px 3px;">
+                                    <div class="profile_img_box2 row-c">
+                                        <img th:if="${recentPost.memberImg != null}"
+                                             th:src="${recentPost.memberImg?.imgSrc}"
+                                             alt="profile">
+                                        <img th:if="${recentPost.memberImg == null}" src="/images/profile.png">
+                                    </div>
+                                    <div style="display:inline-block;" th:text="${recentPost.memberName}"></div>
+                                </div>
+                                <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                                    <p class="badge bg-secondary" style="margin: 3px"
+                                       th:text="${recentPost.memberDesiredJob}"></p>
+                                </div>
+                                <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                                    <p class="badge" style="margin: 3px; background-color: #86b7fe;"
+                                       th:text="${recentPost.state}">공부 중</p>
+                                </div>
+                                <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                                    <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
+                                       th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
+                                        <th:block
+                                                th:text="|${recentPost.times[i -1]}| + ' ~ '+|${recentPost.times[i]}|">
+                                            19:00 ~
+                                            20:00
+                                        </th:block>
+                                    </p>
+                                    <p th:if="${#lists.size(recentPost.times)%2!=0}" class="badge"
+                                       style="margin: 1px; background-color: #dfc2c4;">
+                                        <th:block
+                                                th:text="|${recentPost.times[#lists.size(recentPost.times)-1]}| + ' ~'">
+                                            19:00 ~
+                                        </th:block>
+                                    </p>
+                                </div>
+                                <div class="card-text" style="margin: 10px 0px 0px 0px;">
+                                    <p class="small" style="margin: 3px" th:text="${recentPost.introduce}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" th:if="${!check}"> 로그인이 필요해요!</div>
+                <div class="card-body" th:if="${check and recentPost == null}"> 현재 작성 중인 글이 없습니다</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Modals -->
+    <div th:if="${posts != null}" th:each="post:${posts}" class="portfolio-modal modal fade" th:id="'postModal' + ${post.id}" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pb-5"> <!-- text-center-->
+                    <div class="container">
+                        <div class="row justify-content-center"> <!--justify-content-center-->
+                            <div class="col-lg-8">
+                                <!-- Post Modal - Image-->
+                                <div class="text-center">
+                                    <img th:if="${post.postImg != null}" class="img-fluid rounded"
+                                         th:src="${post.postImg?.imgSrc}"
+                                         alt="..."/>
+                                </div>
+                                <!-- Post Modal - Title-->
+                                <h4 class="display-3" th:text="${post.title}"
+                                    style="font-weight: bold; font-size:50px; margin:40px 0px 15px 0px;"></h4>
+
+                                <!-- Portfolio Modal - Text-->
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/user-solid.svg"></div>
+                                        <div class="property_subtext1">작성자</div>
+                                    </div>
+                                    <div class="profile_img_box2 row-c">
+                                        <img th:if="${post.memberImg == null}" src="/images/profile.png">
+                                        <img th:if="${post.memberImg != null}"
+                                             th:src="${post.memberImg?.imgSrc}"></div>
+                                    <div class="card-text" th:text="${post.memberName}"> Member's Name</div>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
+                                        <div class="property_subtext1">희망직무</div>
+                                    </div>
+                                    <div class="card-text" th:text="${post.memberDesiredJob}"> Member's Name</div>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
+                                        <div class="property_subtext1">학습시간</div>
+                                    </div>
+                                    <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
+                                       th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
+                                        <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
+                                            20:00
+                                        </th:block>
+                                    </p>
+                                    <p th:if="${#lists.size(post.times)%2!=0}" class="badge"
+                                       style="margin: 1px; background-color: #dfc2c4;">
+                                        <th:block th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'"> 19:00 ~
+                                        </th:block>
+                                    </p>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
+                                        <div class="property_subtext1">상태</div>
+                                    </div>
+                                    <div class="card-text" th:text="${post.state}"> Member's Name</div>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
+                                        <div class="property_subtext1">오늘의 한줄평</div>
+                                    </div>
+                                    <div class="card-text" th:text="${post.introduce}"> Member's Name</div>
+                                </div>
+                                <hr>
+
+
+                                <div class="review">
+                                    <div th:each="comment:${post.comments}" height="25px;">
+                                        <div class="d-flex bd-highlight">
+                                            <div class="row-l p-2 flex-grow-1 bd-highlight">
+                                                <div class="img_margin_1 profile_img_box2 row-c">
+                                                    <img th:if="${comment.memberImg != null}"
+                                                         th:src="${comment.memberImg?.imgSrc}">
+                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                                </div>
+                                                <div class="review_writer"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                            </div>
+                                            <div class="p-2">
+                                                <a th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:href="@{/comment/delete/{id} (id=${comment.id})}" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal_comments"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                    </div>
+
+                                    <form class="input-group mb-3" role="form" id="cba"
+                                          th:action="@{/posts/comment/{id} (id=${post.id})}" th:object="${commentForm}"
+                                          method="post">
+                                        <input type="text" th:field="*{comment}" class="form-control"
+                                               placeholder="댓글을 작성해 보세요!">
+                                        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                                    </form>
+                                </div>
+                                <hr>
+
+                                <div class="content_text">
+                                    <p class="mb-4" th:utext="${post.html}"> Content by HTML </p>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <a th:if="${check and member.id == post.memberId}" class="btn btn-secondary btn-sm"
+                                           th:href="@{/posts/edit/{id} (id=*{post.id})}" type="button">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Modal-->
+    <div th:if="${recentPost != null}" th:id="recentPost" class="portfolio-modal modal fade" tabindex="-1"
+         aria-labelledby="portfolioModal1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pb-5"> <!-- text-center-->
+                    <div class="container">
+                        <div class="row justify-content-center"> <!--justify-content-center-->
+                            <div class="col-lg-8">
+                                <!-- Member Modal - Image-->
+                                <div class="text-center">
+                                    <img th:if="${recentPost.postImg != null}" class="img-fluid rounded"
+                                         th:src="${recentPost.postImg?.imgSrc}" alt="..."/>
+                                </div>
+                                <!-- Member Modal - Title-->
+                                <h4 class="display-3" th:text="${recentPost.title}"
+                                    style="font-weight: bold; font-size:50px; margin:0px 0px 15px 0px;"></h4>
+
+                                <!-- Portfolio Modal - Text-->
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/user-solid.svg"></div>
+                                        <div class="property_subtext1">작성자</div>
+                                    </div>
+                                    <div class="profile_img_box2 row-c">
+                                        <img th:if="${recentPost.memberImg == null}" src="/images/profile.png">
+                                        <img th:if="${recentPost.memberImg != null}"
+                                             th:src="${recentPost.memberImg?.imgSrc}"></div>
+                                    <div class="card-text" th:text="${recentPost.memberName}"> Member's Name</div>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
+                                        <div class="property_subtext1">희망직무</div>
+                                    </div>
+                                    <div class="card-text" th:text="${recentPost.memberDesiredJob}"> Member's Name</div>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
+                                        <div class="property_subtext1">학습시간</div>
+                                    </div>
+                                    <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
+                                       th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
+                                        <th:block
+                                                th:text="|${recentPost.times[i -1]}| + ' ~ '+|${recentPost.times[i]}|">
+                                            19:00 ~ 20:00
+                                        </th:block>
+                                    </p>
+                                    <p th:if="${#lists.size(recentPost.times)%2!=0}" class="badge"
+                                       style="margin: 1px; background-color: #dfc2c4;">
+                                        <th:block
+                                                th:text="|${recentPost.times[#lists.size(recentPost.times)-1]}| + ' ~'">
+                                            19:00 ~
+                                        </th:block>
+                                    </p>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
+                                        <div class="property_subtext1">상태</div>
+                                    </div>
+                                    <div class="card-text" th:text="${recentPost.state}"> Member's Name</div>
+                                </div>
+
+                                <div class="row-l col-c property_box1">
+                                    <div class="row-l property_subbox1">
+                                        <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
+                                        <div class="property_subtext1">오늘의 한줄평</div>
+                                    </div>
+                                    <div class="card-text" th:text="${recentPost.introduce}"> Member's Name</div>
+                                </div>
+                                <hr>
+
+
+                                <div class="review">
+                                    <div th:each="comment:${recentPost.comments}" height="25px;">
+                                        <div class="d-flex bd-highlight">
+                                            <div class="row-l p-2 flex-grow-1 bd-highlight">
+                                                <div class="img_margin_1 profile_img_box2 row-c">
+                                                    <img th:if="${comment.memberImg != null}"
+                                                         th:src="${comment.memberImg?.imgSrc}">
+                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                                </div>
+                                                <div class="review_writer"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                            </div>
+                                            <div class="p-2">
+                                                <a th:if="${check and (member.id == comment.memberId or member.id == recentPost.memberId)}" th:href="@{/comment/delete/{id} (id=${comment.id})}" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                            </div>
+                                        </div>
+                                        <div class="modal_comments"><p th:text="${comment.content}">댓글 내용</p></div>
+                                    </div>
+
+                                    <form class="input-group mb-3" role="form"
+                                          th:action="@{/posts/comment/{id} (id=${recentPost.id})}"
+                                          th:object="${commentForm}" method="post">
+                                        <input type="text" th:field="*{comment}" class="form-control"
+                                               placeholder="댓글을 작성해 보세요!">
+                                        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                                    </form>
+                                </div>
+                                <hr>
+
+                                <div class="content_text">
+                                    <p class="mb-4" th:utext="${recentPost.html}"> Content by HTML </p>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <a class="btn btn-secondary btn-sm"
+                                           th:href="@{/posts/edit/{id} (id=*{recentPost.id})}"
+                                           type="button">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JS-->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="/js/origin/scripts.js"></script>
+    <script src="/js/test.js"></script>
+</div>
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; SEMOGONG 2022</p></div>
+</footer>
+</body>
+</html>

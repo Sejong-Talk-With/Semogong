@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="row">
+        <div class="col">
+            <iframe id="iframe1" name="iframe1" style="display:none"></iframe>
+            <form role="form" th:action="@{/posts/edit/{id}/img (id=${postForm.id})}" target="iframe1"  method="post" enctype="multipart/form-data">
+                <label class="form-label" th:for="image" style="display: inline-block">배경 이미지</label>
+                <div th:if="${postForm.image != null}" style="display: inline-block"> ( 현재 <p style="display: inline-block" th:text="${postForm.image.imgName}"> </p> 로 설정 되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)</div>
+                <div class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> ( 썸네일 선택 후 Upload 버튼을 눌러주세요!)</div>
+                <div class="input-group">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload</button>
+                        <input class="form-control" name="file" type="file" accept=".jpg, .png">
+                    </div>
+                </div>
+            </form>
+            <form role="form" th:object="${postForm}" method="post">
+                <!-- id -->
+                <input type="hidden" th:field="*{id}" />
+                <div class="">
+                    <div class="card-text">
+                        <label class="form-label" th:for="times" style="display: inline-block"> 학습 시간 : </label>
+                        <th:block th:id="timeNum+${i}" th:each="i: ${#numbers.sequence(0, #lists.size(postForm.times)-1)}">
+                        <div style="display: inline-block; flex: 0 0 auto; width: 6.33333333%;" >
+                            <input type="text"  th:field="*{times[__${iStat.index}__]}" class="form-control">
+                        </div>
+                            <p style="display: inline-block" th:if="${i % 2 == 0}">~</p>
+                        </th:block>
+                    </div>
+                </div>
+                <label class="form-label" th:for="title">제목</label>
+                <div class="input-group mb-3">
+                    <input type="text" th:field="*{title}" class="form-control" placeholder="제목을 입력하세요" autocomplete="off" th:class="${#fields.hasErrors('title')}? 'form-control fieldError' : 'form-control'">
+                    <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Incorrect date</p>
+                </div>
+                <label class="form-label" th:for="nickname">오늘의 한 줄</label>
+                <div class="input-group mb-3">
+                    <input type="text" th:field="*{introduce}" class="form-control"
+                           placeholder="오늘 하루를 정리하는 문장을 적어주세요!">
+                </div>
+                <label class="form-label" th:for="content">내용</label>
+                <div class="mb-3">
+                    <textarea type="text" rows="4" th:field="*{content}" placeholder="Content" class="form-control" autocomplete="off"></textarea>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/simplemde/simplemde.min.js}"></script>
+
+<script>
+    var simplemde = new SimpleMDE({element: document.getElementById("content")});
+</script>
+
+</body>
+</html>
