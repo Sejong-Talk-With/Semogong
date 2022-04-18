@@ -30,7 +30,8 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 	compileOnly 'org.projectlombok:lombok'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
-	runtimeOnly 'mysql:mysql-connector-java' //'com.h2database:h2'
+//	runtimeOnly 'mysql:mysql-connector-java' // for Real
+	implementation 'com.h2database:h2' // for Test
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// AWS SDK

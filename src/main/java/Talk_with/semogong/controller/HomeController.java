@@ -39,7 +39,7 @@ public class HomeController {
             model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
             if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
-                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()));
+                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
                 model.addAttribute("recentPost", memberRecentPostDto);
             }
             List<Member> members = memberService.findAll();
@@ -67,7 +67,7 @@ public class HomeController {
             model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
             if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
-                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()));
+                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
                 model.addAttribute("recentPost", memberRecentPostDto);
             }
             List<Member> members = memberService.findAll();
@@ -95,7 +95,7 @@ public class HomeController {
             model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
             if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
-                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()));
+                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
                 model.addAttribute("recentPost", memberRecentPostDto);
             }
             List<Member> members = memberService.findAll();

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,9 +27,10 @@ public class PostRepository {
         return em.createQuery("select p from Post p order by p.createTime DESC", Post.class).getResultList();
     }
 
-    public Post findByMember(Long memberId) {
+    public Optional<Post> findByMember(Long memberId) {
         return em.createQuery("select p from Post p join p.member m where m.id = :id order by p.createTime DESC", Post.class)
-                .setParameter("id", memberId).setMaxResults(1).getSingleResult();
+                .setParameter("id", memberId).setMaxResults(1)
+                .getResultList().stream().findAny();
     }
 
     public List<Post> findByPaging(Integer offset) {

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -46,7 +47,7 @@ public class PostService {
 
     // 상태 클릭에 따른 post 시간 변경
     public void addTime(Long memberId, LocalDateTime time) {
-        Post post = postRepository.findByMember(memberId); // memberId 에 따른 Post
+        Post post = postRepository.findByMember(memberId).get(); // memberId 에 따른 Post
         post.addTime(time);
     }
 
@@ -59,7 +60,7 @@ public class PostService {
         post.editState(state);
     }
 
-    public Post getRecentPost(Long memberId) {
+    public Optional<Post> getRecentPost(Long memberId) {
         return postRepository.findByMember(memberId);
     }
 

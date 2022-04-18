@@ -72,7 +72,7 @@ public class PostController {
             return "redirect:/"; // 오류 처리해줘야 됨.
         }
         if (post.getState() != StudyState.END) {
-            member.setState(StudyState.END);
+            memberService.changeState(member.getId(), StudyState.END);
         }
         postService.deletePost(post);
         return "redirect:/";
