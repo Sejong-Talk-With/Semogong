@@ -422,10 +422,10 @@
                                     style="font-size:50px; margin:0px 0px 15px 0px;"></h4>
 
                                 <!-- Portfolio Modal - Text-->
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
-                                        <div><img width="32px" height="24px" src="/images/user-solid.svg"></div>
-                                        <div class="property_subtext1">작성자</div>
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="width:150px;">
+                                        <img width="32px" height="24px" src="/images/user-solid.svg">
+                                        <div>작성자</div>
                                     </div>
                                     <div class="profile_img_box2 d-sm-flex justify-content-center">
                                         <img th:if="${recentPost.memberImg == null}" src="/images/profile.png">
@@ -434,19 +434,20 @@
                                     <div class="card-text" th:text="${recentPost.memberName}"> Member's Name</div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="width:150px;">
                                         <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
                                         <div class="property_subtext1">희망직무</div>
                                     </div>
                                     <div class="card-text" th:text="${recentPost.memberDesiredJob}"> Member's Name</div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="min-width:150px;">
                                         <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
                                         <div class="property_subtext1">학습시간</div>
                                     </div>
+                                    <div class="flex-wrap">
                                     <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
                                        th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
                                         <th:block
@@ -461,18 +462,19 @@
                                             19:00 ~
                                         </th:block>
                                     </p>
+                                    </div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="min-width:150px;">
                                         <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
                                         <div class="property_subtext1">상태</div>
                                     </div>
                                     <div class="card-text" th:text="${recentPost.state}"> Member's Name</div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="min-width:150px;">
                                         <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
                                         <div class="property_subtext1">오늘의 한줄평</div>
                                     </div>
@@ -490,13 +492,13 @@
                                                          th:src="${comment.memberImg?.imgSrc}">
                                                     <img th:if="${comment.memberImg == null}" src="/images/profile.png">
                                                 </div>
-                                                <div class="review_writer"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                                <div class="review_writer" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
                                             </div>
                                             <div class="p-2">
                                                 <a th:if="${check and (member.id == comment.memberId or member.id == recentPost.memberId)}" th:href="@{/comment/delete/{id} (id=${comment.id})}" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
                                             </div>
                                         </div>
-                                        <div class="modal_comments"><p th:text="${comment.content}">댓글 내용</p></div>
+                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
                                     </div>
 
                                     <form class="input-group mb-3" role="form"
