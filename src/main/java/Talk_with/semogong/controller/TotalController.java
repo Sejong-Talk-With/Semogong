@@ -39,28 +39,31 @@ public class TotalController {
         if (state == StudyState.END) {
 
             Optional<Post> optionalPost = postService.getRecentPost(memberId);
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH");
 
             // End -> Studying 넘어갈 때, 이전 글을 이어 쓰냐, 새로 쓰냐 판단
             // 사용자가 글을 쓴 기록이 있는지 확인 -> 맨 처음 글을 작성하는 멤버일 경우 넘어감.
             if (optionalPost.isPresent()) {
                 Post post = optionalPost.get();
-                LocalDate createDate = post.getCreateTime().toLocalDate();
+                LocalDateTime createDateTime = post.getCreateTime();
+                LocalDate createDate = createDateTime.toLocalDate();
+                int createTime = Integer.parseInt(createDate.format(timeFormatter));
                 LocalDateTime nowDateTime = LocalDateTime.now();
+                LocalDate nowDate = nowDateTime.toLocalDate();
+                int nowTime = Integer.parseInt(nowDateTime.format(timeFormatter));
 
-                // 최신 글이 해당 날짜에 작성한 글인지 판단
-                if (createDate.isEqual(nowDateTime.toLocalDate())) { // yes : 그 글 이어작성
+                // 최신 글이 해당 날짜에 작성한 글이면서 04시이후이냐를 판단
+                if (createDate.isEqual(nowDate) & createTime > 4) { // yes : 그 글 이어작성
                     memberService.changeState(memberId, StudyState.STUDYING);
                     postService.changeState(post.getId(), StudyState.STUDYING);
                     postService.addTime(memberId, LocalDateTime.now());
                     return "redirect:/";
                 } else { // no
-                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH");
-                    int nowTime = Integer.parseInt(nowDateTime.format(timeFormatter));
                     // 현재 시점이 4시 이전
                     if (nowTime < 4) {
                         Period period = Period.between(createDate, nowDateTime.toLocalDate());
                         // 그 전날 작성한 글이 존재하는 지 확인
-                        if (period.getDays() == 1) { // yes : 해당 글 이어 작성
+                        if (period.getDays() == 1 & createTime > 4) { // yes : 해당 글 이어 작성
                             memberService.changeState(memberId, StudyState.STUDYING);
                             postService.changeState(post.getId(), StudyState.STUDYING);
                             postService.addTime(memberId, LocalDateTime.now());
@@ -70,6 +73,7 @@ public class TotalController {
                     }
                     // 현재 시점이 4시 이후 -> 걍 새 글 작성
                 }
+                // 00 - 04시에 시작해서 00 - 04시에 end를 누르고 다시 00 - 04시에 study를 누른 경우에 대한 처리 불가. -> 그냥 자라.
             }
 
             memberService.changeState(memberId, StudyState.STUDYING); // posting 후 state change 필요 (오류 처리해야 됨)
