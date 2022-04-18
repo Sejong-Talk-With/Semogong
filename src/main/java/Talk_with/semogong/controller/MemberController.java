@@ -2,7 +2,9 @@ package Talk_with.semogong.controller;
 
 import Talk_with.semogong.domain.Image;
 import Talk_with.semogong.domain.Member;
+import Talk_with.semogong.domain.StudyState;
 import Talk_with.semogong.domain.auth.MyUserDetail;
+import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.domain.form.MemberForm;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.S3Service;
@@ -24,6 +26,7 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpSession;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -46,7 +49,6 @@ public class MemberController {
     public String signUpForm(Model model) {
         log.info("signup");
         model.addAttribute("memberForm", new MemberForm());
-        model.addAttribute("first", true);
         return "member/createMemberForm";
     }
 
@@ -55,7 +57,6 @@ public class MemberController {
     public String signUp(@Valid MemberForm memberForm, BindingResult result, Model model) {
         if (result.hasErrors()) {
             log.info("found Null, re-joining");
-            model.addAttribute("first", true);
             return "member/createMemberForm"; }
         Member member = Member.createMember(memberForm.getLoginId(), memberForm.getPassword(), memberForm.getName(),memberForm.getNickname(),memberForm.getDesiredJob(), null,memberForm.getIntroduce(),null ,null);
         member.setRole("USER");
@@ -66,17 +67,20 @@ public class MemberController {
     @GetMapping("/members/edit/{id}")
     public String memberEditForm(@PathVariable("id") Long id, Model model) {
         Member member = memberService.findOne(id);
-        MemberForm memberForm = createMemberForm(member);
-        model.addAttribute("memberForm",memberForm);
-        model.addAttribute("first",false);
-        return "member/createMemberForm";
+        MemberEditForm memberEditForm = createMemberEditFrom(member);
+        model.addAttribute("memberEditForm",memberEditForm);
+        return "member/editMemberForm";
     }
 
     @PostMapping("/members/edit/{id}")
-    public String memberEdit(@PathVariable("id") Long id, MemberForm memberForm){
-        List<String> links = memberForm.getLinks(); while (links.remove("")){ }
-        memberForm.setLinks(links);
-        memberService.editMember(id, memberForm);
+    public String memberEdit(@PathVariable("id") Long id, @Valid MemberEditForm memberEditForm, BindingResult result){
+        List<String> links = memberEditForm.getLinks(); while (links.remove("")){ }
+        memberEditForm.setLinks(links);
+        if (result.hasErrors()) {
+            log.info("found Null, re-editing");
+            return "member/editMemberForm";
+        }
+        memberService.editMember(id, memberEditForm);
         return "redirect:/";
     }
 
@@ -93,19 +97,19 @@ public class MemberController {
         return "redirect:/"; //주소 요청으로 변경
     }
 
-    private MemberForm createMemberForm(Member member) {
-        MemberForm memberForm = new MemberForm();
-        memberForm.setId(member.getId());
-        memberForm.setLoginId(member.getLoginId());
-        memberForm.setName(member.getName());
-        memberForm.setNickname(member.getNickname());
-        memberForm.setDesiredJob(member.getDesiredJob());
-        memberForm.setIntroduce(member.getIntroduce());
-        memberForm.setState(member.getState());
-        memberForm.setLinks(member.getLinks());
-        memberForm.setImage(member.getImage());
-        return memberForm;
+    private MemberEditForm createMemberEditFrom(Member member) {
+        MemberEditForm memberEditForm = new MemberEditForm();
+        memberEditForm.setId(member.getId());
+        memberEditForm.setName(member.getName());
+        memberEditForm.setNickname(member.getNickname());
+        memberEditForm.setDesiredJob(member.getDesiredJob());
+        memberEditForm.setIntroduce(member.getIntroduce());
+        memberEditForm.setLinks(member.getLinks());
+        memberEditForm.setImage(member.getImage());
+        return memberEditForm;
     }
+
+
 
 
 }

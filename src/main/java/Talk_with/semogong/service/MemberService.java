@@ -1,9 +1,11 @@
 package Talk_with.semogong.service;
 
+import Talk_with.semogong.controller.MemberController;
 import Talk_with.semogong.domain.Image;
 import Talk_with.semogong.domain.auth.MyUserDetail;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.StudyState;
+import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.domain.form.MemberForm;
 import Talk_with.semogong.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +66,7 @@ public class MemberService implements UserDetailsService {
         return new MyUserDetail(user);
     }
 
-    public void editMember(Long id, MemberForm memberForm) {
+    public void editMember(Long id, MemberEditForm memberForm) {
         Member member = memberRepository.findOne(id);
         member.edit(memberForm);
     }

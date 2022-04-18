@@ -48,7 +48,9 @@ public class PostController {
 
     @PostMapping("/posts/edit/{id}")
     public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute("postForm") PostEditForm postEditForm, BindingResult result) {
-        if (result.hasErrors()) { log.info("found Null, required re-post"); return "redirect:/posts/"+id.toString()+"/edit"; }
+        if (result.hasErrors()) {
+            log.info("found Null, required re-post");
+            return "post/editPostForm"; }
         postEditForm.setHtml(markdownToHTML(postEditForm.getContent()));
         postService.edit(postEditForm);
         return "redirect:/";

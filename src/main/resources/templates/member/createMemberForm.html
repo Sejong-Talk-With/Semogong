@@ -6,137 +6,46 @@
 <div class="container">
     <!--ver1-->
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <form role="form" th:if="${first}" action="/members/signup" th:object="${memberForm}" method="post">
+    <form role="form" action="/members/signup" th:object="${memberForm}" method="post">
         <!-- 해당 from 안에서는 memberForm을 사용하겠다는 것, memberForm은 Model을 통해 객체로 접근했기에 가능-->
-        <label class="form-label" th:for="loginId">ID</label>
+        <label class="form-label" th:for="loginId">ID *</label>
         <div class="input-group mb-3 has-validation">
-            <input type="text" th:field="*{loginId}" class="form-control" placeholder="아이디를 입력하세요"
+            <input type="text" th:field="*{loginId}" class="form-control" placeholder="아이디를 입력하세요!"
                    th:class="${#fields.hasErrors('loginId')}? 'form-control is-invalid' : 'form-control'">
             <div th:if="${#fields.hasErrors('loginId')}" class="invalid-feedback" th:errors="*{loginId}">Incorrect
                 date
             </div>
         </div>
-        <label class="form-label" th:for="password">PassWord</label>
+        <label class="form-label" th:for="password">PassWord *</label>
         <div class="input-group mb-3 has-validation">
-            <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호"
-                   th:class="${#fields.hasErrors('password')}? 'form-control is-invalid' : 'form-control'">
+            <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요!" th:class="${#fields.hasErrors('password')}? 'form-control is-invalid' : 'form-control'">
             <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback" th:errors="*{password}">Incorrect
                 date
             </div>
         </div>
-        <label class="form-label" th:for="name">이름</label>
+        <label class="form-label" th:for="name">이름 *</label>
         <div class="input-group mb-3 has-validation">
-            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요"
-                   th:class="${#fields.hasErrors('name')}? 'form-control is-invalid' : 'form-control'">
+            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요!" th:class="${#fields.hasErrors('name')}? 'form-control is-invalid' : 'form-control'">
             <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">Incorrect date
             </div>
         </div>
         <label class="form-label" th:for="nickname">닉네임</label>
         <div class="input-group mb-3">
-            <input type="text" th:field="*{nickname}" class="form-control"
-                   placeholder="도시를 입력하세요">
+            <input type="text" th:field="*{nickname}" class="form-control" placeholder="닉네임을 입력하세요!">
         </div>
         <label class="form-label" th:for="desiredJob">희망 직무</label>
         <div class="input-group mb-3">
-            <input type="text" th:field="*{desiredJob}" class="form-control"
-                   placeholder="거리를 입력하세요">
+            <input type="text" th:field="*{desiredJob}" class="form-control" placeholder="희망 직무를 입력하세요!">
         </div>
         <label class="form-label" th:for="introduce">자기 소개</label>
         <div class="input-group mb-3 has-validation">
-            <input type="text" th:field="*{introduce}" class="form-control" placeholder="간단하게 자기소개를 해주세요!"
-                   th:class="${#fields.hasErrors('introduce')}? 'form-control valid-feedback' : 'form-control'">
-            <div th:if="${#fields.hasErrors('introduce')}" th:errors="*{introduce}">Incorrect date</div>
+            <input type="text" th:field="*{introduce}" class="form-control" placeholder="간단하게 자기소개를 해주세요!">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-
-
-    <!--ver2-->
-    <iframe id="iframe1" name="iframe1" style="display:none"></iframe>
-    <form role="form" th:if="${!first}" th:action="@{/members/edit/{id}/img (id=${memberForm.id})} " target="iframe1" method="post"
-          enctype="multipart/form-data">
-        <label class="form-label" th:for="image" style="display: inline-block">프로필 이미지</label>
-        <div class="form-label" th:if="${memberForm.image != null}" style="display: inline-block"> ( 현재 <p style="display: inline-block; margin:0px" th:text="${memberForm.image?.imgName}"></p> 로 설정 되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
-        </div>
-        <div class="form-label" th:if="${memberForm.image == null}" style="display: inline-block"> ( 프로필 선택 후 Upload 버튼을 눌러주세요!)</div>
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload</button>
-                <input class="form-control" name="file" type="file" accept=".jpg, .png">
-            </div>
-        </div>
-    </form>
-    <form role="form" th:if="${!first}" th:object="${memberForm}" method="post">
-        <!-- 해당 from 안에서는 memberForm을 사용하겠다는 것, memberForm은 Model을 통해 객체로 접근했기에 가능-->
-        <label class="form-label" th:for="name">이름</label>
-        <div class="input-group mb-3 has-validation">
-            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요"
-                   th:class="${#fields.hasErrors('name')}? 'form-control is-invalid' : 'form-control'">
-            <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">Incorrect date
-            </div>
-        </div>
-        <label class="form-label" th:for="nickname">닉네임</label>
-        <div class="input-group mb-3">
-            <input type="text" th:field="*{nickname}" class="form-control"
-                   placeholder="도시를 입력하세요">
-        </div>
-        <label class="form-label" th:for="desiredJob">희망 직무</label>
-        <div class="input-group mb-3">
-            <input type="text" th:field="*{desiredJob}" class="form-control"
-                   placeholder="거리를 입력하세요">
-        </div>
-        <label class="form-label" th:for="introduce">자기 소개</label>
-        <div class="input-group mb-3 has-validation">
-            <input type="text" th:field="*{introduce}" class="form-control" placeholder="간단하게 자기소개를 해주세요!"
-                   th:class="${#fields.hasErrors('introduce')}? 'form-control is-invalid' : 'form-control'">
-            <div th:if="${#fields.hasErrors('introduce')}" class="invalid-feedback" th:errors="*{introduce}">
-                Incorrect date
-            </div>
-        </div>
-        <label class="form-label" th:for="links">링크</label>
-        <button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2" onclick="add_link_box()">
-            +
-        </button>
-        <div class="input-group mb-3 " id="add_group">
-            <div class="input-group" th:id="linkNum+${i}"
-                 th:each="i: ${#numbers.sequence(0, #lists.size(memberForm.links))}">
-                <input type="text" th:field="*{links[__${iStat.index}__]}" class="form-control">
-                <button class="btn btn-outline-danger" type="button"
-                        th:onclick="|javascript:remove_link_box('${i}')|">X
-                </button>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
     <br/>
     <div th:replace="fragments/footer :: footer"/>
 </div>
-<script th:inline="javascript" type="text/javascript">
-
-    /*<![CDATA[*/
-    var len = [[ ${#lists.size(memberForm.links)}]];
-
-    /*]]*/
-
-    function add_link_box() {
-
-        // var temp = document.getElementById("add_group");
-        // var temp2 = document.getElementById("add_group2").cloneNode(true);
-        $("#add_group").append('<div class="input-group" id="linkNum' + len + '">' +
-            '<input type="text" id="links' + len + '"' + 'name="links[' + len + ']"' +
-            'class="form-control" placeholder="추가할 링크를 입력하세요!">' +
-            '<button class="btn btn-outline-danger" type="button" onclick="remove_link_box(' + len + ')">X</button>' +
-            '</div>');
-
-        len++;
-    }
-
-    function remove_link_box(i) {
-        const to_remove = document.getElementById('linkNum' + i);
-        to_remove.remove();
-    }
-</script>
 <!-- Bootstrap core JS-->
 <script src="/js/bootstrap.bundle.js"></script>
 </body>

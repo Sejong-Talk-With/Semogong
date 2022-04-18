@@ -6,6 +6,7 @@ import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.StudyState;
 import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
@@ -13,6 +14,7 @@ public class PostEditForm {
 
     // Post Info
     private Long id;
+    @NotEmpty(message = "제목은 필수로 입력하셔야 됩니다.")
     private String title;
     private String introduce;
     private String content;

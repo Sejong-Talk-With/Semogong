@@ -1,5 +1,6 @@
 package Talk_with.semogong.domain;
 
+import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.domain.form.MemberForm;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -58,7 +59,7 @@ public class Member {
         this.state = state;
     }
 
-    public void edit(MemberForm memberForm) {
+    public void edit(MemberEditForm memberForm) {
         this.name = memberForm.getName();
         this.nickname = memberForm.getNickname();
         this.desiredJob = memberForm.getDesiredJob();

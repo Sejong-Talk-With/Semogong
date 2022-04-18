@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <iframe id="iframe1" name="iframe1" style="display:none"></iframe>
+    <form role="form" th:action="@{/members/edit/{id}/img (id=${memberEditForm.id})} " target="iframe1" method="post"
+          enctype="multipart/form-data">
+        <label class="form-label" th:for="image" style="display: inline-block">프로필 이미지</label>
+        <div class="form-label" th:if="${memberEditForm.image != null}" style="display: inline-block"> ( 현재 <p style="display: inline-block; margin:0px" th:text="${memberEditForm.image?.imgName}"></p> 로 설정 되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
+        </div>
+        <div class="form-label" th:if="${memberEditForm.image == null}" style="display: inline-block"> ( 프로필 선택 후 Upload 버튼을 눌러주세요!)</div>
+        <div class="input-group mb-3">
+            <div class="input-group">
+                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload</button>
+                <input class="form-control" name="file" type="file" accept=".jpg, .png">
+            </div>
+        </div>
+    </form>
+    <form role="form" th:object="${memberEditForm}" method="post">
+        <!-- 해당 from 안에서는 memberForm을 사용하겠다는 것, memberForm은 Model을 통해 객체로 접근했기에 가능-->
+        <label class="form-label" th:for="name">이름</label>
+        <div class="input-group mb-3 has-validation">
+            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요!"
+                   th:class="${#fields.hasErrors('name')}? 'form-control is-invalid' : 'form-control'">
+            <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">Incorrect date
+            </div>
+        </div>
+        <label class="form-label" th:for="nickname">닉네임</label>
+        <div class="input-group mb-3">
+            <input type="text" th:field="*{nickname}" class="form-control"
+                   placeholder="닉네임을 입력하세요!">
+        </div>
+        <label class="form-label" th:for="desiredJob">희망 직무</label>
+        <div class="input-group mb-3">
+            <input type="text" th:field="*{desiredJob}" class="form-control"
+                   placeholder="희망 직무를 입력하세요!">
+        </div>
+        <label class="form-label" th:for="introduce">자기 소개</label>
+        <div class="input-group mb-3 has-validation">
+            <input type="text" th:field="*{introduce}" class="form-control" placeholder="간단하게 자기소개를 해주세요!"
+                   th:class="${#fields.hasErrors('introduce')}? 'form-control is-invalid' : 'form-control'">
+            <div th:if="${#fields.hasErrors('introduce')}" class="invalid-feedback" th:errors="*{introduce}">
+                Incorrect date
+            </div>
+        </div>
+        <label class="form-label" th:for="links">링크</label>
+        <button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2" onclick="add_link_box()">
+            +
+        </button>
+        <div class="input-group mb-3 " id="add_group">
+            <div class="input-group" th:id="linkNum+${i}"
+                 th:each="i: ${#numbers.sequence(0, #lists.size(memberEditForm.links))}">
+                <input type="text" th:field="*{links[__${iStat.index}__]}" class="form-control" placeholder="링크를 입력해 주세요!">
+                <button class="btn btn-outline-danger" type="button"
+                        th:onclick="|javascript:remove_link_box('${i}')|">X
+                </button>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <br/>
+    <div th:replace="fragments/footer :: footer"/>
+</div>
+<script th:inline="javascript" type="text/javascript">
+
+    /*<![CDATA[*/
+    var len = [[ ${#lists.size(memberEditForm.links)}]];
+
+    /*]]*/
+
+    function add_link_box() {
+        $("#add_group").append('<div class="input-group" id="linkNum' + len + '">' +
+            '<input type="text" id="links' + len + '"' + 'name="links[' + len + ']"' +
+            'class="form-control" placeholder="추가할 링크를 입력하세요!">' +
+            '<button class="btn btn-outline-danger" type="button" onclick="remove_link_box(' + len + ')">X</button>' +
+            '</div>');
+
+        len++;
+    }
+
+    function remove_link_box(i) {
+        const to_remove = document.getElementById('linkNum' + i);
+        to_remove.remove();
+    }
+</script>
+<!-- Bootstrap core JS-->
+<script src="/js/bootstrap.bundle.js"></script>
+</body>
+</html>
