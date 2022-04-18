@@ -56,14 +56,14 @@
             <div class="row">
                 <div class="col-lg-6" th:if="${posts != null}" th:each="post:${posts}">
                     <!-- Blog post-->
-                    <div class="card mb-4" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${post.id}">
-                        <div class="overflow-hidden d-sm-flex justify-content-center align-items-center w-100" style= "height: 180px; background-color: white; border: solid 1px lightgray;">
+                    <div class="card mb-4" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${post.id}" >
+                        <div class="overflow-hidden d-sm-flex justify-content-center align-items-center w-100" style= "height: 175px; background-color: white; border: solid 1px lightgray;">
                             <img th:if="${post.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
                                  th:src="${post.postImg?.imgSrc}" alt="..."
-                                 style="border: solid lightgray 1px; border: 0px;"/>
+                                 style="border: solid lightgray 1px; border: 0px; "/>
                         </div>
-                        <div class="card_box" style="border: solid 1px lightgray;">
-                            <p class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${post.title}" style="font-size: 20px;  color: gray;">Post Title</p>
+                        <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
+                            <p class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${post.title}" style="font-size: 20px;  color: gray; height: 30px;">Post Title</p>
                             <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${post.memberImg != null}"
@@ -93,7 +93,7 @@
                                     </th:block>
                                 </p>
                             </div>
-                            <div class="card-text d-sm-flex text-truncate" style="margin: 10px 0px 0px 0px;" >
+                            <div class="card-text d-sm-flex text-truncate" style="margin: 10px 0px 0px 0px; height: 30px;" >
                                 <p class="small" style="margin: 3px" th:text="${post.introduce}"></p>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                     <div>
                         <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal"
                              th:attr="data-bs-target='#recentPost'">
-                            <div class="overflow-hidden d-sm-flex justify-content-center align-items-center" style= "height: 180px; background-color: white; border: solid 1px lightgray;">
+                            <div class="overflow-hidden d-sm-flex justify-content-center align-items-center" style= "height: 150px; background-color: white; border: solid 1px lightgray;">
                                 <img th:if="${recentPost.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
                                      th:src="${recentPost.postImg?.imgSrc}" alt="..."
                                      style="border: solid lightgray 1px; border: 0px;"/>
@@ -296,10 +296,10 @@
                                     style="font-size:50px; margin:40px 0px 15px 0px;"></h4>
 
                                 <!-- Portfolio Modal - Text-->
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
-                                        <div><img width="32px" height="24px" src="/images/user-solid.svg"></div>
-                                        <div class="property_subtext1">작성자</div>
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="width:150px;">
+                                        <img width="32px" height="24px" src="/images/user-solid.svg">
+                                        <div>작성자</div>
                                     </div>
                                     <div class="profile_img_box2 d-sm-flex justify-content-center">
                                         <img th:if="${post.memberImg == null}" src="/images/profile.png">
@@ -308,42 +308,44 @@
                                     <div class="card-text" th:text="${post.memberName}"> Member's Name</div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="width:150px;">
                                         <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
                                         <div class="property_subtext1">희망직무</div>
                                     </div>
                                     <div class="card-text" th:text="${post.memberDesiredJob}"> Member's Name</div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="min-width:150px;">
                                         <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
                                         <div class="property_subtext1">학습시간</div>
                                     </div>
-                                    <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
-                                       th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
-                                        <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
-                                            20:00
-                                        </th:block>
-                                    </p>
-                                    <p th:if="${#lists.size(post.times)%2!=0}" class="badge"
-                                       style="margin: 1px; background-color: #dfc2c4;">
-                                        <th:block th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'"> 19:00 ~
-                                        </th:block>
-                                    </p>
+                                    <div class="flex-wrap">
+                                        <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
+                                           th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
+                                            <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
+                                                20:00
+                                            </th:block>
+                                        </p>
+                                        <p th:if="${#lists.size(post.times)%2!=0}" class="badge"
+                                           style="margin: 1px; background-color: #dfc2c4;">
+                                            <th:block th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'"> 19:00 ~
+                                            </th:block>
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="min-width:150px;">
                                         <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
                                         <div class="property_subtext1">상태</div>
                                     </div>
                                     <div class="card-text" th:text="${post.state}"> Member's Name</div>
                                 </div>
 
-                                <div class="d-sm-flex align-items-center property_box1">
-                                    <div class="d-sm-flex property_subbox1">
+                                <div class="d-sm-flex align-items-center my-2">
+                                    <div class="d-sm-flex" style="min-width:150px;">
                                         <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
                                         <div class="property_subtext1">오늘의 한줄평</div>
                                     </div>
@@ -352,23 +354,23 @@
                                 <hr>
 
 
-                                <div class="review">
+                                <div>
                                     <div th:each="comment:${post.comments}" height="25px;">
                                         <div class="d-flex bd-highlight">
                                             <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                                <div class="img_margin_1 profile_img_box2 d-sm-flex justify-content-center">
+                                                <div class="profile_img_box2 d-sm-flex justify-content-center">
                                                     <img th:if="${comment.memberImg != null}"
                                                          th:src="${comment.memberImg?.imgSrc}">
                                                     <img th:if="${comment.memberImg == null}" src="/images/profile.png">
                                                 </div>
-                                                <div class="review_writer"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                                <div class="review_writer" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
                                             </div>
                                             <div class="p-2">
                                                 <a th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:href="@{/comment/delete/{id} (id=${comment.id})}" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
                                             </div>
                                         </div>
 
-                                        <div class="modal_comments"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
                                     </div>
 
                                     <form class="input-group mb-3" role="form" id="cba"
