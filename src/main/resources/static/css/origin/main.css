@@ -1,88 +1,59 @@
-.card_box{
-    border: solid lightgray 1px;
-    padding:10px 10px 10px 10px;
+
+/* css 추가 */
+
+.profile_img_box1{
+    width:100px;
+    height:100px;
+    border-radius: 70%;
+    overflow: hidden;
 }
+
+.profile_img_box2{
+    width:30px;
+    height:30px;
+    border-radius: 70%;
+    overflow: hidden;
+}
+
+
+/* animation */
 
 .col-lg-6:hover .card_box {
     background-color: #f8f9fa;
 }
 
-.temp:hover .card_box {
-    background-color: #f8f9fa;
-}
 
-.content_title_img{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-.content_title_img_box{
-    height:180px;
-    width: 100%;
-    background-color:white;
-    overflow: hidden;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-
-.row-l{
-    display: flex;
-    justify-content: left;
-}
-
-.row-r{
-    display: flex;
-    justify-content: right;
-}
-
-row-c{
-    display: flex;
-    justify-content: center;
-}
-
-.row-s{
-    display: flex;
-    justify-content: space-between;
-}
-
-.col-c{
-    display: flex;
-    align-items: center;
-}
-
-
-/* 부트스트랩 수정 */
-@media (min-width: 1400px) {
-    .container {
-        max-width: 1720px !important;
-    }
-}
-
-.col-lg-8 {
-    width: 80% !important;
-}
-
-.col-lg-4 {
-    width: 20% !important;
-}
-
-.col-lg-6 {
-    width: 25% !important;
-}
-
-.btn-secondary,.btn-success,.btn-warning{
-    width:50px !important;
-    height: 30px !important;
-    font-size: 13px !important;
-
-}
+/* boot 수정 */
 
 .btn-outline-dark{
     border : none !important;
+}
+
+
+
+
+/* media query */
+
+@media (max-width: 992px) {
+    .col-lg-4 {
+        order:1;
+    }
+    .col-lg-8{
+        order: 2;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1600px !important;
+    }
+    .col-lg-8{
+        width: 80% !important;
+    }
+    .col-lg-6{
+        width:25% !important;
+    }
+    .col-lg-4{
+        width:20% !important;
+    }
 }

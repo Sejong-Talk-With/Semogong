@@ -11,7 +11,6 @@
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/origin/styles.css" rel="stylesheet"/>
-    <link href="/css/origin/modal.css" rel="stylesheet"/>
     <link href="/css/origin/main.css" rel="stylesheet"/>
     <!-- Bootstrap core CSS-->
     <link href="/css/bootstrap.min.css" rel="stylesheet"/>
@@ -35,6 +34,7 @@
         </div>
     </div>
 </nav>
+
 <!-- Page header with logo and tagline-->
 <header class="py-5 bg-light border-bottom mb-4">
     <div class="container">
@@ -49,7 +49,6 @@
 <!-- Page content-->
 <div class="container">
     <div class="row">
-
         <!-- Blog entries-->
         <div class="col-lg-8">
             <!-- Featured blog post-->
@@ -58,16 +57,15 @@
                 <div class="col-lg-6" th:if="${posts != null}" th:each="post:${posts}">
                     <!-- Blog post-->
                     <div class="card mb-4" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${post.id}">
-                        <div class="content_title_img_box">
-                            <img th:if="${post.postImg != null}" class="card-img-top content_title_img"
+                        <div class="overflow-hidden d-sm-flex justify-content-center align-items-center w-100" style= "height: 180px; background-color: white; border: solid 1px lightgray;">
+                            <img th:if="${post.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
                                  th:src="${post.postImg?.imgSrc}" alt="..."
-                                 style="border: solid lightgray 1px;"/>
+                                 style="border: solid lightgray 1px; border: 0px;"/>
                         </div>
-                        <div class="card_box">
-                            <h2 class="card-title h5 col-c" th:text="${post.title}"
-                                style="font-size: 20px; font-weight: bold; color: gray; height: 40px;">Post Title</h2>
-                            <div class="card-text make-align row-l" style="margin: 3px 0px 5px 3px;">
-                                <div class="profile_img_box2 row-c">
+                        <div class="card_box" style="border: solid 1px lightgray;">
+                            <p class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${post.title}" style="font-size: 20px;  color: gray;">Post Title</p>
+                            <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${post.memberImg != null}"
                                          th:src="${post.memberImg?.imgSrc}" alt="profile">
                                     <img th:if="${post.memberImg == null}" src="/images/profile.png">
@@ -82,7 +80,7 @@
                                 <p class="badge" style="margin: 3px; background-color: #86b7fe;"
                                    th:text="${post.state}">공부 중</p>
                             </div>
-                            <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                            <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;" >
                                 <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
                                    th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
                                     <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
@@ -95,7 +93,7 @@
                                     </th:block>
                                 </p>
                             </div>
-                            <div class="card-text" style="margin: 10px 0px 0px 0px;">
+                            <div class="card-text d-sm-flex text-truncate" style="margin: 10px 0px 0px 0px;" >
                                 <p class="small" style="margin: 3px" th:text="${post.introduce}"></p>
                             </div>
                         </div>
@@ -123,11 +121,11 @@
             <!-- Member widget-->
             <div class="card mb-4">
                 <!-- Profile (if member did Log in) -->
-                <div class="card-header row-s" th:if="${check}">
+                <div class="card-header d-sm-flex justify-content-between" th:if="${check}">
                     <div style="margin-top: 5px" class="input-group">
                         <div class="badge rounded-pill btn-dark" th:text="${member.state}"> 공부중</div>
                     </div>
-                    <div class="row-c">
+                    <div class="d-sm-flex justify-content-center">
                         <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id})}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-gear" viewBox="0 0 16 16">
@@ -147,19 +145,19 @@
                     </div>
                 </div>
                 <div class="card-body" th:if="${check}" th:object="${member}">
-                    <div class="row-c">
-                        <div class="row-c profile_img_box1">
+                    <div class="d-sm-flex justify-content-center">
+                        <div class="d-sm-flex justify-content-center profile_img_box1">
                             <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
                                  alt="profile img">
                             <img th:if="${member.image == null}" src="/images/profile.png">
                         </div>
                     </div>
-                    <div class="row-c" th:text="*{name}" style="font-weight: bold; font-size: 20px; margin-top: 10px;">
+                    <div class="d-sm-flex justify-content-center fw-bold" th:text="*{name}" style="font-size: 20px; margin-top: 10px;">
                         NONE
                     </div>
-                    <div class="row-c" th:text="*{desiredJob}"
-                         style="font-weight: bold; font-size: 15px; color: gray;"></div>
-                    <div class="row-c">
+                    <div class="d-sm-flex justify-content-center fw-bold" th:text="*{desiredJob}"
+                         style="font-size: 15px; color: gray;"></div>
+                    <div class="d-sm-flex justify-content-center">
                         <div class="input-group btn-group" role="group" aria-label="Basic mixed styles example"
                              style="margin-top: 10px;">
                             <a class="btn btn-success" href="/studying">STUDY</a>
@@ -199,20 +197,20 @@
                 <div class="card-header">My Post</div>
                 <div class="card-body" th:if="${recentPost != null}">
                     <!-- My post-->
-                    <div class="temp">
+                    <div>
                         <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal"
                              th:attr="data-bs-target='#recentPost'">
-                            <div class="content_title_img_box">
-                                <img th:if="${recentPost.postImg != null}" class="card-img-top content_title_img"
+                            <div class="overflow-hidden d-sm-flex justify-content-center align-items-center" style= "height: 180px; background-color: white; border: solid 1px lightgray;">
+                                <img th:if="${recentPost.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
                                      th:src="${recentPost.postImg?.imgSrc}" alt="..."
-                                     style="border: solid lightgray 1px;"/>
+                                     style="border: solid lightgray 1px; border: 0px;"/>
                             </div>
                             <div class="card_box">
-                                <h2 class="card-title h5 col-c" th:text="${recentPost.title}"
-                                    style="font-size: 20px; font-weight: bold; color: gray; height: 40px;">Post
+                                <h2 class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${recentPost.title}"
+                                    style="font-size: 20px; color: gray; height: 40px;">Post
                                     Title</h2>
-                                <div class="card-text make-align row-l" style="margin: 3px 0px 5px 3px;">
-                                    <div class="profile_img_box2 row-c">
+                                <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
+                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
                                         <img th:if="${recentPost.memberImg != null}"
                                              th:src="${recentPost.memberImg?.imgSrc}"
                                              alt="profile">
@@ -228,7 +226,7 @@
                                     <p class="badge" style="margin: 3px; background-color: #86b7fe;"
                                        th:text="${recentPost.state}">공부 중</p>
                                 </div>
-                                <div class="card-text" style="margin: 2px 0px 0px 0px;">
+                                <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;">
                                     <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
                                        th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
                                         <th:block
@@ -245,7 +243,7 @@
                                         </th:block>
                                     </p>
                                 </div>
-                                <div class="card-text" style="margin: 10px 0px 0px 0px;">
+                                <div class="card-text text-truncate" style="margin: 10px 0px 0px 0px;">
                                     <p class="small" style="margin: 3px" th:text="${recentPost.introduce}"></p>
                                 </div>
                             </div>
@@ -260,9 +258,9 @@
             <div class="card mb-4">
                 <div class="card-header"> All Members </div>
                 <div class="card-body" th:if="${check}">
-                    <div class="row" th:each="otherMember: ${allMembers}" >
-                        <div class="card-text row-l" style="margin: 3px 0px 5px 3px;">
-                            <div class="profile_img_box2 row-c">
+                    <div class="row" th:each="otherMember: ${allMembers}">
+                        <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
+                            <div class="profile_img_box2 d-sm-flex justify-content-center">
                                 <img th:if="${otherMember.image != null}"
                                      th:src="${otherMember.image.imgSrc}" alt="profile">
                                 <img th:if="${otherMember.image == null}" src="/images/profile.png">
@@ -295,32 +293,32 @@
                                          alt="..."/>
                                 </div>
                                 <!-- Post Modal - Title-->
-                                <h4 class="display-3" th:text="${post.title}"
-                                    style="font-weight: bold; font-size:50px; margin:40px 0px 15px 0px;"></h4>
+                                <h4 class="display-3 fw-bold" th:text="${post.title}"
+                                    style="font-size:50px; margin:40px 0px 15px 0px;"></h4>
 
                                 <!-- Portfolio Modal - Text-->
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/user-solid.svg"></div>
                                         <div class="property_subtext1">작성자</div>
                                     </div>
-                                    <div class="profile_img_box2 row-c">
+                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
                                         <img th:if="${post.memberImg == null}" src="/images/profile.png">
                                         <img th:if="${post.memberImg != null}"
                                              th:src="${post.memberImg?.imgSrc}"></div>
                                     <div class="card-text" th:text="${post.memberName}"> Member's Name</div>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
                                         <div class="property_subtext1">희망직무</div>
                                     </div>
                                     <div class="card-text" th:text="${post.memberDesiredJob}"> Member's Name</div>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
                                         <div class="property_subtext1">학습시간</div>
                                     </div>
@@ -337,16 +335,16 @@
                                     </p>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
                                         <div class="property_subtext1">상태</div>
                                     </div>
                                     <div class="card-text" th:text="${post.state}"> Member's Name</div>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
                                         <div class="property_subtext1">오늘의 한줄평</div>
                                     </div>
@@ -358,8 +356,8 @@
                                 <div class="review">
                                     <div th:each="comment:${post.comments}" height="25px;">
                                         <div class="d-flex bd-highlight">
-                                            <div class="row-l p-2 flex-grow-1 bd-highlight">
-                                                <div class="img_margin_1 profile_img_box2 row-c">
+                                            <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
+                                                <div class="img_margin_1 profile_img_box2 d-sm-flex justify-content-center">
                                                     <img th:if="${comment.memberImg != null}"
                                                          th:src="${comment.memberImg?.imgSrc}">
                                                     <img th:if="${comment.memberImg == null}" src="/images/profile.png">
@@ -418,32 +416,32 @@
                                          th:src="${recentPost.postImg?.imgSrc}" alt="..."/>
                                 </div>
                                 <!-- Member Modal - Title-->
-                                <h4 class="display-3" th:text="${recentPost.title}"
-                                    style="font-weight: bold; font-size:50px; margin:0px 0px 15px 0px;"></h4>
+                                <h4 class="display-3 fw-bold" th:text="${recentPost.title}"
+                                    style="font-size:50px; margin:0px 0px 15px 0px;"></h4>
 
                                 <!-- Portfolio Modal - Text-->
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/user-solid.svg"></div>
                                         <div class="property_subtext1">작성자</div>
                                     </div>
-                                    <div class="profile_img_box2 row-c">
+                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
                                         <img th:if="${recentPost.memberImg == null}" src="/images/profile.png">
                                         <img th:if="${recentPost.memberImg != null}"
                                              th:src="${recentPost.memberImg?.imgSrc}"></div>
                                     <div class="card-text" th:text="${recentPost.memberName}"> Member's Name</div>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
                                         <div class="property_subtext1">희망직무</div>
                                     </div>
                                     <div class="card-text" th:text="${recentPost.memberDesiredJob}"> Member's Name</div>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
                                         <div class="property_subtext1">학습시간</div>
                                     </div>
@@ -463,16 +461,16 @@
                                     </p>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
                                         <div class="property_subtext1">상태</div>
                                     </div>
                                     <div class="card-text" th:text="${recentPost.state}"> Member's Name</div>
                                 </div>
 
-                                <div class="row-l col-c property_box1">
-                                    <div class="row-l property_subbox1">
+                                <div class="d-sm-flex align-items-center property_box1">
+                                    <div class="d-sm-flex property_subbox1">
                                         <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
                                         <div class="property_subtext1">오늘의 한줄평</div>
                                     </div>
@@ -481,11 +479,11 @@
                                 <hr>
 
 
-                                <div class="review">
+                                <div class="w-100">
                                     <div th:each="comment:${recentPost.comments}" height="25px;">
                                         <div class="d-flex bd-highlight">
-                                            <div class="row-l p-2 flex-grow-1 bd-highlight">
-                                                <div class="img_margin_1 profile_img_box2 row-c">
+                                            <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
+                                                <div class="img_margin_1 profile_img_box2 d-sm-flex justify-content-center">
                                                     <img th:if="${comment.memberImg != null}"
                                                          th:src="${comment.memberImg?.imgSrc}">
                                                     <img th:if="${comment.memberImg == null}" src="/images/profile.png">
