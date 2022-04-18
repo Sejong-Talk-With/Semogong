@@ -15,6 +15,9 @@
     overflow: hidden;
 }
 
+.margin1{
+    margin-right: 50px;
+}
 
 /* animation */
 
@@ -28,7 +31,6 @@
 .btn-outline-dark{
     border : none !important;
 }
-
 
 
 
