@@ -3,4 +3,5 @@
 
 서비스 보완 및 디자인 변경 후 출시 예정
 
-Demo version : http://34.64.228.139/
+Demo version : http://semogong.site
+ 
