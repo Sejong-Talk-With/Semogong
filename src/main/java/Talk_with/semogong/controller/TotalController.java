@@ -47,7 +47,7 @@ public class TotalController {
                 Post post = optionalPost.get();
                 LocalDateTime createDateTime = post.getCreateTime();
                 LocalDate createDate = createDateTime.toLocalDate();
-                int createTime = Integer.parseInt(createDate.format(timeFormatter));
+                int createTime = Integer.parseInt(createDateTime.format(timeFormatter));
                 LocalDateTime nowDateTime = LocalDateTime.now();
                 LocalDate nowDate = nowDateTime.toLocalDate();
                 int nowTime = Integer.parseInt(nowDateTime.format(timeFormatter));
