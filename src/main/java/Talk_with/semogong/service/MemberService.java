@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,8 +37,24 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findOne(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Member> findAll(){
-        return memberRepository.findAll();
+        List<Member> members = memberRepository.findAll();
+        List<Member> sortedMembers = new ArrayList<>();
+        List<StudyState> orders = new ArrayList<>();
+        orders.add(StudyState.STUDYING);
+        orders.add(StudyState.BREAKING);
+        orders.add(StudyState.END);
+
+        // Studying, Breaking, End 순으로 정렬하여 반환.
+        for (StudyState state : orders) {
+            for (Member member : members) {
+                if (member.getState() == state) {
+                    sortedMembers.add(member);
+                }
+            }
+        }
+        return sortedMembers;
     }
 
     public Member findByName(String name){
@@ -76,7 +93,4 @@ public class MemberService implements UserDetailsService {
         member.setImage(image);
     }
 
-//    public List<String> findLinks(Long memberId) {
-//        memberRepository.findLinks(memberId);
-//    }
 }

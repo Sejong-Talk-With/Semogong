@@ -1,6 +1,11 @@
 
 /* css 추가 */
 
+body {
+    font-family: 'NanumSquareRound';
+}
+
+
 .profile_img_box1{
     width:100px;
     height:100px;

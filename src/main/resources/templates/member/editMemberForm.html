@@ -1,20 +1,28 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!--<!DOCTYPE HTML>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
 <head th:replace="fragments/header :: header"/>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
-<div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+<!-- Responsive navbar-->
+<nav th:replace="fragments/navbar :: navbar"/>
+
+<div class="container" style="padding-top: 10px">
     <iframe id="iframe1" name="iframe1" style="display:none"></iframe>
-    <form role="form" th:action="@{/members/edit/{id}/img (id=${memberEditForm.id})} " target="iframe1" method="post"
+    <form role="form" th:action="@{/members/edit/{id}/img (id=${memberEditForm.id})} " target="iframe1"
+          method="post"
           enctype="multipart/form-data">
-        <label class="form-label" th:for="image" style="display: inline-block">프로필 이미지</label>
-        <div class="form-label" th:if="${memberEditForm.image != null}" style="display: inline-block"> ( 현재 <p style="display: inline-block; margin:0px" th:text="${memberEditForm.image?.imgName}"></p> 로 설정 되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
+        <label class="form-label" th:for="image" style="display: inline-block; margin-top: 5px">프로필 이미지</label>
+        <div class="form-label" th:if="${memberEditForm.image != null}" style="display: inline-block"> ( 현재 <p
+                style="display: inline-block; margin:0px" th:text="${memberEditForm.image?.imgName}"></p> 로 설정
+            되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
         </div>
-        <div class="form-label" th:if="${memberEditForm.image == null}" style="display: inline-block"> ( 프로필 선택 후 Upload 버튼을 눌러주세요!)</div>
+        <div class="form-label" th:if="${memberEditForm.image == null}" style="display: inline-block"> ( 프로필 선택
+            후 Upload 버튼을 눌러주세요!)
+        </div>
         <div class="input-group mb-3">
             <div class="input-group">
-                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload</button>
+                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload
+                </button>
                 <input class="form-control" name="file" type="file" accept=".jpg, .png">
             </div>
         </div>
@@ -25,7 +33,8 @@
         <div class="input-group mb-3 has-validation">
             <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요!"
                    th:class="${#fields.hasErrors('name')}? 'form-control is-invalid' : 'form-control'">
-            <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">Incorrect date
+            <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">Incorrect
+                date
             </div>
         </div>
         <label class="form-label" th:for="nickname">닉네임</label>
@@ -47,13 +56,15 @@
             </div>
         </div>
         <label class="form-label" th:for="links">링크</label>
-        <button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2" onclick="add_link_box()">
+        <button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2"
+                onclick="add_link_box()">
             +
         </button>
         <div class="input-group mb-3 " id="add_group">
             <div class="input-group" th:id="linkNum+${i}"
                  th:each="i: ${#numbers.sequence(0, #lists.size(memberEditForm.links))}">
-                <input type="text" th:field="*{links[__${iStat.index}__]}" class="form-control" placeholder="링크를 입력해 주세요!">
+                <input type="text" th:field="*{links[__${iStat.index}__]}" class="form-control"
+                       placeholder="링크를 입력해 주세요!">
                 <button class="btn btn-outline-danger" type="button"
                         th:onclick="|javascript:remove_link_box('${i}')|">X
                 </button>
@@ -63,8 +74,8 @@
     </form>
 
     <br/>
-    <div th:replace="fragments/footer :: footer"/>
 </div>
+<div th:replace="fragments/footer :: footer"/>
 <script th:inline="javascript" type="text/javascript">
 
     /*<![CDATA[*/

@@ -143,8 +143,10 @@ public class HomeController {
         private String content;
         private String html;
         private LocalDateTime createTime;
+        private String formatCreateDate;
         private List<String> times = new ArrayList<>();
         private List<CommentViewDto> comments = new ArrayList<>();
+        private int commentCount;
         private StudyState state;
         private Image postImg;
         private Image memberImg;
@@ -165,6 +167,7 @@ public class HomeController {
             this.createTime = post.getCreateTime();
             this.times = post.getTimes();
             this.comments = post.getComments().stream().map(CommentViewDto::new).collect(Collectors.toList());
+            this.commentCount = comments.size();
             this.state = post.getState();
             this.memberName = post.getMember().getName();
             this.memberNickname = post.getMember().getNickname();
@@ -172,6 +175,7 @@ public class HomeController {
             this.memberDesiredJob = post.getMember().getDesiredJob();
             this.postImg = post.getImage();
             this.memberImg = post.getMember().getImage();
+            this.formatCreateDate = post.getFormatCreateTime();
         }
 
     }
