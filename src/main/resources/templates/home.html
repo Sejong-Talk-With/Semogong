@@ -1,39 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <title>SeMoGong</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="/css/origin/styles.css" rel="stylesheet"/>
-    <link href="/css/origin/main.css" rel="stylesheet"/>
-    <!-- Bootstrap core CSS-->
-    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
-
-</head>
+<head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/addheader :: addheader"/>
 <body>
 <!-- Responsive navbar-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="/">SeMoGong</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                <li th:if="${check}" class="nav-item"><span class="nav-link" href="/">Join</span></li>
-                <li th:if="${!check}" class="nav-item"><a class="nav-link" href="/members/signup">Join</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Today</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<nav th:replace="fragments/navbar :: navbar"/>
 
 <!-- Page header with logo and tagline-->
 <header class="py-5 bg-light border-bottom mb-4">
@@ -63,6 +35,13 @@
                                  style="border: solid lightgray 1px; border: 0px; "/>
                         </div>
                         <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
+                            <div class="d-sm-flex">
+                                <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;" th:text="${post.formatCreateDate}">Post Date</p>
+                                <th:block th:if="${post.commentCount != 0}">
+                                    <img src="/images/comment.png" width="14px" height="14px"/>
+                                    <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:text="${post.commentCount}"> 1 </p>
+                                </th:block>
+                            </div>
                             <p class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${post.title}" style="font-size: 20px;  color: gray; height: 30px;">Post Title</p>
                             <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
@@ -73,27 +52,31 @@
                                 <div style="display:inline-block;" th:text="${post.memberName}"></div>
                             </div>
                             <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                <p class="badge bg-secondary" style="margin: 3px"
+                                <p class="badge bg-secondary" style="margin: 3px;"
                                    th:text="${post.memberDesiredJob}"></p>
                             </div>
                             <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                <p class="badge" style="margin: 3px; background-color: #86b7fe;"
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
+                                   th:text="${post.state}">공부 중</p>
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
+                                   th:text="${post.state}">공부 중</p>
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
                                    th:text="${post.state}">공부 중</p>
                             </div>
                             <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;" >
-                                <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
+                                <p class="badge" th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185'"
                                    th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
                                     <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
                                         20:00
                                     </th:block>
                                 </p>
                                 <p th:if="${#lists.size(post.times)%2!=0}" class="badge"
-                                   style="margin: 1px; background-color: #dfc2c4;">
+                                   th:style="${(#lists.size(post.times)-1)%4==0}? 'margin: 3px; background-color:#A1A185;' : 'margin: 3px;  background-color:#8AA6A3;'">
                                     <th:block th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'"> 19:00 ~
                                     </th:block>
                                 </p>
                             </div>
-                            <div class="card-text d-sm-flex text-truncate" style="margin: 10px 0px 0px 0px; height: 30px;" >
+                            <div class="card-text d-sm-flex text-truncate" style="margin: 6px 0px 0px 0px; height: 30px;" >
                                 <p class="small" style="margin: 3px" th:text="${post.introduce}"></p>
                             </div>
                         </div>
@@ -123,7 +106,9 @@
                 <!-- Profile (if member did Log in) -->
                 <div class="card-header d-sm-flex justify-content-between" th:if="${check}">
                     <div style="margin-top: 5px" class="input-group">
-                        <div class="badge rounded-pill btn-dark" th:text="${member.state}"> 공부중</div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #198754;"> 공부중</div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge rounded-pill text-dark" th:text="${member.state}" style="background-color: #ffc107;"> 공부중</div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #212529;"> 공부중</div>
                     </div>
                     <div class="d-sm-flex justify-content-center">
                         <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id})}">
@@ -205,7 +190,14 @@
                                      th:src="${recentPost.postImg?.imgSrc}" alt="..."
                                      style="border: solid lightgray 1px; border: 0px;"/>
                             </div>
-                            <div class="card_box">
+                            <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
+                                <div class="d-sm-flex">
+                                    <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;" th:text="${recentPost.formatCreateDate}">Post Date</p>
+                                    <th:block th:if="${recentPost.commentCount != 0}">
+                                        <img src="/images/comment.png" width="14px" height="14px"/>
+                                        <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:text="${recentPost.commentCount}"> 1 </p>
+                                    </th:block>
+                                </div>
                                 <h2 class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${recentPost.title}"
                                     style="font-size: 20px; color: gray; height: 40px;">Post
                                     Title</h2>
@@ -219,15 +211,19 @@
                                     <div style="display:inline-block;" th:text="${recentPost.memberName}"></div>
                                 </div>
                                 <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                    <p class="badge bg-secondary" style="margin: 3px"
+                                    <p class="badge bg-secondary" style="margin: 3px;"
                                        th:text="${recentPost.memberDesiredJob}"></p>
                                 </div>
                                 <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                    <p class="badge" style="margin: 3px; background-color: #86b7fe;"
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
+                                       th:text="${recentPost.state}">공부 중</p>
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
+                                       th:text="${recentPost.state}">공부 중</p>
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
                                        th:text="${recentPost.state}">공부 중</p>
                                 </div>
                                 <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;">
-                                    <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
+                                    <p class="badge" th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185;'"
                                        th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
                                         <th:block
                                                 th:text="|${recentPost.times[i -1]}| + ' ~ '+|${recentPost.times[i]}|">
@@ -236,14 +232,14 @@
                                         </th:block>
                                     </p>
                                     <p th:if="${#lists.size(recentPost.times)%2!=0}" class="badge"
-                                       style="margin: 1px; background-color: #dfc2c4;">
+                                       th:style="${(#lists.size(recentPost.times)-1)%4==0}? 'margin: 3px; background-color:#A1A185;' : 'margin: 3px;  background-color:#8AA6A3;'">
                                         <th:block
                                                 th:text="|${recentPost.times[#lists.size(recentPost.times)-1]}| + ' ~'">
                                             19:00 ~
                                         </th:block>
                                     </p>
                                 </div>
-                                <div class="card-text text-truncate" style="margin: 10px 0px 0px 0px;">
+                                <div class="card-text text-truncate" style="margin: 6px 0px 0px 0px;">
                                     <p class="small" style="margin: 3px" th:text="${recentPost.introduce}"></p>
                                 </div>
                             </div>
@@ -266,7 +262,11 @@
                                 <img th:if="${otherMember.image == null}" src="/images/profile.png">
                             </div>
                             <div style="display:inline-block; margin-left: 3px" th:text="${otherMember.name}"></div>
-                            <div style="margin-left: 10px"><div class="badge bg-dark" style="display:inline-block;" th:text="${otherMember.state}"></div></div>
+                            <div style="margin-left: 10px">
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge" style="display:inline-block; background-color: #198754;" th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge text-dark" style="display:inline-block; background-color: #ffc107;" th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge" style="display:inline-block; background-color: #212529;" th:text="${otherMember.state}"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -323,16 +323,13 @@
                                         <div class="property_subtext1">학습시간</div>
                                     </div>
                                     <div class="flex-wrap">
-                                        <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
-                                           th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
-                                            <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
-                                                20:00
-                                            </th:block>
+                                        <p class="border border-2 rounded" style="margin: 0px 4px 0px 0px; display: inline-block;"
+                                           th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}" th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|">
+                                            19:00 ~ 20:00
                                         </p>
-                                        <p th:if="${#lists.size(post.times)%2!=0}" class="badge"
-                                           style="margin: 1px; background-color: #dfc2c4;">
-                                            <th:block th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'"> 19:00 ~
-                                            </th:block>
+                                        <p class="border border-2 rounded" th:if="${#lists.size(post.times)%2!=0}"
+                                           style="margin: 0px 2px 0px 0px; display: inline-block;" th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'">
+                                            19:00 ~
                                         </p>
                                     </div>
                                 </div>
@@ -448,20 +445,14 @@
                                         <div class="property_subtext1">학습시간</div>
                                     </div>
                                     <div class="flex-wrap">
-                                    <p class="badge" style="margin: 1px; background-color:#dfc2c4;"
-                                       th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
-                                        <th:block
-                                                th:text="|${recentPost.times[i -1]}| + ' ~ '+|${recentPost.times[i]}|">
+                                        <p class="border border-2 rounded" style="margin: 0px 4px 0px 0px; display: inline-block;"
+                                           th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}" th:text="|${recentPost.times[i -1]}| + ' ~ '+|${recentPost.times[i]}|">
                                             19:00 ~ 20:00
-                                        </th:block>
-                                    </p>
-                                    <p th:if="${#lists.size(recentPost.times)%2!=0}" class="badge"
-                                       style="margin: 1px; background-color: #dfc2c4;">
-                                        <th:block
-                                                th:text="|${recentPost.times[#lists.size(recentPost.times)-1]}| + ' ~'">
+                                        </p>
+                                        <p class="border border-2 rounded" th:if="${#lists.size(recentPost.times)%2!=0}"
+                                           style="margin: 0px 2px 0px 0px; display: inline-block;" th:text="|${recentPost.times[#lists.size(recentPost.times)-1]}| + ' ~'">
                                             19:00 ~
-                                        </th:block>
-                                    </p>
+                                        </p>
                                     </div>
                                 </div>
 
@@ -535,9 +526,6 @@
     <script src="/js/test.js"></script>
     <script> function comment_error(){ alert("로그인 후 댓글을 달 수 있습니다!"); self.close();} </script>
 </div>
-<!-- Footer-->
-<footer class="py-5 bg-dark">
-    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; SEMOGONG 2022</p></div>
-</footer>
+<div th:replace="fragments/footer :: footer" />
 </body>
 </html>

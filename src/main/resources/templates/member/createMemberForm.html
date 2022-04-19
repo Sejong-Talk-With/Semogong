@@ -3,9 +3,10 @@
 <head th:replace="fragments/header :: header"/>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
-<div class="container">
-    <!--ver1-->
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+<!-- Responsive navbar-->
+<nav th:replace="fragments/navbar :: navbar"/>
+
+<div class="container" style="padding-top: 10px">
     <form role="form" action="/members/signup" th:object="${memberForm}" method="post">
         <!-- 해당 from 안에서는 memberForm을 사용하겠다는 것, memberForm은 Model을 통해 객체로 접근했기에 가능-->
         <label class="form-label" th:for="loginId">ID *</label>
@@ -44,8 +45,8 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <br/>
-    <div th:replace="fragments/footer :: footer"/>
 </div>
+<div th:replace="fragments/footer :: footer"/>
 <!-- Bootstrap core JS-->
 <script src="/js/bootstrap.bundle.js"></script>
 </body>

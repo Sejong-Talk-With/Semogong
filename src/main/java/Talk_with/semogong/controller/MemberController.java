@@ -54,7 +54,7 @@ public class MemberController {
 
     // 회원가입 진행
     @PostMapping("/members/signup")
-    public String signUp(@Valid MemberForm memberForm, BindingResult result, Model model) {
+    public String signUp(@Valid MemberForm memberForm, BindingResult result) {
         if (result.hasErrors()) {
             log.info("found Null, re-joining");
             return "member/createMemberForm"; }
