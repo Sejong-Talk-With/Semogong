@@ -19,28 +19,28 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.security:spring-security-test'
-	implementation 'com.atlassian.commonmark:commonmark:0.17.0'
-	implementation 'org.apache.commons:commons-lang3:3.12.0'
-	compileOnly 'org.projectlombok:lombok'
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
-	runtimeOnly 'mysql:mysql-connector-java' // for Real
-//	implementation 'com.h2database:h2' // for Test
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// AWS SDK
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //spring-data-jpa
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' //veiw template
+	implementation 'org.springframework.boot:spring-boot-starter-web' // spring-web
+	implementation 'org.springframework.boot:spring-boot-starter-validation' // for validation
+	implementation 'org.springframework.boot:spring-boot-devtools' // for easy rebuilding
+	implementation 'org.springframework.boot:spring-boot-starter-security' // spring-security
+	implementation 'org.springframework.security:spring-security-test' // spring-security-test
+	implementation 'com.atlassian.commonmark:commonmark:0.17.0' // for using markdown (SimpleMDE)
+	implementation 'org.apache.commons:commons-lang3:3.12.0' // for easy using
+	compileOnly 'org.projectlombok:lombok' // for annotation
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0' //for tracking sql query
+	runtimeOnly 'mysql:mysql-connector-java' // for Real _ in AWS DB
+//	implementation 'com.h2database:h2' // for Test _ in Local DB
+	annotationProcessor 'org.projectlombok:lombok' // for annotation
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' // spring-test
+
+	/*
+	*  AWS SDK
+	*/
 	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
 }
-
-// AWS
-
 
 
 tasks.named('test') {

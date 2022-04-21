@@ -44,9 +44,7 @@ public class Post {
     @OneToMany(mappedBy = "post" , cascade={CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();
 
-//    private StudyState state;
     private LocalDateTime createTime;
-    private String formatCreateTime;
 
     //==연관관계 메서드==//
     private void setMember(Member member){
@@ -65,10 +63,22 @@ public class Post {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         post.times.add(time.format(timeFormatter));
         post.createTime = time;
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(LONG).withLocale(Locale.ENGLISH);
-        post.formatCreateTime = time.format(dateFormatter);
         post.state = StudyState.STUDYING;
         return post;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+
+    //==수정 메서드==//
+    public void edit(PostEditForm postEditForm) {
+        this.title = postEditForm.getTitle();
+        this.introduce = postEditForm.getIntroduce();
+        this.content = postEditForm.getContent();
+        this.html = postEditForm.getHtml();
+        this.times = postEditForm.getTimes();
     }
 
     public void addTime(LocalDateTime time) {
@@ -81,18 +91,7 @@ public class Post {
         this.state = state;
     }
 
-    //==수정 메서드==//
-    public void edit(PostEditForm postEditForm) {
-        this.title = postEditForm.getTitle();
-        this.introduce = postEditForm.getIntroduce();
-        this.content = postEditForm.getContent();
-        this.html = postEditForm.getHtml();
-        this.times = postEditForm.getTimes();
-    }
 
-    public void setImage(Image image) {
-        this.image = image;
-    }
 
 
 }

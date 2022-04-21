@@ -55,6 +55,11 @@ public class Member {
          return member;
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    //==수정 메서드==//
     public void changeState(StudyState state){
         this.state = state;
     }
@@ -78,13 +83,5 @@ public class Member {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public void setState(StudyState state) {
-        this.state = state;
     }
 }

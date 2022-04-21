@@ -15,9 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
+
+import static java.time.format.FormatStyle.LONG;
 
 @Controller
 @Slf4j
@@ -175,7 +179,8 @@ public class HomeController {
             this.memberDesiredJob = post.getMember().getDesiredJob();
             this.postImg = post.getImage();
             this.memberImg = post.getMember().getImage();
-            this.formatCreateDate = post.getFormatCreateTime();
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(LONG).withLocale(Locale.ENGLISH);
+            this.formatCreateDate = createTime.format(dateFormatter);
         }
 
     }
