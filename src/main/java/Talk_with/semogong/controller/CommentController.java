@@ -28,6 +28,7 @@ public class CommentController {
     private final PostService postService;
     private final CommentService commentService;
 
+    // 댓글 작성
     @PostMapping("/posts/comment/{id}")
     public String create(@PathVariable("id") Long postId, Authentication authentication, CommentForm commentForm) {
         MyUserDetail userDetail =  (MyUserDetail) authentication.getPrincipal();  //userDetail 객체를 가져옴 (로그인 되어 있는 놈)
@@ -41,6 +42,7 @@ public class CommentController {
         return "redirect:/";
     }
 
+    // 댓글 삭제
     @GetMapping("/comment/delete/{id}")
     public String postDelete(@PathVariable("id") Long id) {
         commentService.deleteComment(id);

@@ -33,19 +33,24 @@ public class PostController {
     private final MemberService memberService;
     private final S3Service s3Service;
 
+    // 게시글 수정 폼
     @GetMapping("/posts/edit/{id}")
     public String to_edit(@PathVariable("id") Long id, Model model, Authentication authentication) {
         log.info("posting");
+        if (authentication == null) {
+            return "redirect:/"; // 오류 처리 필요
+        }
         Member member = getLoginMemberId(authentication);
         Post post = postService.findOne(id);
         if (member.getId() != post.getMember().getId()) {
             return "redirect:/"; // 오류 처리해줘야 됨.
         }
-        PostEditForm postEditForm = new PostEditForm(post, member);
+        PostEditForm postEditForm = new PostEditForm(post);
         model.addAttribute("postForm", postEditForm);
         return "post/editPostForm";
     }
 
+    // 게시글 수정
     @PostMapping("/posts/edit/{id}")
     public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute("postForm") PostEditForm postEditForm, BindingResult result) {
         if (result.hasErrors()) {
@@ -56,7 +61,7 @@ public class PostController {
         return "redirect:/";
     }
 
-
+    // 게시글 이미지 업로드 및 변경
     @PostMapping("/posts/edit/{id}/img")
     public void postImgEdit(@PathVariable("id") Long id, @RequestParam("file") MultipartFile[] files) throws IOException {
         MultipartFile file = files[0];
@@ -64,8 +69,12 @@ public class PostController {
         postService.editPostImg(id, image);
     }
 
+    // 게시글 삭제
     @GetMapping("/posts/delete/{id}")
     public String postDelete(@PathVariable("id") Long id, Authentication authentication) {
+        if (authentication == null) {
+            return "redirect:/"; // 오류 처리 필요
+        }
         Member member = getLoginMemberId(authentication);
         Post post = postService.findOne(id);
         if (member.getId() != post.getMember().getId()) {
@@ -78,12 +87,14 @@ public class PostController {
         return "redirect:/";
     }
 
+    // Login 된 회원의 Member Entity 조회 Method
     private Member getLoginMemberId(Authentication authentication) {
-        MyUserDetail userDetail =  (MyUserDetail) authentication.getPrincipal();  //userDetail 객체를 가져옴 (로그인 되어 있는 놈)
+        MyUserDetail userDetail =  (MyUserDetail) authentication.getPrincipal();  //userDetail 객체를 가져옴 (로그인 되어 있는 객체)
         String loginId = userDetail.getEmail();
-        return memberService.findByLoginId(loginId); // "박승일"로 로그인 했다고 가정, 해당 로그인된 회원의 ID를 가져옴
+        return memberService.findByLoginId(loginId);
     }
 
+    // MarkDown To HTML Method
     private String markdownToHTML(String markdown) {
         Parser parser = Parser.builder().build();
 

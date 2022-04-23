@@ -64,12 +64,12 @@ public class Member {
         this.state = state;
     }
 
-    public void edit(MemberEditForm memberForm) {
-        this.name = memberForm.getName();
-        this.nickname = memberForm.getNickname();
-        this.desiredJob = memberForm.getDesiredJob();
-        this.introduce = memberForm.getIntroduce();
-        this.links = memberForm.getLinks();
+    public void edit(MemberEditForm memberEditForm) {
+        this.name = memberEditForm.getName();
+        this.nickname = memberEditForm.getNickname();
+        this.desiredJob = memberEditForm.getDesiredJob();
+        this.introduce = memberEditForm.getIntroduce();
+        this.links = memberEditForm.getLinks();
     }
 
     //==권한메서드(Setter)==//

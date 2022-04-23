@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://${DB_URL}:3306/semogong # jdbc:h2:tcp://localhost/~/semogong #
-    username: ${DB_NAME} # park #
-    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver # org.h2.Driver #
+    url: jdbc:h2:tcp://localhost/~/semogong # jdbc:mysql://${DB_URL}:3306/semogong #
+    username: park # ${DB_NAME} #
+    password: # ${DB_PASSWORD}
+    driver-class-name: org.h2.Driver # com.mysql.cj.jdbc.Driver #
 
   jpa:
     hibernate:

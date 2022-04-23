@@ -10,9 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
-import static java.time.format.FormatStyle.LONG;
 
 @Entity
 @Getter
@@ -53,16 +50,12 @@ public class Post {
     }
 
     //==생성 메서드==//
-    public static Post createPost(Member member, String title, String introduce, String content, String html ,LocalDateTime time){
+    public static Post createPost(Member member, LocalDateTime createTime){
         Post post = new Post();
         post.setMember(member);
-        post.title = title;
-        post.introduce = introduce;
-        post.content = content;
-        post.html = html;
+        post.createTime = createTime;
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        post.times.add(time.format(timeFormatter));
-        post.createTime = time;
+        post.times.add(createTime.format(timeFormatter));
         post.state = StudyState.STUDYING;
         return post;
     }

@@ -11,13 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentService {
 
+    // DI
     private final CommentRepository commentRepository;
 
+    // 댓글 저장 (리포지토리 단순 위임)
     public Long save(Comment comment){
         commentRepository.save(comment);
         return comment.getId();
     }
 
+    // 댓글 삭제 (리포지토리 단순 위임)
     public void deleteComment(Long id) {
         commentRepository.deleteOne(id);
     }

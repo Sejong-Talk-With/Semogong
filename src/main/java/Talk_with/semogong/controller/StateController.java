@@ -4,7 +4,6 @@ package Talk_with.semogong.controller;
 import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.StudyState;
 import Talk_with.semogong.domain.auth.MyUserDetail;
-import Talk_with.semogong.domain.form.PostForm;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ import java.util.Optional;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-public class TotalController {
+public class StateController {
 
     private final PostService postService;
     private final MemberService memberService;
@@ -77,10 +76,8 @@ public class TotalController {
             }
 
             memberService.changeState(memberId, StudyState.STUDYING); // posting 후 state change 필요 (오류 처리해야 됨)
-            PostForm postForm = new PostForm();
-            postForm.setTime(LocalDateTime.now());
-            Long postId = postService.post(memberId, new PostForm());
-            return "redirect:/posts/edit/" + postId.toString();
+            Long postId = postService.save(memberId, LocalDateTime.now()); // 저장할 때는 해당 글의 작성자 Member 연결, creatTime만 설정해줌
+            return "redirect:/posts/edit/" + postId.toString(); // 저장 후 바로 edit을 통해서 그 글을 작성하도록 설정
         }
 
         Long postId = postService.getRecentPost(memberId).get().getId();
@@ -153,10 +150,4 @@ public class TotalController {
         return memberService.findByLoginId(loginId).getId(); // "박승일"로 로그인 했다고 가정, 해당 로그인된 회원의 ID를 가져옴
     }
 
-    public boolean checkToday(Post post) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String createTime = post.getCreateTime().format(formatter);
-        String now = LocalDateTime.now().format(formatter);
-        return createTime.equals(now);
-    }
 }

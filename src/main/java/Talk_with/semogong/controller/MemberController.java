@@ -2,38 +2,22 @@ package Talk_with.semogong.controller;
 
 import Talk_with.semogong.domain.Image;
 import Talk_with.semogong.domain.Member;
-import Talk_with.semogong.domain.StudyState;
-import Talk_with.semogong.domain.auth.MyUserDetail;
 import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.domain.form.MemberForm;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.S3Service;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpSession;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -64,6 +48,7 @@ public class MemberController {
         return "redirect:/";
     }
 
+    // 회원 정보 수정 폼
     @GetMapping("/members/edit/{id}")
     public String memberEditForm(@PathVariable("id") Long id, Model model) {
         Member member = memberService.findOne(id);
@@ -72,6 +57,7 @@ public class MemberController {
         return "member/editMemberForm";
     }
 
+    // 회원 정보 수정 (이미지 업로드 및 수정 폼 포함)
     @PostMapping("/members/edit/{id}")
     public String memberEdit(@PathVariable("id") Long id, @Valid MemberEditForm memberEditForm, BindingResult result){
         List<String> links = memberEditForm.getLinks(); while (links.remove("")){ }
@@ -84,6 +70,7 @@ public class MemberController {
         return "redirect:/";
     }
 
+    // 회원 이미지 업로드 및 수정
     @PostMapping("/members/edit/{id}/img")
     public void memberImgEdit(@PathVariable("id") Long id, @RequestParam("file") MultipartFile[] files) throws IOException {
         MultipartFile file = files[0];
@@ -91,12 +78,14 @@ public class MemberController {
         memberService.editMemberImg(id, image);
     }
 
+    // 회원 로그아웃
     @GetMapping("/members/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/"; //주소 요청으로 변경
     }
 
+    // "Entity -> DTO" Method
     private MemberEditForm createMemberEditFrom(Member member) {
         MemberEditForm memberEditForm = new MemberEditForm();
         memberEditForm.setId(member.getId());

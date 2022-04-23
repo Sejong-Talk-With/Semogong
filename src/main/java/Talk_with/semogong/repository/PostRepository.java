@@ -13,26 +13,32 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostRepository {
 
+    // DI : Entity Manger
     private final EntityManager em;
 
+    // 게시글 저장
     public void save(Post post){
         em.persist(post);
     }
 
+    // Post id를 통한 게시글 단일 조회
     public Post findOne(Long id){
         return em.find(Post.class, id);
     }
 
+    // 게시글 다건 조회
     public List<Post> findAll() {
         return em.createQuery("select p from Post p order by p.createTime DESC", Post.class).getResultList();
     }
 
+    // Member Id에 따른 최근 게시글 단일 조회
     public Optional<Post> findByMember(Long memberId) {
         return em.createQuery("select p from Post p join p.member m where m.id = :id order by p.createTime DESC", Post.class)
                 .setParameter("id", memberId).setMaxResults(1)
                 .getResultList().stream().findAny();
     }
 
+    // 게시글 페이징 다건 조회
     public List<Post> findByPaging(Integer offset) {
         return em.createQuery("select p from Post p order by p.createTime DESC", Post.class)
                 .setFirstResult(Integer.parseInt(offset.toString()))
@@ -40,6 +46,7 @@ public class PostRepository {
                 .getResultList();
     }
 
+    // 게시글 단일 삭제
     public void deleteOne(Post post) {
         em.remove(post);
     }
