@@ -57,6 +57,7 @@
             <textarea type="text" rows="4" th:field="*{content}" placeholder="Content" class="form-control"
                       autocomplete="off"></textarea>
         </div>
+<!--        <div id="editor" class="mb-4"></div>-->
 
         <div class="d-sm-flex justify-content-between mb-4">
             <a class="btn btn-danger" type="button" th:href="@{/posts/delete/{id} (id=${postForm.id})}"
@@ -65,6 +66,10 @@
         </div>
     </form>
 </div>
+
+
+
+
 <div th:replace="fragments/footer :: footer"/>
 
 
@@ -72,13 +77,33 @@
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{/assets/simplemde/simplemde.min.js}"></script>
+<!-- Toast MDE CDN -->
+<!--<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>-->
 
-<script>
+
+<script th:inline="javascript" type="text/javascript">
     var simplemde = new SimpleMDE({element: document.getElementById("content")});
 
     function delete_check() {
         alert("글이 삭제 되었습니다.");
     }
+
+/*    /!*<![CDATA[*!/
+    var content = [[ ${postForm.content}]];
+    /!*]]*!/
+
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        height: '500px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        initialValue: content
+    });
+
+    // content = editor.getMarkdown();
+    // var html = editor.getHTML();         */
+
+
 
 </script>
 

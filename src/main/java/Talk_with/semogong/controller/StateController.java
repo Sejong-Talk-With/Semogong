@@ -121,13 +121,13 @@ public class StateController {
         Long memberId = getLoginMemberId(authentication);
         StudyState state = memberService.checkState(memberId); // 현재 로그인된 회원의 상태를 조회
 
-        // Case #1 (사용자의 현상태가 공부 완료 -> 오류)
+        // Case #3 (사용자의 현상태가 공부 완료 -> 오류)
         if (state == StudyState.END) {
             return "redirect:/";
         }
 
         Long postId = postService.getRecentPost(memberId).get().getId();
-        // Case #2 (사용자의 현상태가 공부 중 -> 즉, 공부 완료)
+        // Case #1 (사용자의 현상태가 공부 중 -> 즉, 공부 완료)
         if (state == StudyState.STUDYING) {
             memberService.changeState(memberId, StudyState.END);
             postService.changeState(postId, StudyState.END);
@@ -135,7 +135,7 @@ public class StateController {
             return "redirect:/";
         }
 
-        // Case #3 (사용자의 현상태가 휴식 중 -> 그대로 상태 변경 후 종료)
+        // Case #2 (사용자의 현상태가 휴식 중 -> 그대로 상태 변경 후 종료)
         else {
             memberService.changeState(memberId, StudyState.END);
             postService.changeState(postId, StudyState.END);

@@ -145,9 +145,12 @@
                     <div class="d-sm-flex justify-content-center">
                         <div class="input-group btn-group" role="group" aria-label="Basic mixed styles example"
                              style="margin-top: 10px;">
-                            <a class="btn btn-success" href="/studying">STUDY</a>
-                            <a class="btn btn-warning" href="/breaking">BREAK</a>
-                            <a class="btn btn-secondary" href="/end">END</a>
+                            <a th:if="${member.state != T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-success" href="/studying">STUDY</a>
+                            <button th:if="${member.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-success" type="button" onclick="state_error()">STUDY</button>
+                            <a th:if="${member.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-warning" href="/breaking">BREAK</a>
+                            <button th:if="${member.state != T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-warning" type="button" onclick="state_error()">BREAK</button>
+                            <a th:if="${member.state != T(Talk_with.semogong.domain.StudyState).END}" class="btn btn-secondary" href="/end">END</a>
+                            <button th:if="${member.state == T(Talk_with.semogong.domain.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
                         </div>
                     </div>
                 </div>
@@ -377,7 +380,7 @@
                                         <input type="text" th:field="*{comment}" class="form-control"
                                                placeholder="댓글을 작성해 보세요!">
                                         <button th:if="${check}" class="btn btn-outline-secondary" type="submit">Submit</button>
-                                        <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="comment_error()">Submit</button>
+                                        <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
                                     </form>
                                 </div>
                                 <hr>
@@ -498,7 +501,7 @@
                                         <input type="text" th:field="*{comment}" class="form-control"
                                                placeholder="댓글을 작성해 보세요!">
                                         <button th:if="${check}" class="btn btn-outline-secondary" type="submit">Submit</button>
-                                        <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="comment_error()">Submit</button>
+                                        <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
                                     </form>
                                 </div>
                                 <hr>
@@ -524,7 +527,14 @@
     <!-- Core theme JS-->
     <script src="/js/origin/scripts.js"></script>
     <script src="/js/test.js"></script>
-    <script> function comment_error(){ alert("로그인 후 댓글을 달 수 있습니다!"); self.close();} </script>
+    <script>
+        function alert_error(){
+            alert("로그인 후 댓글을 달 수 있습니다!"); //self.close();
+        }
+        function state_error(){
+            alert("현재 상태를 확인해주세요!")
+        }
+    </script>
 </div>
 <div th:replace="fragments/footer :: footer" />
 </body>
