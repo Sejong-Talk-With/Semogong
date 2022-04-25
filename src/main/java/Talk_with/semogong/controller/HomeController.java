@@ -14,7 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -191,17 +194,26 @@ public class HomeController {
         // Comment Info
         private Long id;
         private String content;
-        private LocalDateTime createTime;
+        private LocalDateTime createDateTime;
+        private int diffMin;
         private Image memberImg;
 
         // Member Info
         private Long memberId;
         private String memberName;
 
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
         public CommentViewDto(Comment comment) {
+
             this.id = comment.getId();
             this.content = comment.getContent();
-            this.createTime = comment.getCreateTime();
+
+            this.createDateTime = comment.getCreateTime();
+            LocalDateTime nowDateTime = LocalDateTime.now();
+            Duration duration = Duration.between(createDateTime, nowDateTime);
+            this.diffMin = Math.round(duration.getSeconds()/60);
+
             this.memberName = comment.getMember().getName();
             this.memberImg = comment.getMember().getImage();
             this.memberId = comment.getMember().getId();

@@ -30,8 +30,8 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3:3.12.0' // for easy using
 	compileOnly 'org.projectlombok:lombok' // for annotation
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0' //for tracking sql query
-//	runtimeOnly 'mysql:mysql-connector-java' // for Real _ in AWS DB
-	implementation 'com.h2database:h2' // for Test _ in Local DB
+	runtimeOnly 'mysql:mysql-connector-java' // for Real _ in AWS DB
+//	implementation 'com.h2database:h2' // for Test _ in Local DB
 	annotationProcessor 'org.projectlombok:lombok' // for annotation
 	testImplementation 'org.springframework.boot:spring-boot-starter-test' // spring-test
 

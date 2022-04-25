@@ -60,7 +60,7 @@ public class StateController {
                 } else { // no
                     // 현재 시점이 4시 이전
                     if (nowTime < 4) {
-                        Period period = Period.between(createDate, nowDateTime.toLocalDate());
+                        Period period = Period.between(createDate, nowDate);
                         // 그 전날 작성한 글이 존재하는 지 확인
                         if (period.getDays() == 1 & createTime > 4) { // yes : 해당 글 이어 작성
                             memberService.changeState(memberId, StudyState.STUDYING);

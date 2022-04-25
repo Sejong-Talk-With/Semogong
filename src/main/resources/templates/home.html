@@ -356,7 +356,7 @@
 
 
                                 <div>
-                                    <div th:each="comment:${post.comments}" height="25px;">
+                                    <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                         <div class="d-flex bd-highlight">
                                             <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
                                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
@@ -364,10 +364,15 @@
                                                          th:src="${comment.memberImg?.imgSrc}">
                                                     <img th:if="${comment.memberImg == null}" src="/images/profile.png">
                                                 </div>
-                                                <div class="review_writer" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                                <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                                <div class="align-middle" style="margin-left:20px; margin-top: 2px">
+                                                    <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                    <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
+                                                    <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                </div>
                                             </div>
                                             <div class="p-2">
-                                                <a th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:href="@{/comment/delete/{id} (id=${comment.id})}" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                                <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
                                             </div>
                                         </div>
 
@@ -525,14 +530,25 @@
     <!-- Bootstrap core JS-->
     <script src="/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
-    <script src="/js/origin/scripts.js"></script>
-    <script src="/js/test.js"></script>
+<!--    <script src="/js/origin/scripts2.js"></script>-->
     <script>
         function alert_error(){
-            alert("로그인 후 댓글을 달 수 있습니다!"); //self.close();
+            alert("로그인 후 댓글을 달 수 있습니다!");
         }
+
         function state_error(){
             alert("현재 상태를 확인해주세요!")
+        }
+
+        function delete_check(id) {
+            var check = confirm("정말 삭제하시겠습니까??");
+            if (check){    //확인
+                location.href = "/comment/delete/"+id;
+                // fetch(`/comment/delete/${id}`)
+                //     .then((response) => location.href = response.url);
+            }else{   //취소
+                return false;
+            }
         }
     </script>
 </div>
