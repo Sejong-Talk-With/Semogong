@@ -4,3 +4,8 @@
 서비스 보완 및 디자인 변경 후 출시 예정
 
 Demo version : http://semogong.site
+
+
+#### 서비스 구성도
+
+<img src="/structure.png">
