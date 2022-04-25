@@ -8,3 +8,4 @@ Demo version : http://semogong.site
 
 #### 서비스 구성도
 
+<img src="/structure.png">
