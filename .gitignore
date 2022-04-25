@@ -1,5 +1,6 @@
 HELP.md
 README.md
+structure.png
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
