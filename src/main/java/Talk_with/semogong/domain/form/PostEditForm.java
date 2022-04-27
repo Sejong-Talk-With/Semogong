@@ -1,9 +1,8 @@
 package Talk_with.semogong.domain.form;
 
-import Talk_with.semogong.domain.Image;
-import Talk_with.semogong.domain.Member;
+import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Post;
-import Talk_with.semogong.domain.StudyState;
+import Talk_with.semogong.domain.att.StudyState;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;

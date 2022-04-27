@@ -1,7 +1,8 @@
 package Talk_with.semogong.domain;
 
+import Talk_with.semogong.domain.att.Image;
+import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.form.MemberEditForm;
-import Talk_with.semogong.domain.form.MemberForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

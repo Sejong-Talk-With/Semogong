@@ -1,9 +1,9 @@
 package Talk_with.semogong.controller;
 
-import Talk_with.semogong.domain.Image;
+import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
-import Talk_with.semogong.domain.StudyState;
+import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.auth.MyUserDetail;
 import Talk_with.semogong.domain.form.PostEditForm;
 import Talk_with.semogong.service.MemberService;

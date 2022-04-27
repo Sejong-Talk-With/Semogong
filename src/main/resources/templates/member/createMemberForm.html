@@ -34,9 +34,14 @@
         <div class="input-group mb-3">
             <input type="text" th:field="*{nickname}" class="form-control" placeholder="닉네임을 입력하세요!">
         </div>
-        <label class="form-label" th:for="desiredJob">희망 직무</label>
+        <label th:for="desiredJob" class="form-label">희망 직무</label>
         <div class="input-group mb-3">
-            <input type="text" th:field="*{desiredJob}" class="form-control" placeholder="희망 직무를 입력하세요!">
+            <input type="text" autocomplete="off" class="form-control" list="datalistOptions" th:field="*{desiredJob}" placeholder="희망 직무를 선택하거나 입력하세요!">
+            <datalist id="datalistOptions" >
+                <th:block th:each="job : ${jobs}">
+                    <option th:value="${job}">
+                </th:block>
+            </datalist>
         </div>
         <label class="form-label" th:for="introduce">자기 소개</label>
         <div class="input-group mb-3 has-validation">

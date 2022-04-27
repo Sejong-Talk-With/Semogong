@@ -11,16 +11,18 @@
     <form role="form" th:action="@{/posts/edit/{id}/img (id=${postForm.id})}" target="iframe1" method="post"
           enctype="multipart/form-data">
         <label class="form-label" th:for="image" style="display: inline-block">배경 이미지</label>
-        <div th:if="${postForm.image != null}" style="display: inline-block"> ( 현재 <p style="display: inline-block"
+        <div th:if="${postForm.image != null}" style="display: inline-block"> ( 현재 <p class="mb-0" style="display: inline-block"
                                                                                       th:text="${postForm.image.imgName}"></p>
             로 설정 되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
         </div>
         <div class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> ( 썸네일 선택 후 Upload 버튼을
             눌러주세요!)
         </div>
-        <div class="input-group">
-            <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload</button>
+        <div class="input-group mb-3">
+            <img class="mb-2 img-thumbnail" height="150px" width="270px" th:if="${postForm.image != null}" th:src="${postForm.image.imgSrc}" alt="profile">
+            <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/profile.png">
+            <div class="input-group">
+                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onclick="upload_check()">Upload</button>
                 <input class="form-control" name="file" type="file" accept=".jpg, .png">
             </div>
         </div>
@@ -86,6 +88,10 @@
         }else{   //취소
             return false;
         }
+    }
+
+    function upload_check() {
+        setTimeout(function(){alert("Upload완료 되었습니다!");location.reload();},500);
     }
 
 

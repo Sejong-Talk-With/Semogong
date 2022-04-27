@@ -1,8 +1,8 @@
 package Talk_with.semogong.service;
 
-import Talk_with.semogong.domain.Image;
+import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Post;
-import Talk_with.semogong.domain.StudyState;
+import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.form.PostEditForm;
 import Talk_with.semogong.repository.MemberRepository;
 import Talk_with.semogong.repository.PostRepository;

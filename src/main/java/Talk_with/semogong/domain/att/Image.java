@@ -1,4 +1,4 @@
-package Talk_with.semogong.domain;
+package Talk_with.semogong.domain.att;
 
 import lombok.Getter;
 

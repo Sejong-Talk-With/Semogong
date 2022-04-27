@@ -1,18 +1,15 @@
 package Talk_with.semogong.domain.auth;
 
-import Talk_with.semogong.domain.Image;
+import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Member;
-import Talk_with.semogong.domain.StudyState;
+import Talk_with.semogong.domain.att.StudyState;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Getter
 public class MyUserDetail implements UserDetails {

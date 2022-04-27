@@ -1,6 +1,8 @@
 package Talk_with.semogong.controller;
 
 import Talk_with.semogong.domain.*;
+import Talk_with.semogong.domain.att.Image;
+import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.auth.MyUserDetail;
 import Talk_with.semogong.domain.form.CommentForm;
 import Talk_with.semogong.domain.form.MemberForm;
@@ -15,9 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

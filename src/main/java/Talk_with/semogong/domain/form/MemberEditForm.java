@@ -1,6 +1,6 @@
 package Talk_with.semogong.domain.form;
 
-import Talk_with.semogong.domain.Image;
+import Talk_with.semogong.domain.att.Image;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;

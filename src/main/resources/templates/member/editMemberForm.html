@@ -11,21 +11,25 @@
     <form role="form" th:action="@{/members/edit/{id}/img (id=${memberEditForm.id})} " target="iframe1"
           method="post"
           enctype="multipart/form-data">
-        <label class="form-label" th:for="image" style="display: inline-block; margin-top: 5px">프로필 이미지</label>
-        <div class="form-label" th:if="${memberEditForm.image != null}" style="display: inline-block"> ( 현재 <p
-                style="display: inline-block; margin:0px" th:text="${memberEditForm.image?.imgName}"></p> 로 설정
-            되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
-        </div>
-        <div class="form-label" th:if="${memberEditForm.image == null}" style="display: inline-block"> ( 프로필 선택
-            후 Upload 버튼을 눌러주세요!)
-        </div>
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload
-                </button>
-                <input class="form-control" name="file" type="file" accept=".jpg, .png">
+
+            <label class="form-label" th:for="image" style="display: inline-block; margin-top: 5px">프로필 이미지</label>
+            <div class="form-label" th:if="${memberEditForm.image != null}" style="display: inline-block"> ( 현재 <p
+                    style="display: inline-block; margin:0px" th:text="${memberEditForm.image?.imgName}"></p> 로 설정
+                되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
             </div>
-        </div>
+            <div class="form-label" th:if="${memberEditForm.image == null}" style="display: inline-block"> ( 선택된 프로필이 없습니다! 프로필 선택
+                후 Upload 버튼을 눌러주세요!)
+            </div>
+            <div class="input-group mb-3">
+                <img class="mb-2 img-thumbnail" height="140px" width="140px" th:if="${memberEditForm.image != null}" th:src="${memberEditForm.image.imgSrc}" alt="profile">
+                <img class="img-thumbnail" height="140px" width="140px" th:if="${memberEditForm.image == null}" src="/images/profile.png">
+                <div class="input-group">
+                    <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onclick="upload_check()">Upload
+                    </button>
+                    <input class="form-control" name="file" type="file" accept=".jpg, .png">
+                </div>
+            </div>
+
     </form>
     <form role="form" th:object="${memberEditForm}" method="post">
         <!-- 해당 from 안에서는 memberForm을 사용하겠다는 것, memberForm은 Model을 통해 객체로 접근했기에 가능-->
@@ -42,10 +46,14 @@
             <input type="text" th:field="*{nickname}" class="form-control"
                    placeholder="닉네임을 입력하세요!">
         </div>
-        <label class="form-label" th:for="desiredJob">희망 직무</label>
+        <label th:for="desiredJob" class="form-label">희망 직무</label>
         <div class="input-group mb-3">
-            <input type="text" th:field="*{desiredJob}" class="form-control"
-                   placeholder="희망 직무를 입력하세요!">
+            <input type="text" autocomplete="off" class="form-control" list="datalistOptions" th:field="*{desiredJob}" placeholder="희망 직무를 선택하거나 입력하세요!">
+            <datalist id="datalistOptions" >
+                <th:block th:each="job : ${jobs}">
+                    <option th:value="${job}">
+                </th:block>
+            </datalist>
         </div>
         <label class="form-label" th:for="introduce">자기 소개</label>
         <div class="input-group mb-3 has-validation">
@@ -96,6 +104,10 @@
     function remove_link_box(i) {
         const to_remove = document.getElementById('linkNum' + i);
         to_remove.remove();
+    }
+
+    function upload_check() {
+        setTimeout(function(){alert("Upload완료 되었습니다!");location.reload();},500);
     }
 </script>
 <!-- Bootstrap core JS-->

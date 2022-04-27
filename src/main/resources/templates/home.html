@@ -56,11 +56,11 @@
                                    th:text="${post.memberDesiredJob}"></p>
                             </div>
                             <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                <p th:if="${post.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
                                    th:text="${post.state}">공부 중</p>
-                                <p th:if="${post.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
                                    th:text="${post.state}">공부 중</p>
-                                <p th:if="${post.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
                                    th:text="${post.state}">공부 중</p>
                             </div>
                             <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;" >
@@ -106,9 +106,9 @@
                 <!-- Profile (if member did Log in) -->
                 <div class="card-header d-sm-flex justify-content-between" th:if="${check}">
                     <div style="margin-top: 5px" class="input-group">
-                        <div th:if="${member.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #198754;"> 공부중</div>
-                        <div th:if="${member.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge rounded-pill text-dark" th:text="${member.state}" style="background-color: #ffc107;"> 공부중</div>
-                        <div th:if="${member.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #212529;"> 공부중</div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #198754;"> 공부중</div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge rounded-pill text-dark" th:text="${member.state}" style="background-color: #ffc107;"> 공부중</div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #212529;"> 공부중</div>
                     </div>
                     <div class="d-sm-flex justify-content-center">
                         <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id})}">
@@ -145,12 +145,12 @@
                     <div class="d-sm-flex justify-content-center">
                         <div class="input-group btn-group" role="group" aria-label="Basic mixed styles example"
                              style="margin-top: 10px;">
-                            <a th:if="${member.state != T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-success" href="/studying">STUDY</a>
-                            <button th:if="${member.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-success" type="button" onclick="state_error()">STUDY</button>
-                            <a th:if="${member.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-warning" href="/breaking">BREAK</a>
-                            <button th:if="${member.state != T(Talk_with.semogong.domain.StudyState).STUDYING}" class="btn btn-warning" type="button" onclick="state_error()">BREAK</button>
-                            <a th:if="${member.state != T(Talk_with.semogong.domain.StudyState).END}" class="btn btn-secondary" href="/end">END</a>
-                            <button th:if="${member.state == T(Talk_with.semogong.domain.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
+                            <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-success" href="/studying">STUDY</a>
+                            <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-success" type="button" onclick="state_error()">STUDY</button>
+                            <a th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-warning" href="/breaking">BREAK</a>
+                            <button th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-warning" type="button" onclick="state_error()">BREAK</button>
+                            <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" href="/end">END</a>
+                            <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
                         </div>
                     </div>
                 </div>
@@ -218,11 +218,11 @@
                                        th:text="${recentPost.memberDesiredJob}"></p>
                                 </div>
                                 <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
                                        th:text="${recentPost.state}">공부 중</p>
-                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
                                        th:text="${recentPost.state}">공부 중</p>
-                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
                                        th:text="${recentPost.state}">공부 중</p>
                                 </div>
                                 <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;">
@@ -266,9 +266,9 @@
                             </div>
                             <div style="display:inline-block; margin-left: 3px" th:text="${otherMember.name}"></div>
                             <div style="margin-left: 10px">
-                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.StudyState).STUDYING}" class="badge" style="display:inline-block; background-color: #198754;" th:text="${otherMember.state}"></div>
-                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.StudyState).BREAKING}" class="badge text-dark" style="display:inline-block; background-color: #ffc107;" th:text="${otherMember.state}"></div>
-                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.StudyState).END}" class="badge" style="display:inline-block; background-color: #212529;" th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge" style="display:inline-block; background-color: #198754;" th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge text-dark" style="display:inline-block; background-color: #ffc107;" th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="display:inline-block; background-color: #212529;" th:text="${otherMember.state}"></div>
                             </div>
                         </div>
                     </div>

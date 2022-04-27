@@ -1,6 +1,6 @@
 package Talk_with.semogong.service;
 
-import Talk_with.semogong.domain.Image;
+import Talk_with.semogong.domain.att.Image;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

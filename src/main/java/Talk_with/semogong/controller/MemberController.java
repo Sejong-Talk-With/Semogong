@@ -1,6 +1,7 @@
 package Talk_with.semogong.controller;
 
-import Talk_with.semogong.domain.Image;
+import Talk_with.semogong.domain.att.DesiredJob;
+import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.domain.form.MemberForm;
@@ -31,8 +32,10 @@ public class MemberController {
     // 회원가입 폼
     @GetMapping("/members/signup")
     public String signUpForm(Model model) {
+        List<String> jobList = DesiredJob.getJobList();
         log.info("signup");
         model.addAttribute("memberForm", new MemberForm());
+        model.addAttribute("jobs", jobList);
         return "member/createMemberForm";
     }
 
@@ -51,9 +54,11 @@ public class MemberController {
     // 회원 정보 수정 폼
     @GetMapping("/members/edit/{id}")
     public String memberEditForm(@PathVariable("id") Long id, Model model) {
+        List<String> jobList = DesiredJob.getJobList();
         Member member = memberService.findOne(id);
         MemberEditForm memberEditForm = createMemberEditFrom(member);
         model.addAttribute("memberEditForm",memberEditForm);
+        model.addAttribute("jobs", jobList);
         return "member/editMemberForm";
     }
 

@@ -1,8 +1,8 @@
 package Talk_with.semogong.service;
 
-import Talk_with.semogong.domain.Image;
+import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Member;
-import Talk_with.semogong.domain.StudyState;
+import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
