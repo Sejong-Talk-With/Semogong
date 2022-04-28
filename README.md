@@ -16,3 +16,14 @@ Demo version : http://semogong.site
 
 <br>
 
+### 기술스택
+
+| -                     | 사용 스택             |
+| --------------------- | --------------------- |
+| Front-end             | HTML. CSS, JS         |
+| Back-end              | Spring Boot           |
+| DataBase              | AWS RDS( MySQL )      |
+| Bucket(이미지 저장용) | AWS S3                |
+| Cloud                 | GCP Kubernetes Engine |
+| CI/CD                 | (개발예정)            |
+| 형상관리              | Github, Docker        |
