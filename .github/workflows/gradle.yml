@@ -33,7 +33,7 @@ jobs:
         run: cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
   
       - name: export date to tag
-        run: export date_tag=`date +%s`
+        run: export date_tag=latest
       
       - name: Build docker image
         run: docker build -t wjdqlsdlsp/semogong:$date_tag .
