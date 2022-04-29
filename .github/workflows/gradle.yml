@@ -40,11 +40,12 @@ jobs:
       - uses: actions/checkout@v1
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-
+        
       - name: tagging
         run: |
             eval $TIMETAG
-            docker docker tag (docker images -qa wjdqlsdlsp/semogong:$timetag) wjdqlsdlsp/semogong:$timetag wjdqlsdlsp/semogong:$timetag
+            images_id=$(docker images -qa wjdqlsdlsp/semogong:$timetag)
+            docker tag $images_id wjdqlsdlsp/semogong:$timetag wjdqlsdlsp/semogong:$timetag
             
       - name: push to hub
         run: |
