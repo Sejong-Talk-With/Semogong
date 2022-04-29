@@ -17,9 +17,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      
-      - name: export timetag
-        run: export timetag=latest
+        env:
+          timetag: Mona
 
       - name: Set current date as env variable
         run: echo ${{ env.timetag }}
