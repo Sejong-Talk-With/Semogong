@@ -25,6 +25,9 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-      - name: Build with Gradle # 실제 application build(-x 옵션을 통해 test는 제외)
+        
+      - name: Delete test case
+        run: rm -rf src/test
+        
+      - name: Build with Gradle
         run: gradle build
