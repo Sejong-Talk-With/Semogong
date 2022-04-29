@@ -1,4 +1,5 @@
-name: gradle build and docker build
+
+name: earth-github-action-test CI
 
 on:
   push:
@@ -8,14 +9,17 @@ on:
     branches:
       - master
       
+# 참고사항
+# push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
+
 jobs:
   build: 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # 실행 환경 지정
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2 # github action 버전 지정(major version)
 
-      - name: Set up JDK 11
+      - name: Set up JDK 11 # JAVA 버전 지정
         uses: actions/setup-java@v1
         with:
           java-version: 11 
@@ -31,19 +35,6 @@ jobs:
 
       - name: Copy the jar
         run: cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
-  
+      
       - name: Build docker image
-        run: docker build -t wjdqlsdlsp/semogong .
-
-      - uses: actions/checkout@v1
-      - name: Login to DockerHub Registry
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-        
-      - name: export images_id
-        run: images_id=$(docker images -qa wjdqlsdlsp/semogong)
-
-      - name: tagging
-        run: docker tag $images_id wjdqlsdlsp/semogong
-        
-      - name: push to hub
-        run: docker push wjdqlsdlsp/semogong
+        run: docker build -t wjdqlsdlsp/semogong:latest .
