@@ -31,23 +31,15 @@ jobs:
 
       - name: Copy the jar
         run: cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
-        
-      - name: Build docker image
-        run: |
-            eval $TIMETAG
-            docker build -t wjdqlsdlsp/semogong:$timetag .
 
       - uses: actions/checkout@v1
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         
-      - name: tagging
+      - name: Build docker image and push to hub
         run: |
             eval $TIMETAG
+            docker build -t wjdqlsdlsp/semogong:$timetag .
             images_id=$(docker images -qa wjdqlsdlsp/semogong:$timetag)
             docker tag $images_id wjdqlsdlsp/semogong:$timetag wjdqlsdlsp/semogong:$timetag
-            
-      - name: push to hub
-        run: |
-            eval $TIMETAG
             docker push wjdqlsdlsp/semogong:$timetag
