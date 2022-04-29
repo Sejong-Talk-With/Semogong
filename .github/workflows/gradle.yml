@@ -47,7 +47,7 @@ jobs:
         run: images_id=$(docker images -qa wjdqlsdlsp/semogong:latest)
 
       - name: tagging
-        run: docker tag $images_id wjdqlsdlsp/semogong:latest
+        run: docker tag $images_id wjdqlsdlsp/semogong:latest wjdqlsdlsp/semogong:latest
         
       - name: push to hub
         run: docker push wjdqlsdlsp/semogong:latest
