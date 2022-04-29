@@ -39,7 +39,7 @@ jobs:
         run: export date_tag=latest
         
       - name: Build docker image
-        run: docker build -t wjdqlsdlsp/semogong:$date_tag .
+        run: docker build --tag wjdqlsdlsp/semogong:$date_tag .
         
       - uses: actions/checkout@v1
       - name: Login to DockerHub Registry
