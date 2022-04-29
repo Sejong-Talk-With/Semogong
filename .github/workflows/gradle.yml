@@ -39,7 +39,7 @@ jobs:
       - name: Build docker image and push to hub
         run: |
             eval $TIMETAG
-            docker build -t wjdqlsdlsp/semogong:$timetag .
-            images_id=$(docker images -qa wjdqlsdlsp/semogong:$timetag)
-            docker tag $images_id wjdqlsdlsp/semogong:$timetag wjdqlsdlsp/semogong:$timetag
+            docker build -t semogong-demo:0.1 .
+            images_id=$(docker images -qa semogong-demo:0.1)
+            docker tag $images_id wjdqlsdlsp/semogong:$timetag
             docker push wjdqlsdlsp/semogong:$timetag
