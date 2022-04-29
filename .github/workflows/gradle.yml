@@ -35,6 +35,25 @@ jobs:
       - name: Copy the jar
         run: cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
       
+      - name: export date to tag
+        run: export date_tag=(date +%s)
+        
       - name: Build docker image
-        run: docker build -t wjdqlsdlsp/semogong:$(date +%s) .
+        run: docker build -t wjdqlsdlsp/semogong:$date_tag .
+        
+      - uses: actions/checkout@v1
+      - uses: actions/docker/login@master
+        with: # Set the secret as an input
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: export images_id
+        run: images_id=$(docker images -qa wjdqlsdlsp/semogong:$date_tag)
+
+      - name: tagging
+        run: docker tag $images_id wjdqlsdlsp/semogong:$date_tag
+        
+
+      - name: push to hub
+        run: docker push wjdqlsdlsp/semogong:$date_tag
       
