@@ -36,10 +36,10 @@ jobs:
         run: cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
       
       - name: export date to tag
-        run: export date_tag=latest
+        run: export date_tag=(date +%s)
         
       - name: Build docker image
-        run: docker build --platform amd64 --build-arg DEPENDENCY=build/dependency -t wjdqlsdlsp/semogong:$date_tag .
+        run: docker build -t wjdqlsdlsp/semogong:$date_tag .
         
       - uses: actions/checkout@v1
       - name: Login to DockerHub Registry
