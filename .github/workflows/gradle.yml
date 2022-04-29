@@ -31,3 +31,10 @@ jobs:
         
       - name: Build with Gradle
         run: gradle build
+
+      - name: Copy the jar
+        run: cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
+      
+      - name: Build docker image
+        run: docker build -t wjdqlsdlsp/semogong:(date +%s) .
+      
