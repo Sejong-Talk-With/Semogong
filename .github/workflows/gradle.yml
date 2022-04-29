@@ -42,3 +42,12 @@ jobs:
       - uses: actions/checkout@v1
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        
+      - name: export images_id
+        run: images_id=$(docker images -qa wjdqlsdlsp/semogong:latest)
+
+      - name: tagging
+        run: docker tag $images_id wjdqlsdlsp/semogong:latest
+        
+      - name: push to hub
+        run: docker push wjdqlsdlsp/semogong:latest
