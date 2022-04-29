@@ -18,11 +18,11 @@ jobs:
         with:
           java-version: 11
       
+      - name: export timetag
+        run: timetag=latest
+
       - name: Set current date as env variable
-        run: echo "NOW::$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-        
-      - name: Echo current date
-        run: echo $NOW
+        run: echo ${{ env.timetag }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -35,22 +35,19 @@ jobs:
 
       - name: Copy the jar
         run: cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
-      
-      - name: export timetag
-        run: timetag=latest
 
       - name: Build docker image
-        run: docker build -t wjdqlsdlsp/semogong:$timetag .
+        run: docker build -t wjdqlsdlsp/semogong:${{ env.timetag }} .
         
       - uses: actions/checkout@v1
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         
       - name: export images_id
-        run: images_id=$(docker images -qa wjdqlsdlsp/semogong:$timetag)
+        run: images_id=$(docker images -qa wjdqlsdlsp/semogong:${{ env.timetag }})
 
       - name: tagging
-        run: docker tag $images_id wjdqlsdlsp/semogong:$timetag wjdqlsdlsp/semogong:$timetag
+        run: docker tag $images_id wjdqlsdlsp/semogong:${{ env.timetag }} wjdqlsdlsp/semogong:${{ env.timetag }}
         
       - name: push to hub
-        run: docker push wjdqlsdlsp/semogong:$timetag
+        run: docker push wjdqlsdlsp/semogong:${{ env.timetag }}
