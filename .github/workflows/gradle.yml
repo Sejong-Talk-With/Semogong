@@ -19,7 +19,7 @@ jobs:
           java-version: 11
       
       - name: export timetag
-        run: timetag=latest
+        run: export timetag=latest
 
       - name: Set current date as env variable
         run: echo ${{ env.timetag }}
