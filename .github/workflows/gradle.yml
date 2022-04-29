@@ -41,16 +41,16 @@ jobs:
       - name: Build docker image
         run: docker build --tag wjdqlsdlsp/semogong:$date_tag .
         
-      - uses: actions/checkout@v1
-      - name: Login to DockerHub Registry
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+#       - uses: actions/checkout@v1
+#       - name: Login to DockerHub Registry
+#         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         
-      - name: export images_id
-        run: images_id=$(docker images -qa wjdqlsdlsp/semogong:$date_tag)
+#       - name: export images_id
+#         run: images_id=$(docker images -qa wjdqlsdlsp/semogong:$date_tag)
 
-      - name: tagging
-        run: docker tag $images_id wjdqlsdlsp/semogong:$date_tag
+#       - name: tagging
+#         run: docker tag $images_id wjdqlsdlsp/semogong:$date_tag
         
-      - name: push to hub
-        run: docker push wjdqlsdlsp/semogong:$date_tag
+#       - name: push to hub
+#         run: docker push wjdqlsdlsp/semogong:$date_tag
       
