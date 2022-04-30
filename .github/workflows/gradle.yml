@@ -8,7 +8,7 @@ on:
     branches:
       - master
 env:
-  TIMETAG: export timetag=`date +%s`
+  TIMETAG: export timetag=latest
 
 jobs:
   build: 
