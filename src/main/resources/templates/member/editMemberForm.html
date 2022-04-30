@@ -21,8 +21,10 @@
                 후 Upload 버튼을 눌러주세요!)
             </div>
             <div class="input-group mb-3">
-                <img class="mb-2 img-thumbnail" height="140px" width="140px" th:if="${memberEditForm.image != null}" th:src="${memberEditForm.image.imgSrc}" alt="profile">
-                <img class="img-thumbnail" height="140px" width="140px" th:if="${memberEditForm.image == null}" src="/images/profile.png">
+                <div class="input-group">
+                    <img class="mb-2 img-thumbnail" height="140px" width="140px" th:if="${memberEditForm.image != null}" th:src="${memberEditForm.image.imgSrc}" alt="profile">
+                    <img class="img-thumbnail" height="140px" width="140px" th:if="${memberEditForm.image == null}" src="/images/profile.png">
+                </div>
                 <div class="input-group">
                     <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onclick="upload_check()">Upload
                     </button>

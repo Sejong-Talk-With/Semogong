@@ -19,8 +19,10 @@
             눌러주세요!)
         </div>
         <div class="input-group mb-3">
-            <img class="mb-2 img-thumbnail" height="150px" width="270px" th:if="${postForm.image != null}" th:src="${postForm.image.imgSrc}" alt="profile">
-            <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/profile.png">
+            <div class="input-group">
+                <img class="mb-2 img-thumbnail" height="150px" width="270px" th:if="${postForm.image != null}" th:src="${postForm.image.imgSrc}" alt="profile">
+                <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/profile.png">
+            </div>
             <div class="input-group">
                 <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onclick="upload_check()">Upload</button>
                 <input class="form-control" name="file" type="file" accept=".jpg, .png">

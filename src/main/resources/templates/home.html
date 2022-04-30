@@ -3,6 +3,7 @@
 <html lang="en">
 <head th:replace="fragments/header :: header"/>
 <head th:replace="fragments/addheader :: addheader"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
 <!-- Responsive navbar-->
 <nav th:replace="fragments/navbar :: navbar"/>
@@ -356,35 +357,36 @@
 
 
                                 <div>
-                                    <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
-                                        <div class="d-flex bd-highlight">
-                                            <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                                <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                                    <img th:if="${comment.memberImg != null}"
-                                                         th:src="${comment.memberImg?.imgSrc}">
-                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                    <div th:id="'comments'+${post.id}">
+                                        <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
+                                            <div class="d-flex bd-highlight">
+                                                <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
+                                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                                        <img th:if="${comment.memberImg != null}"
+                                                             th:src="${comment.memberImg?.imgSrc}">
+                                                        <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                                    </div>
+                                                    <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                                    <div class="align-middle" style="margin-left:20px; margin-top: 2px">
+                                                        <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                        <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
+                                                        <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                    </div>
                                                 </div>
-                                                <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
-                                                <div class="align-middle" style="margin-left:20px; margin-top: 2px">
-                                                    <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
-                                                    <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
-                                                    <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                <div class="p-2">
+                                                    <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
                                                 </div>
                                             </div>
-                                            <div class="p-2">
-                                                <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
-                                            </div>
-                                        </div>
 
-                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                            <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                        </div>
                                     </div>
 
                                     <form class="input-group mb-3" role="form" id="cba"
                                           th:action="@{/posts/comment/{id} (id=${post.id})}" th:object="${commentForm}"
                                           method="post">
-                                        <input type="text" th:field="*{comment}" class="form-control"
-                                               placeholder="댓글을 작성해 보세요!">
-                                        <button th:if="${check}" class="btn btn-outline-secondary" type="submit">Submit</button>
+                                        <input id="comment_content" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
+                                        <button th:if="${check}" class="btn btn-outline-secondary" type="button" th:onclick="|javascript:submit_comment(${post.id})|">Submit</button>
                                         <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
                                     </form>
                                 </div>
@@ -550,6 +552,59 @@
                 return false;
             }
         }
+
+        function submit_comment(id) {
+            var postId = id;
+            var comment = $("#comment_content").val();
+            if (comment.trim() == '') {
+                alert('내용을 입력해주세요!');
+                return;
+            }
+
+            // $("#comment_content").setAttribute('value', '');
+
+            var sendData = {"postId":postId, "comment":comment}
+            $.ajax({
+                url: 'comment/api/new/' + id,
+                method: 'POST',
+                data : sendData,
+                success: function (response) {
+                    console.log(response);
+                    var commentId = response.data.id;
+                    var memberName = response.data.memberName;
+                    var memberImg = response.data.memberImg;
+                    if (memberImg == null) {var imgSrc = "/images/profile.png";}
+                    else {var imgSrc = response.data.memberImg.imgSrc;}
+                    var diffMin = response.data.diffMin;
+                    var timeInfo;
+                    if (diffMin < 60) {timeInfo = String(diffMin) + "분 전";}
+                    else if (diffMin >= 60 && diffMin < 24*60) { timeInfo = String(Math.round(diffMin/60)) + "시간 전"}
+                    else {timeInfo = String(Math.round(diffMin/60*24)) + "일 전"}
+                    var content = response.data.content;
+                    console.log(memberName, memberImg, imgSrc, diffMin, content);
+                    $("#comments" + postId).append(
+                        '<div height="25px;" class="mb-2">' +
+                            '<div class="d-flex bd-highlight">' +
+                                '<div class="d-sm-flex p-2 flex-grow-1 bd-highlight">' +
+                                    '<div class="profile_img_box2 d-sm-flex justify-content-center">' +
+                                        '<img src="'+imgSrc+'">' +
+                                    '</div>' +
+                                    '<div class="align-middle" style="margin-left:5px;"><p class="mb-0">' + memberName +'</p>' +
+                                    '</div>' +
+                                    '<div class="align-middle" style="margin-left:20px; margin-top: 2px">' +
+                                        '<p class=" mb-0 small text-secondary">'+ timeInfo +'</p>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="p-2">' +
+                                    '<a role="button" onclick="delete_check('+ commentId +')" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1">' + content + '</p></div>' +
+                        '</div>'
+                    );
+                }
+        }); }
     </script>
 </div>
 <div th:replace="fragments/footer :: footer" />
