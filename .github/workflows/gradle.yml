@@ -26,9 +26,6 @@ jobs:
       - name: Delete test case
         run: rm -rf src/test
         
-      - name: Build with Gradle
-        run: gradle build
-
       - uses: actions/checkout@v1
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
@@ -36,6 +33,7 @@ jobs:
       - name: Build docker image and push to hub
         run: |
             eval $TIMETAG
+            gradle build
             cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
             docker build -t semogong-demo:0.1 .
             images_id=$(docker images -qa semogong-demo:0.1)
