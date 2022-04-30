@@ -9,29 +9,31 @@
 <div class="container" style="padding-top: 10px">
     <iframe id="iframe1" name="iframe1" style="display:none"></iframe>
     <form role="form" th:action="@{/posts/edit/{id}/img (id=${postForm.id})}" target="iframe1" method="post"
-          enctype="multipart/form-data">
-        <label class="form-label" th:for="image" style="display: inline-block">배경 이미지</label>
-        <div th:if="${postForm.image != null}" style="display: inline-block"> ( 현재 <p class="mb-0" style="display: inline-block"
-                                                                                      th:text="${postForm.image.imgName}"></p>
-            로 설정 되어 있습니다. 수정을 원하신다면 파일을 새로 선택 후 Upload 버튼을 눌러주세요.)
+          enctype="multipart/form-data" style="margin-bottom: 20px;">
+
+        <label class="form-label" th:for="image" style="display: inline-block"><strong>배경 이미지</strong></label>
+        <div class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> 지정된 이미지가 없습니다</div>
+        <div th:if="${postForm.image != null}" style="display: inline-block">(현재 이미지 : <p class="mb-0" style="display: inline-block; text-decoration: underline;"
+                                                                                      th:text="${postForm.image.imgName}"></p>)
         </div>
-        <div class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> ( 썸네일 선택 후 Upload 버튼을
-            눌러주세요!)
+
+        <div class="input-group" style="height: 30px; width: 300px; margin-bottom:20px;" >
+            <input class="form-control" name="file" type="file" accept=".jpg, .png">
+            <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onclick="upload_check()">확인</button>
         </div>
-        <div class="input-group mb-3">
+
+        <div class="input-group mb-3 d-sm-flex">
             <img class="mb-2 img-thumbnail" height="150px" width="270px" th:if="${postForm.image != null}" th:src="${postForm.image.imgSrc}" alt="profile">
-            <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/profile.png">
-            <div class="input-group">
-                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onclick="upload_check()">Upload</button>
-                <input class="form-control" name="file" type="file" accept=".jpg, .png">
-            </div>
+            <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/semogong.jpg">
         </div>
+
     </form>
-    <form role="form" th:object="${postForm}" method="post">
+
+    <form role="form" th:object="${postForm}" method="post" >
         <!-- id -->
         <input type="hidden" th:field="*{id}"/>
-        <div>
-            <label class="form-label" th:for="times"> 학습 시간 </label>
+        <div >
+            <label class="form-label" th:for="times"><strong>학습 시간</strong></label>
             <div class="card-text mb-3">
                 <th:block th:id="timeNum+${i}" th:each="i: ${#numbers.sequence(0, #lists.size(postForm.times)-1)}">
                     <div style="display: inline-block; flex: 0 0 auto; width: 70px;">
@@ -42,19 +44,19 @@
                 </th:block>
             </div>
         </div>
-        <label class="form-label" th:for="title">제목 *</label>
+        <label class="form-label" th:for="title"><strong>제목</strong></label>
         <div class="input-group mb-3 has-validation">
             <input type="text" th:field="*{title}" class="form-control" placeholder="제목을 입력하세요!" autocomplete="off"
                    th:class="${#fields.hasErrors('title')}? 'form-control is-invalid' : 'form-control'">
             <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback" th:errors="*{title}">Incorrect date
             </div>
         </div>
-        <label class="form-label" th:for="nickname">오늘의 한 줄</label>
+        <label class="form-label" th:for="nickname"><strong>오늘의 한 줄</strong></label>
         <div class="input-group mb-3">
             <input type="text" th:field="*{introduce}" class="form-control"
                    placeholder="오늘 하루를 정리하는 문장을 적어주세요!">
         </div>
-        <label class="form-label" th:for="content">내용</label>
+        <label class="form-label" th:for="content"><strong>내용</strong></label>
         <div class="mb-2">
             <textarea type="text" rows="4" th:field="*{content}" placeholder="Content" class="form-control"
                       autocomplete="off"></textarea>
@@ -91,7 +93,7 @@
     }
 
     function upload_check() {
-        setTimeout(function(){alert("Upload완료 되었습니다!");location.reload();},500);
+        setTimeout(function(){alert("이미지 변경이 완료 되었습니다!");location.reload();},500);
     }
 
 
