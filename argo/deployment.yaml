@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: semogong
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      name: semogong-pod
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: semogong-container
+        image: wjdqlsdlsp/semogong:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: config-dev
