@@ -26,7 +26,7 @@ jobs:
         
       - name: Build docker image and push to hub
         run: |
-            VERSIONALL=$(cat /argo/deployment.yaml | grep image)
+            VERSIONALL=$(cat argo/deployment.yaml | grep image)
             VERSION_SPLIT=($(echo $VERSIONALL | tr ":" "\n")) 
             VERSION=${VERSION_SPLIT[2]}
             rm -rf src/test
