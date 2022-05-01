@@ -7,9 +7,6 @@ on:
   pull_request:
     branches:
       - master
-env:
-  TIMETAG: export timetag=latest
-
 jobs:
   build: 
     runs-on: ubuntu-latest
@@ -29,11 +26,13 @@ jobs:
         
       - name: Build docker image and push to hub
         run: |
-            eval $TIMETAG
+            VERSIONALL=$(cat /argo/deployment.yaml | grep image)
+            VERSION_SPLIT=($(echo $VERSIONALL | tr ":" "\n")) 
+            VERSION=${VERSION_SPLIT[2]}
             rm -rf src/test
             gradle build
             cp build/libs/semogong-0.0.1-SNAPSHOT.jar target/
             docker build -t semogong-demo:0.1 .
             images_id=$(docker images -qa semogong-demo:0.1)
-            docker tag $images_id wjdqlsdlsp/semogong:$timetag
-            docker push wjdqlsdlsp/semogong:$timetag
+            docker tag $images_id wjdqlsdlsp/semogong:$VERSION
+            docker push wjdqlsdlsp/semogong:$VERSION
