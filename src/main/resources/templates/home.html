@@ -9,7 +9,7 @@
 <nav th:replace="fragments/navbar :: navbar"/>
 
 <!-- Page header with logo and tagline-->
-<header class="py-5 bg-light border-bottom mb-4">
+<header id="comeon" class="py-5 bg-light border-bottom mb-4">
     <div class="container">
         <div class="text-center my-5">
             <h1 class="fw-bolder">Welcome to SeMoGong!</h1>
@@ -29,18 +29,18 @@
             <div class="row">
                 <div class="col-lg-6" th:if="${posts != null}" th:each="post:${posts}">
                     <!-- Blog post-->
-                    <div class="card mb-4" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${post.id}" >
+                    <div th:id="'post'+${post.id}" class="card mb-4" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${post.id}" >
                         <div class="overflow-hidden d-sm-flex justify-content-center align-items-center w-100" style= "height: 175px; background-color: white; border: solid 1px lightgray;">
                             <img th:if="${post.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
                                  th:src="${post.postImg?.imgSrc}" alt="..."
                                  style="border: solid lightgray 1px; border: 0px; "/>
                         </div>
                         <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
-                            <div class="d-sm-flex">
+                            <div th:id="'commentDiv'+${post.id}" class="d-sm-flex">
                                 <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;" th:text="${post.formatCreateDate}">Post Date</p>
                                 <th:block th:if="${post.commentCount != 0}">
                                     <img src="/images/comment.png" width="14px" height="14px"/>
-                                    <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:text="${post.commentCount}"> 1 </p>
+                                    <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:id="'commentCount'+${post.id}" th:text="${post.commentCount}"> 1 </p>
                                 </th:block>
                             </div>
                             <p class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${post.title}" style="font-size: 20px;  color: gray; height: 30px;">Post Title</p>
@@ -184,22 +184,21 @@
             <!-- My Post widget-->
             <div class="card mb-4">
                 <div class="card-header">My Post</div>
-                <div class="card-body" th:if="${recentPost != null}">
+                <div class="card-body" th:if="${recentPost}">
                     <!-- My post-->
                     <div>
-                        <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal"
-                             th:attr="data-bs-target='#recentPost'">
+                        <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${recentPost.id}">
                             <div class="overflow-hidden d-sm-flex justify-content-center align-items-center" style= "height: 150px; background-color: white; border: solid 1px lightgray;">
                                 <img th:if="${recentPost.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
                                      th:src="${recentPost.postImg?.imgSrc}" alt="..."
                                      style="border: solid lightgray 1px; border: 0px;"/>
                             </div>
                             <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
-                                <div class="d-sm-flex">
+                                <div th:id="'recent_commentDiv'+${recentPost.id}" class="d-sm-flex">
                                     <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;" th:text="${recentPost.formatCreateDate}">Post Date</p>
                                     <th:block th:if="${recentPost.commentCount != 0}">
                                         <img src="/images/comment.png" width="14px" height="14px"/>
-                                        <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:text="${recentPost.commentCount}"> 1 </p>
+                                        <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:id="'recent_commentCount'+${recentPost.id}" th:text="${recentPost.commentCount}"> 1 </p>
                                     </th:block>
                                 </div>
                                 <h2 class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${recentPost.title}"
@@ -280,7 +279,7 @@
     </div>
 
     <!-- Post Modals -->
-    <div th:if="${posts != null}" th:each="post:${posts}" class="portfolio-modal modal fade" th:id="'postModal' + ${post.id}" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
+    <div th:if="${postModals != null}" th:each="post:${postModals}" class="portfolio-modal modal fade" th:id="'postModal' + ${post.id}" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header border-0">
@@ -355,40 +354,35 @@
                                 </div>
                                 <hr>
 
-
-                                <div>
-                                    <div th:id="'comments'+${post.id}">
-                                        <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
-                                            <div class="d-flex bd-highlight">
-                                                <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                                        <img th:if="${comment.memberImg != null}"
-                                                             th:src="${comment.memberImg?.imgSrc}">
-                                                        <img th:if="${comment.memberImg == null}" src="/images/profile.png">
-                                                    </div>
-                                                    <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
-                                                    <div class="align-middle" style="margin-left:20px; margin-top: 2px">
-                                                        <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
-                                                        <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
-                                                        <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
-                                                    </div>
+                                <!-- comment -->
+                                <div th:id="'commentPart'+${post.id}">
+                                    <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
+                                        <div class="d-flex bd-highlight">
+                                            <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
+                                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                                    <img th:if="${comment.memberImg != null}"
+                                                         th:src="${comment.memberImg?.imgSrc}">
+                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
                                                 </div>
-                                                <div class="p-2">
-                                                    <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                                <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                                <div class="align-middle" style="margin-left:20px; margin-top: 2px">
+                                                    <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                    <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
+                                                    <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
                                                 </div>
                                             </div>
-
-                                            <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                            <div class="p-2">
+                                                <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${post.id},${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <form class="input-group mb-3" role="form" id="cba"
-                                          th:action="@{/posts/comment/{id} (id=${post.id})}" th:object="${commentForm}"
-                                          method="post">
-                                        <input id="comment_content" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
-                                        <button th:if="${check}" class="btn btn-outline-secondary" type="button" th:onclick="|javascript:submit_comment(${post.id})|">Submit</button>
+                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
+                                        <button th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
                                         <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
-                                    </form>
+                                    </div>
                                 </div>
                                 <hr>
 
@@ -407,133 +401,16 @@
         </div>
     </div>
 
-    <!-- Member Modal-->
-    <div th:if="${recentPost != null}" th:id="recentPost" class="portfolio-modal modal fade" tabindex="-1"
-         aria-labelledby="portfolioModal1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pb-5"> <!-- text-center-->
-                    <div class="container">
-                        <div class="row justify-content-center"> <!--justify-content-center-->
-                            <div class="col-lg-8">
-                                <!-- Member Modal - Image-->
-                                <div class="text-center">
-                                    <img th:if="${recentPost.postImg != null}" class="img-fluid rounded"
-                                         th:src="${recentPost.postImg?.imgSrc}" alt="..."/>
-                                </div>
-                                <!-- Member Modal - Title-->
-                                <h4 class="display-3 fw-bold" th:text="${recentPost.title}"
-                                    style="font-size:50px; margin:0px 0px 15px 0px;"></h4>
-
-                                <!-- Portfolio Modal - Text-->
-                                <div class="d-sm-flex align-items-center my-2">
-                                    <div class="d-sm-flex" style="width:150px;">
-                                        <img width="32px" height="24px" src="/images/user-solid.svg">
-                                        <div>작성자</div>
-                                    </div>
-                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                        <img th:if="${recentPost.memberImg == null}" src="/images/profile.png">
-                                        <img th:if="${recentPost.memberImg != null}"
-                                             th:src="${recentPost.memberImg?.imgSrc}"></div>
-                                    <div class="card-text" th:text="${recentPost.memberName}"> Member's Name</div>
-                                </div>
-
-                                <div class="d-sm-flex align-items-center my-2">
-                                    <div class="d-sm-flex" style="width:150px;">
-                                        <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
-                                        <div class="property_subtext1">희망직무</div>
-                                    </div>
-                                    <div class="card-text" th:text="${recentPost.memberDesiredJob}"> Member's Name</div>
-                                </div>
-
-                                <div class="d-sm-flex align-items-center my-2">
-                                    <div class="d-sm-flex" style="min-width:150px;">
-                                        <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
-                                        <div class="property_subtext1">학습시간</div>
-                                    </div>
-                                    <div class="flex-wrap">
-                                        <p class="border border-2 rounded" style="margin: 0px 4px 0px 0px; display: inline-block;"
-                                           th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}" th:text="|${recentPost.times[i -1]}| + ' ~ '+|${recentPost.times[i]}|">
-                                            19:00 ~ 20:00
-                                        </p>
-                                        <p class="border border-2 rounded" th:if="${#lists.size(recentPost.times)%2!=0}"
-                                           style="margin: 0px 2px 0px 0px; display: inline-block;" th:text="|${recentPost.times[#lists.size(recentPost.times)-1]}| + ' ~'">
-                                            19:00 ~
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="d-sm-flex align-items-center my-2">
-                                    <div class="d-sm-flex" style="min-width:150px;">
-                                        <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
-                                        <div class="property_subtext1">상태</div>
-                                    </div>
-                                    <div class="card-text" th:text="${recentPost.state}"> Member's Name</div>
-                                </div>
-
-                                <div class="d-sm-flex align-items-center my-2">
-                                    <div class="d-sm-flex" style="min-width:150px;">
-                                        <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
-                                        <div class="property_subtext1">오늘의 한줄평</div>
-                                    </div>
-                                    <div class="card-text" th:text="${recentPost.introduce}"> Member's Name</div>
-                                </div>
-                                <hr>
-
-
-                                <div class="w-100">
-                                    <div th:each="comment:${recentPost.comments}" height="25px;">
-                                        <div class="d-flex bd-highlight">
-                                            <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                                <div class="img_margin_1 profile_img_box2 d-sm-flex justify-content-center">
-                                                    <img th:if="${comment.memberImg != null}"
-                                                         th:src="${comment.memberImg?.imgSrc}">
-                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
-                                                </div>
-                                                <div class="review_writer" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
-                                            </div>
-                                            <div class="p-2">
-                                                <a th:if="${check and (member.id == comment.memberId or member.id == recentPost.memberId)}" th:href="@{/comment/delete/{id} (id=${comment.id})}" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
-                                            </div>
-                                        </div>
-                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
-                                    </div>
-
-                                    <form class="input-group mb-3" role="form"
-                                          th:action="@{/posts/comment/{id} (id=${recentPost.id})}"
-                                          th:object="${commentForm}" method="post">
-                                        <input type="text" th:field="*{comment}" class="form-control"
-                                               placeholder="댓글을 작성해 보세요!">
-                                        <button th:if="${check}" class="btn btn-outline-secondary" type="submit">Submit</button>
-                                        <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
-                                    </form>
-                                </div>
-                                <hr>
-
-                                <div class="content_text">
-                                    <p class="mb-4" th:utext="${recentPost.html}"> Content by HTML </p>
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <a class="btn btn-secondary btn-sm"
-                                           th:href="@{/posts/edit/{id} (id=*{recentPost.id})}"
-                                           type="button">Edit</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Bootstrap core JS-->
     <script src="/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
-<!--    <script src="/js/origin/scripts2.js"></script>-->
-    <script>
+
+    <script th:inline="javascript" type="text/javascript">
+
+        /*<![CDATA[*/
+        var recentPostId = [[ ${recentPost?.id}]];
+
+        /*]]*/
         function alert_error(){
             alert("로그인 후 댓글을 달 수 있습니다!");
         }
@@ -542,69 +419,110 @@
             alert("현재 상태를 확인해주세요!")
         }
 
-        function delete_check(id) {
-            var check = confirm("정말 삭제하시겠습니까??");
-            if (check){    //확인
-                location.href = "/comment/delete/"+id;
-                // fetch(`/comment/delete/${id}`)
-                //     .then((response) => location.href = response.url);
+        function delete_check(postId, commentId) {
+
+            var deleteForm = {
+                postId : postId,
+                commentId : commentId
+            };
+
+            var check = confirm("정말 삭제하시겠습니까?");
+
+            if (check){ //확인
+                $.ajax({
+                    url: 'comment/delete/' + commentId,
+                    type: "DELETE",
+                    data: deleteForm
+                })
+                    .done(function (fragment) {
+                        $('#commentPart' + postId).replaceWith(fragment);
+                        var obj = document.getElementById("commentPart");
+                        obj.setAttribute("id", "commentPart"+postId.toString());
+
+                        var count = 1;
+                        var obj2 = document.getElementById("commentCount"+ postId);
+                        if (obj2) {
+                            count = parseInt(document.getElementById("commentCount"+ postId).innerText) - 1;
+                            $('#commentCount'+ postId).replaceWith(
+                                '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" id="commentCount'+ postId + '">'+ count +'</p>'
+                            );
+                        }
+                        if (recentPostId == postId){
+                            count = parseInt(document.getElementById("recent_commentCount"+ postId).innerText) - 1;
+                            $('#recent_commentCount'+ postId).replaceWith(
+                                '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" id="recent_commentCount'+ recentPostId + '">'+ count +'</p>'
+                            );
+                        }
+                    });
             }else{   //취소
                 return false;
             }
         }
 
         function submit_comment(id) {
-            var postId = id;
-            var comment = $("#comment_content").val();
-            if (comment.trim() == '') {
-                alert('내용을 입력해주세요!');
-                return;
-            }
 
-            // $("#comment_content").setAttribute('value', '');
+            var commentForm = {
+                postId : id,
+                comment : $("#comment_content"+id).val()
+            };
 
-            var sendData = {"postId":postId, "comment":comment}
             $.ajax({
                 url: 'comment/api/new/' + id,
-                method: 'POST',
-                data : sendData,
-                success: function (response) {
-                    console.log(response);
-                    var commentId = response.data.id;
-                    var memberName = response.data.memberName;
-                    var memberImg = response.data.memberImg;
-                    if (memberImg == null) {var imgSrc = "/images/profile.png";}
-                    else {var imgSrc = response.data.memberImg.imgSrc;}
-                    var diffMin = response.data.diffMin;
-                    var timeInfo;
-                    if (diffMin < 60) {timeInfo = String(diffMin) + "분 전";}
-                    else if (diffMin >= 60 && diffMin < 24*60) { timeInfo = String(Math.round(diffMin/60)) + "시간 전"}
-                    else {timeInfo = String(Math.round(diffMin/60*24)) + "일 전"}
-                    var content = response.data.content;
-                    console.log(memberName, memberImg, imgSrc, diffMin, content);
-                    $("#comments" + postId).append(
-                        '<div height="25px;" class="mb-2">' +
-                            '<div class="d-flex bd-highlight">' +
-                                '<div class="d-sm-flex p-2 flex-grow-1 bd-highlight">' +
-                                    '<div class="profile_img_box2 d-sm-flex justify-content-center">' +
-                                        '<img src="'+imgSrc+'">' +
-                                    '</div>' +
-                                    '<div class="align-middle" style="margin-left:5px;"><p class="mb-0">' + memberName +'</p>' +
-                                    '</div>' +
-                                    '<div class="align-middle" style="margin-left:20px; margin-top: 2px">' +
-                                        '<p class=" mb-0 small text-secondary">'+ timeInfo +'</p>' +
-                                    '</div>' +
-                                '</div>' +
-                                '<div class="p-2">' +
-                                    '<a role="button" onclick="delete_check('+ commentId +')" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>' +
-                                '</div>' +
-                            '</div>' +
+                type: "POST",
+                data: commentForm,
+            })
+                .done(function (fragment) {
+                    $('#commentPart' + id).replaceWith(fragment);
+                    var commentPart = document.getElementById("commentPart");
+                    commentPart.setAttribute("id", "commentPart"+id.toString());
 
-                            '<div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1">' + content + '</p></div>' +
-                        '</div>'
-                    );
-                }
-        }); }
+                    var count = 1;
+                    var commentCount = document.getElementById("commentCount" + id);
+                    var recentCommentCount = document.getElementById("recent_commentCount" + id);
+                    var post = document.getElementById("post" + id);
+                    if (post) {
+                        if (commentCount) {
+                            count = parseInt(commentCount.innerText) + 1;
+                            $('#commentCount' + id).replaceWith(
+                                '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" id="commentCount' + id + '">' + count + '</p>'
+                            );
+                            if (recentPostId == id) {
+                                $('#recent_commentCount' + id).replaceWith(
+                                    '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" id="recent_commentCount' + recentPostId + '">' + count + '</p>'
+                                );
+                            }
+                        } else {
+                            $('#commentDiv' + id).append(
+                                '<img src="/images/comment.png" width="14px" height="14px"/> ' +
+                                '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px"' +
+                                'id="commentCount' + id + '"> 1 </p>'
+                            );
+                            if (recentPostId == id) {
+                                $('#recent_commentDiv' + id).append(
+                                    '<img src="/images/comment.png" width="14px" height="14px"/> ' +
+                                    '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px"' +
+                                    'id="recent_commentCount' + id + '"> 1 </p>'
+                                );
+                            }
+                        }
+                    } else {
+                        if (recentCommentCount) {
+                            count = parseInt(recentCommentCount.innerText) + 1;
+                            $('#recent_commentCount' + id).replaceWith(
+                                '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" id="recent_commentCount' + recentPostId + '">' + count + '</p>'
+                            );
+                        } else {
+                            $('#recent_commentDiv' + id).append(
+                                '<img src="/images/comment.png" width="14px" height="14px"/> ' +
+                                '<p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px"' +
+                                'id="recent_commentCount' + id + '"> 1 </p>'
+                            );
+                        }
+                    }
+
+                });
+        }
+
     </script>
 </div>
 <div th:replace="fragments/footer :: footer" />
