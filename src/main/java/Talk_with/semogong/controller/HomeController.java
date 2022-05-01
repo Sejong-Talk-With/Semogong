@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.format.FormatStyle.LONG;
@@ -39,6 +37,12 @@ public class HomeController {
     public String home(Model model, Authentication authentication) {
 
         log.info("opened home");
+
+        List<Post> posts = postService.findByPage(0);
+        List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
+        List<PostViewDto> postModals = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
+        Set<Long> ids = postModals.stream().map(PostViewDto::getId).collect(Collectors.toSet());
+
         if (authentication != null) {
             Member member = getLoginMember(authentication);
             MemberForm memberForm = createMemberForm(member);
@@ -48,6 +52,7 @@ public class HomeController {
             if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
                 PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
                 model.addAttribute("recentPost", memberRecentPostDto);
+                if (! ids.contains(memberRecentPostDto.getId())) postModals.add(memberRecentPostDto);
             }
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
@@ -55,18 +60,23 @@ public class HomeController {
         } else {
             model.addAttribute("check", false);
         }
-        List<Post> posts = postService.findByPage(0);
-        List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
 
         model.addAttribute("page", -1);
         model.addAttribute("posts", postDtos);
+        model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
         return "home";
     }
 
     @RequestMapping("/{page}")
     public String home_page(@PathVariable("page") Integer page, Model model, Authentication authentication) {
-        log.info("opened home");
+        log.info("paging home");
+
+        List<Post> posts = postService.findByPage((page - 1) * 12);
+        List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
+        List<PostViewDto> postModals = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
+        Set<Long> ids = postModals.stream().map(PostViewDto::getId).collect(Collectors.toSet());
+
         if (authentication != null) {
             Member member = getLoginMember(authentication);
             MemberForm memberForm = createMemberForm(member);
@@ -76,6 +86,7 @@ public class HomeController {
             if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
                 PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
                 model.addAttribute("recentPost", memberRecentPostDto);
+                if (! ids.contains(memberRecentPostDto.getId())) postModals.add(memberRecentPostDto);
             }
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
@@ -83,10 +94,10 @@ public class HomeController {
         } else {
             model.addAttribute("check", false);
         }
-        List<Post> posts = postService.findByPage((page - 1) * 12);
-        List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
-        model.addAttribute("posts", postDtos);
+
         model.addAttribute("page", page);
+        model.addAttribute("posts", postDtos);
+        model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
         return "home";
     }
@@ -95,6 +106,12 @@ public class HomeController {
     public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model, Authentication authentication) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
+        log.info("Login Error");
+        List<Post> posts = postService.findByPage(0);
+        List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
+        List<PostViewDto> postModals = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
+        Set<Long> ids = postModals.stream().map(PostViewDto::getId).collect(Collectors.toSet());
+
         if (authentication != null) {
             Member member = getLoginMember(authentication);
             MemberForm memberForm = createMemberForm(member);
@@ -104,6 +121,7 @@ public class HomeController {
             if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
                 PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
                 model.addAttribute("recentPost", memberRecentPostDto);
+                if (! ids.contains(memberRecentPostDto.getId())) postModals.add(memberRecentPostDto);
             }
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
@@ -111,15 +129,13 @@ public class HomeController {
         } else {
             model.addAttribute("check", false);
         }
-        List<Post> posts = postService.findByPage(0);
-        List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
 
         model.addAttribute("page", -1);
         model.addAttribute("posts", postDtos);
+        model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
         return "home";
     }
-
 
     private Member getLoginMember(Authentication authentication) {
         MyUserDetail userDetail = (MyUserDetail) authentication.getPrincipal();  //userDetail 객체를 가져옴 (로그인 되어 있는 놈)
