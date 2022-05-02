@@ -32,6 +32,13 @@ public class HomeController {
     private final PostService postService;
     private final MemberService memberService;
 
+    @GetMapping("/data")
+    public String data(Model model){
+        model.addAttribute("nav", "data");
+        return "analysis";
+    }
+
+
 
     @RequestMapping("/")
     public String home(Model model, Authentication authentication) {
@@ -65,6 +72,8 @@ public class HomeController {
         model.addAttribute("posts", postDtos);
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("nav", "home");
+
         return "home";
     }
 
@@ -99,6 +108,8 @@ public class HomeController {
         model.addAttribute("posts", postDtos);
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("nav", "home");
+
         return "home";
     }
 
@@ -134,6 +145,8 @@ public class HomeController {
         model.addAttribute("posts", postDtos);
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("nav", "home");
+
         return "home";
     }
 
