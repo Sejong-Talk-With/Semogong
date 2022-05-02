@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> </head>
+<body>
+<!-- Post Modals -->
+<div class="portfolio-modal modal fade" th:id="'postModal' + ${post.id}" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pb-5"> <!-- text-center-->
+                <div th:id="'postModal_content'+${post.id}" class="container">
+                    <div class="row justify-content-center"> <!--justify-content-center-->
+                        <div class="col-lg-8">
+                            <!-- Post Modal - Image-->
+                            <div class="text-center">
+                                <img th:if="${post.postImg != null}" class="img-fluid rounded"
+                                     th:src="${post.postImg?.imgSrc}"
+                                     alt="..."/>
+                            </div>
+                            <!-- Post Modal - Title-->
+                            <h4 class="display-3 fw-bold" th:text="${post.title}"
+                                style="font-size:50px; margin:40px 0px 15px 0px;"></h4>
+
+                            <!-- Portfolio Modal - Text-->
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="width:150px;">
+                                    <img width="32px" height="24px" src="/images/user-solid.svg">
+                                    <div>작성자</div>
+                                </div>
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                    <img th:if="${post.memberImg == null}" src="/images/profile.png">
+                                    <img th:if="${post.memberImg != null}"
+                                         th:src="${post.memberImg?.imgSrc}"></div>
+                                <div class="card-text" th:text="${post.memberName}"> Member's Name</div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
+                                    <div class="property_subtext1">희망직무</div>
+                                </div>
+                                <div class="card-text" th:text="${post.memberDesiredJob}"> Member's Name</div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="min-width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
+                                    <div class="property_subtext1">학습시간</div>
+                                </div>
+                                <div class="flex-wrap">
+                                    <p class="border border-2 rounded" style="margin: 0px 4px 0px 0px; display: inline-block;"
+                                       th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}" th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|">
+                                        19:00 ~ 20:00
+                                    </p>
+                                    <p class="border border-2 rounded" th:if="${#lists.size(post.times)%2!=0}"
+                                       style="margin: 0px 2px 0px 0px; display: inline-block;" th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'">
+                                        19:00 ~
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="min-width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
+                                    <div class="property_subtext1">상태</div>
+                                </div>
+                                <div class="card-text" th:text="${post.state}"> Member's Name</div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="min-width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
+                                    <div class="property_subtext1">오늘의 한줄평</div>
+                                </div>
+                                <div class="card-text" th:text="${post.introduce}"> Member's Name</div>
+                            </div>
+                            <hr>
+
+                            <!-- comment -->
+                            <div th:id="'commentPart'+${post.id}">
+                                <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
+                                    <div class="d-flex bd-highlight">
+                                        <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
+                                            <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                                <img th:if="${comment.memberImg != null}"
+                                                     th:src="${comment.memberImg?.imgSrc}">
+                                                <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                            </div>
+                                            <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                            <div class="align-middle" style="margin-left:20px; margin-top: 2px">
+                                                <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
+                                                <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
+                                            </div>
+                                        </div>
+                                        <div class="p-2">
+                                            <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${post.id},${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
+                                    <button th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
+                                    <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="content_text">
+                                <p class="mb-4" th:utext="${post.html}"> Content by HTML </p>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a th:if="${check and member.id == post.memberId}" class="btn btn-secondary btn-sm"
+                                       th:onclick="|javascript:edit_post(${post.id})|" type="button">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

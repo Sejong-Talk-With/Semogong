@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/addheader :: addheader"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+<!-- Responsive navbar-->
+<nav th:replace="fragments/navbar :: navbar"/>
+<!-- Page header with logo and tagline-->
+
+<!-- Page header with logo and tagline-->
+<header id="comeon" class="py-5 bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">Welcome to Data Analysis!</h1>
+            <p class="lead mb-0">Share how you studied today</p>
+        </div>
+    </div>
+</header>
+
+<img width="100%" height="100%" src="https://semogong-bucket.s3.ap-northeast-2.amazonaws.com/my_plot.png">
+<!-- Bootstrap core JS-->
+<script src="/js/bootstrap.bundle.min.js"></script>
+</body>

@@ -181,6 +181,11 @@
                 </div>
             </div>
 
+            <div class="card mb-4">
+                <div class="card-header">통계</div>
+                <div class="card-body" style="padding: 0;"><a href="/data"><img width="100%" height="100%" src="https://semogong-bucket.s3.ap-northeast-2.amazonaws.com/my_plot.png"></div></a>
+            </div>
+
             <!-- My Post widget-->
             <div class="card mb-4">
                 <div class="card-header">My Post</div>
@@ -253,6 +258,14 @@
                 <div class="card-body" th:if="${check and recentPost == null}"> 현재 작성 중인 글이 없습니다</div>
             </div>
 
+            <!-- Data widget-->
+            <div class="card mb-4">
+                <div class="card-header">My Post</div>
+                <div class="card-body" th:if="${recentPost}">
+                    <img th:src="${plot}"/>
+                </div>
+            </div>
+
             <!-- All Members-->
             <div class="card mb-4">
                 <div class="card-header"> All Members </div>
@@ -286,7 +299,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pb-5"> <!-- text-center-->
-                    <div class="container">
+                    <div th:id="'postModal_content'+${post.id}" class="container">
                         <div class="row justify-content-center"> <!--justify-content-center-->
                             <div class="col-lg-8">
                                 <!-- Post Modal - Image-->
@@ -390,7 +403,7 @@
                                     <p class="mb-4" th:utext="${post.html}"> Content by HTML </p>
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                         <a th:if="${check and member.id == post.memberId}" class="btn btn-secondary btn-sm"
-                                           th:href="@{/posts/edit/{id} (id=*{post.id})}" type="button">Edit</a>
+                                           th:onclick="|javascript:edit_post(${post.id})|" type="button">Edit</a>
                                     </div>
                                 </div>
                             </div>
@@ -521,6 +534,50 @@
                     }
 
                 });
+        }
+
+        function edit_post(id) {
+            $.ajax({
+                url: 'posts/edit/' + id,
+                type: "GET",
+            })
+                .done(function (fragment) {
+                    $('#postModal_content' + id).replaceWith(fragment);
+                    var simplemde = new SimpleMDE({element: document.getElementById("content"),spellChecker: false});
+                });
+        }
+
+        function post_delete_check(id) {
+            var check = confirm("정말 삭제하시겠습니까??");
+            if (check){    //확인
+                alert("삭제가 완료 되었습니다.")
+                $.ajax({
+                    url: 'posts/delete/' + id,
+                    type: "DELETE"
+                })
+                    .done(function () {
+                        location.reload();
+                    })
+            }else{   //취소
+                return false;
+            }
+        }
+
+        function upload_check() {
+            setTimeout(function(){alert("이미지 변경이 완료 되었습니다!");location.reload();},500);
+        }
+
+        function post_edit(id) {
+            var editForm = $("#postForm");
+
+            $.ajax({
+                url: 'posts/edit/' + id,
+                type: "POST",
+                data: editForm
+            })
+                .done(function () {
+                    location.reload();
+                })
         }
 
     </script>
