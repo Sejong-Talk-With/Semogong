@@ -8,6 +8,7 @@ import Talk_with.semogong.domain.form.CommentForm;
 import Talk_with.semogong.domain.form.MemberForm;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.PostService;
+import Talk_with.semogong.service.S3Service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,10 +33,11 @@ public class HomeController {
 
     private final PostService postService;
     private final MemberService memberService;
+    private final S3Service s3Service;
 
 
     @RequestMapping("/")
-    public String home(Model model, Authentication authentication) {
+    public String home(Model model, Authentication authentication) throws IOException {
 
         log.info("opened home");
 
@@ -57,6 +60,7 @@ public class HomeController {
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
             model.addAttribute("allMembers", memberDtos);
+            model.addAttribute("plot", s3Service.load());
         } else {
             model.addAttribute("check", false);
         }

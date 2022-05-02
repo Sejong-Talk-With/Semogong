@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"/>
-<body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body >
+
 
 <!-- Responsive navbar-->
 <nav th:replace="fragments/navbar :: navbar"/>
 
-<div class="container" style="padding-top: 10px">
+<div id="postEdit_container" class="container" style="padding-top: 10px">
     <iframe id="iframe1" name="iframe1" style="display:none"></iframe>
     <form role="form" th:action="@{/posts/edit/{id}/img (id=${postForm.id})}" target="iframe1" method="post"
           enctype="multipart/form-data" style="margin-bottom: 20px;">
@@ -27,10 +29,9 @@
         </div>
     </form>
 
-    <form role="form" th:object="${postForm}" method="post" >
-        <!-- id -->
+    <form role="form" id="postForm" th:action="@{/posts/edit/{id} (id=${postForm.id})}" th:object="${postForm}" method="post">
         <input type="hidden" th:field="*{id}"/>
-        <div >
+        <div>
             <label class="form-label" th:for="times"><strong>학습 시간</strong></label>
             <div class="card-text mb-3">
                 <th:block th:id="timeNum+${i}" th:each="i: ${#numbers.sequence(0, #lists.size(postForm.times)-1)}">
@@ -59,12 +60,11 @@
             <textarea type="text" rows="4" th:field="*{content}" placeholder="Content" class="form-control"
                       autocomplete="off"></textarea>
         </div>
-<!--        <div id="editor" class="mb-4"></div>-->
 
         <div class="d-sm-flex justify-content-between mb-4">
             <button class="btn btn-danger" type="button"
-                    th:onclick="|javascript:delete_check(${postForm.id})|">Delete</button>
-            <button class="btn btn-primary" type="submit">Submit</button>
+                    th:onclick="|javascript:post_delete_check(${postForm.id})|">Delete</button>
+            <button class="btn btn-primary" type="submit">Submit</button> <!-- th:onclick="|javascript:post_edit(${postForm.id})|" -->
         </div>
     </form>
 </div>
@@ -72,13 +72,19 @@
 <div th:replace="fragments/footer :: footer"/>
 
 <script th:inline="javascript" type="text/javascript">
-    var simplemde = new SimpleMDE({element: document.getElementById("content")});
+    var simplemde = new SimpleMDE({element: document.getElementById("content"), spellChecker: false});
 
-    function delete_check(id) {
+    function post_delete_check(id) {
         var check = confirm("정말 삭제하시겠습니까??");
         if (check){    //확인
             alert("삭제가 완료 되었습니다.")
-            location.href = "/posts/delete/"+id;
+            $.ajax({
+                url: 'posts/delete/' + id,
+                type: "DELETE"
+            })
+                .done(function () {
+                    location.reload();
+                })
         }else{   //취소
             return false;
         }
@@ -87,6 +93,21 @@
     function upload_check() {
         setTimeout(function(){alert("이미지 변경이 완료 되었습니다!");location.reload();},500);
     }
+
+/*    function post_edit(id) {
+        var editForm = $("#postForm");
+        var formData = new FormData(editForm[0]);
+        console.log(formData);
+
+        $.ajax({
+            url: '/posts/edit/' + id,
+            type: "POST",
+            data: formData
+        })
+            .done(function () {
+                location.reload();
+            })
+    }*/
 
 
 

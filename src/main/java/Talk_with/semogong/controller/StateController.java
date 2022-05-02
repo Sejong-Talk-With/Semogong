@@ -77,7 +77,7 @@ public class StateController {
 
             memberService.changeState(memberId, StudyState.STUDYING); // posting 후 state change 필요 (오류 처리해야 됨)
             Long postId = postService.save(memberId, LocalDateTime.now()); // 저장할 때는 해당 글의 작성자 Member 연결, creatTime만 설정해줌
-            return "redirect:/posts/edit/" + postId.toString(); // 저장 후 바로 edit을 통해서 그 글을 작성하도록 설정
+            return "redirect:/posts/new/" + postId.toString(); // 저장 후 바로 edit을 통해서 그 글을 작성하도록 설정
         }
 
         Long postId = postService.getRecentPost(memberId).get().getId();

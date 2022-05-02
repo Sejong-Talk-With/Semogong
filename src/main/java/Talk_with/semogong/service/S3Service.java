@@ -58,4 +58,9 @@ public class S3Service {
         Image image = new Image(fileName,s3Client.getUrl(bucket, pathName).toString());
         return image;
     }
+
+    public String load() throws IOException {
+        String imgName = "my_plot.png";
+        return s3Client.getUrl(bucket, imgName).toString();
+    }
 }
