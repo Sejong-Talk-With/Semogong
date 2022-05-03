@@ -36,8 +36,13 @@ public class HomeController {
     private final S3Service s3Service;
 
     @GetMapping("/data")
-    public String data(Model model){
+    public String data(Model model, Authentication authentication) throws IOException {
+        if (authentication == null) {
+            return "redirect:/";
+        }
         model.addAttribute("nav", "data");
+        model.addAttribute("check", true);
+        model.addAttribute("plot", s3Service.load());
         return "analysis";
     }
 
@@ -67,7 +72,7 @@ public class HomeController {
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
             model.addAttribute("allMembers", memberDtos);
-            model.addAttribute("plot", s3Service.load());
+
         } else {
             model.addAttribute("check", false);
         }
@@ -76,13 +81,15 @@ public class HomeController {
         model.addAttribute("posts", postDtos);
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("plot", s3Service.load());
         model.addAttribute("nav", "home");
+
 
         return "home";
     }
 
     @RequestMapping("/{page}")
-    public String home_page(@PathVariable("page") Integer page, Model model, Authentication authentication) {
+    public String home_page(@PathVariable("page") Integer page, Model model, Authentication authentication) throws IOException {
         log.info("paging home");
 
         List<Post> posts = postService.findByPage((page - 1) * 12);
@@ -112,13 +119,15 @@ public class HomeController {
         model.addAttribute("posts", postDtos);
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("plot", s3Service.load());
         model.addAttribute("nav", "home");
+
 
         return "home";
     }
 
     @GetMapping("/auth/login")
-    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model, Authentication authentication) {
+    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model, Authentication authentication) throws IOException {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         log.info("Login Error");
@@ -149,6 +158,7 @@ public class HomeController {
         model.addAttribute("posts", postDtos);
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("plot", s3Service.load());
         model.addAttribute("nav", "home");
 
         return "home";

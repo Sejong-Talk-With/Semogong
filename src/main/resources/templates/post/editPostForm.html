@@ -14,9 +14,9 @@
           enctype="multipart/form-data" style="margin-bottom: 20px;">
 
         <label class="form-label" th:for="image" style="display: inline-block"><strong>배경 이미지</strong></label>
-        <div class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> 지정된 이미지가 없습니다</div>
-        <div th:if="${postForm.image != null}" style="display: inline-block">(현재 이미지 : <p class="mb-0" style="display: inline-block; font-weight: bold;"
-                                                                                      th:text="${postForm.image.imgName}"></p>)
+        <div class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> ( 지정된 이미지가 없습니다 )</div>
+        <div th:if="${postForm.image != null}" style="display: inline-block">( 현재 이미지 : <p class="mb-0" style="display: inline-block; font-weight: bold;"
+                                                                                      th:text="${postForm.image.imgName}"></p>&nbsp;)
         </div>
 
         <div class="input-group" style="height: 30px; width: 300px; margin-bottom:20px;" >
@@ -25,7 +25,7 @@
         </div>
         <div class="input-group mb-3 d-sm-flex">
             <img class="mb-2 img-thumbnail" height="150px" width="270px" th:if="${postForm.image != null}" th:src="${postForm.image.imgSrc}" alt="profile">
-            <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/semogong.jpg">
+            <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/semogong_light.jpg">
         </div>
     </form>
 
@@ -75,7 +75,7 @@
     var simplemde = new SimpleMDE({element: document.getElementById("content"), spellChecker: false});
 
     function post_delete_check(id) {
-        var check = confirm("정말 삭제하시겠습니까??");
+        var check = confirm("정말 삭제하시겠습니까?");
         if (check){    //확인
             alert("삭제가 완료 되었습니다.")
             $.ajax({

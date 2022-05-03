@@ -36,6 +36,7 @@ public class MemberController {
         log.info("signup");
         model.addAttribute("memberForm", new MemberForm());
         model.addAttribute("jobs", jobList);
+        model.addAttribute("check", false); // not authenticated
         return "member/createMemberForm";
     }
 
@@ -59,6 +60,8 @@ public class MemberController {
         MemberEditForm memberEditForm = createMemberEditFrom(member);
         model.addAttribute("memberEditForm",memberEditForm);
         model.addAttribute("jobs", jobList);
+        model.addAttribute("check", false); // authenticated
+
         return "member/editMemberForm";
     }
 

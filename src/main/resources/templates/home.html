@@ -34,6 +34,9 @@
                             <img th:if="${post.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
                                  th:src="${post.postImg?.imgSrc}" alt="..."
                                  style="border: solid lightgray 1px; border: 0px; "/>
+                            <img th:if="${post.postImg == null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
+                                 src="images/semogong_light.jpg" alt="..."
+                                 style="border: solid lightgray 1px; border: 0px; "/>
                         </div>
                         <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
                             <div th:id="'commentDiv'+${post.id}" class="d-sm-flex">
@@ -181,9 +184,15 @@
                 </div>
             </div>
 
+            <!-- Statics widget-->
             <div class="card mb-4">
-                <div class="card-header">통계</div>
-                <div class="card-body" style="padding: 0;"><a href="/data"><img width="100%" height="100%" src="https://semogong-bucket.s3.ap-northeast-2.amazonaws.com/my_plot.png"></div></a>
+                <div class="card-header">Statics</div>
+                <div class="card-body p-0" th:if="${check}">
+                    <a href="/data"> <img width="100%" height="100%" th:src="${plot}"/> </a>
+                </div>
+                <div class="card-body p-0" th:if="${!check}">
+                    <a role="button" onclick="login_check()"> <img width="100%" height="100%" th:src="${plot}"/> </a>
+                </div>
             </div>
 
             <!-- My Post widget-->
@@ -259,12 +268,7 @@
             </div>
 
             <!-- Data widget-->
-            <div class="card mb-4">
-                <div class="card-header">My Post</div>
-                <div class="card-body" th:if="${recentPost}">
-                    <img th:src="${plot}"/>
-                </div>
-            </div>
+
 
             <!-- All Members-->
             <div class="card mb-4">
@@ -428,6 +432,10 @@
             alert("로그인 후 댓글을 달 수 있습니다!");
         }
 
+        function login_check() {
+            alert("로그인 후 서비스를 이용할 수 있습니다!");
+        }
+
         function state_error(){
             alert("현재 상태를 확인해주세요!")
         }
@@ -548,7 +556,7 @@
         }
 
         function post_delete_check(id) {
-            var check = confirm("정말 삭제하시겠습니까??");
+            var check = confirm("정말 삭제하시겠습니까?");
             if (check){    //확인
                 alert("삭제가 완료 되었습니다.")
                 $.ajax({
