@@ -9,27 +9,27 @@
 <nav th:replace="fragments/navbar :: navbar"/>
 
 <div id="postEdit_container" class="container" style="padding-top: 10px">
-    <iframe id="iframe1" name="iframe1" style="display:none"></iframe>
-    <form role="form" th:action="@{/posts/edit/{id}/img (id=${postForm.id})}" target="iframe1" method="post"
-          enctype="multipart/form-data" style="margin-bottom: 20px;">
-
+<!--    <iframe id="iframe1" name="iframe1" style="display:none"></iframe>-->
+<!--    <form role="form" th:action="@{/posts/edit/{id}/img (id=${postForm.id})}" target="iframe1" method="post" enctype="multipart/form-data" style="margin-bottom: 20px;">-->
+    <div class="mb-3">
         <label class="form-label" th:for="image" style="display: inline-block"><strong>배경 이미지</strong></label>
-        <div class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> ( 지정된 이미지가 없습니다 )</div>
-        <div th:if="${postForm.image != null}" style="display: inline-block">( 현재 이미지 : <p class="mb-0" style="display: inline-block; font-weight: bold;"
+        <div th:id="'post_img_name'+${postForm.id}" class="form-label" th:if="${postForm.image == null}" style="display: inline-block"> ( 지정된 이미지가 없습니다 )</div>
+        <div th:id="'post_img_name'+${postForm.id}" th:if="${postForm.image != null}" style="display: inline-block">( 현재 이미지 : <p class="mb-0" style="display: inline-block; font-weight: bold;"
                                                                                       th:text="${postForm.image.imgName}"></p>&nbsp;)
         </div>
 
         <div class="input-group" style="height: 30px; width: 300px; margin-bottom:20px;" >
-            <input class="form-control" name="file" type="file" accept=".jpg, .png">
-            <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" onclick="upload_check()">확인</button>
+            <input class="form-control" id="file" name="file" type="file" accept=".jpg, .png">
+            <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04" th:onclick="|javascript:image_upload(${postForm.id})|">확인</button>
         </div>
         <div class="input-group mb-3 d-sm-flex">
-            <img class="mb-2 img-thumbnail" height="150px" width="270px" th:if="${postForm.image != null}" th:src="${postForm.image.imgSrc}" alt="profile">
-            <img class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/semogong_light.jpg">
+            <img th:id="'post_img' + ${postForm.id}" class="mb-2 img-thumbnail" height="150px" width="270px" th:if="${postForm.image != null}" th:src="${postForm.image.imgSrc}" alt="profile">
+            <img th:id="'post_img' + ${postForm.id}" class="img-thumbnail"  height="150px" width="270px" th:if="${postForm.image == null}" src="/images/semogong_light.jpg">
         </div>
-    </form>
+    </div>
+<!--    </form>-->
 
-    <form role="form" id="postForm" th:action="@{/posts/edit/{id} (id=${postForm.id})}" th:object="${postForm}" method="post">
+    <form role="form" id="formPost" th:action="@{/posts/edit/{id} (id=${postForm.id})}" th:object="${postForm}" method="post">
         <input type="hidden" th:field="*{id}"/>
         <div>
             <label class="form-label" th:for="times"><strong>학습 시간</strong></label>
@@ -61,10 +61,10 @@
                       autocomplete="off"></textarea>
         </div>
 
-        <div class="d-sm-flex justify-content-between mb-4">
+        <div class="d-sm-flex justify-content-between mb-0">
             <button class="btn btn-danger" type="button"
                     th:onclick="|javascript:post_delete_check(${postForm.id})|">Delete</button>
-            <button class="btn btn-primary" type="submit">Submit</button> <!-- th:onclick="|javascript:post_edit(${postForm.id})|" -->
+            <button class="btn btn-primary" type="button" th:onclick="|javascript:post_edit(${postForm.id})|">Submit</button> <!-- th:onclick="|javascript:post_edit(${postForm.id})|" -->
         </div>
     </form>
 </div>
@@ -94,20 +94,68 @@
         setTimeout(function(){alert("이미지 변경이 완료 되었습니다!");location.reload();},500);
     }
 
-/*    function post_edit(id) {
-        var editForm = $("#postForm");
-        var formData = new FormData(editForm[0]);
-        console.log(formData);
+    function post_edit(id) {
+        var formData = $("#formPost").serializeArray();
+        formData[formData.length - 1].value = simplemde.value();
+
+        if (formData[formData.length - 3].value == '') { // title
+            alert("제목을 입력해주세요!");
+            var title = document.getElementById("title");
+            title.setAttribute('class','form-control is-invalid');
+            document.getElementById("times0").scrollIntoView();
+        } else {
+            $.ajax({
+                url: '/posts/edit/' + id,
+                type: "POST",
+                data: formData
+            })
+                .done(function () {
+                    location.href='/';
+                });
+        }
+
+    }
+
+    function image_upload(id){
+
+        var formData = new FormData();
+        var image = $("#file")[0].files[0];
+
+
+        formData.append( "file", image);
+
+        if(image == null){
+            alert("파일을 선택해주세요");
+            return;
+        }
+
 
         $.ajax({
-            url: '/posts/edit/' + id,
-            type: "POST",
-            data: formData
-        })
-            .done(function () {
-                location.reload();
-            })
-    }*/
+            url : "/posts/edit/"+id+"/img"
+            , type : "POST"
+            , processData : false
+            , contentType : false
+            , data : formData
+            , success:function(response) {
+                alert("이미지 변경이 완료 되었습니다!");
+                var imgSrc = response.imgSrc;
+                var imgName = response.imgName;
+                $("#post_img"+id).replaceWith(
+                    '<img id="post_img'+ id +'" class="img-thumbnail"  height="150px" width="270px" src="'+ imgSrc +'">'
+                )
+                $('#post_img_name'+id).replaceWith(
+                    '<div id="post_img_name'+ id + '" style="display: inline-block">' +
+                    '( 현재 이미지 : <p class="mb-0" style="display: inline-block; font-weight: bold;">'+imgName+'</p>&nbsp;)' +
+                    '</div>'
+                )
+
+            }
+            ,error: function ()
+            {
+                alert("업로드 실패");
+            }
+        });
+    }
 
 
 
