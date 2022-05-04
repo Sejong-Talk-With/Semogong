@@ -100,7 +100,6 @@ public class HomeController {
         if (authentication != null) {
             Member member = getLoginMember(authentication);
             MemberForm memberForm = createMemberForm(member);
-
             model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
             if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {

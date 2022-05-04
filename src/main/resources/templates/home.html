@@ -67,7 +67,7 @@
                                 <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
                                    th:text="${post.state}">공부 중</p>
                             </div>
-                            <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;" >
+                            <div th:id="'post_times'+${post.id}" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;" >
                                 <p class="badge" th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185'"
                                    th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
                                     <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
@@ -146,7 +146,7 @@
                     </div>
                     <div class="d-sm-flex justify-content-center fw-bold" th:text="*{desiredJob}"
                          style="font-size: 15px; color: gray;"></div>
-                    <div class="d-sm-flex justify-content-center">
+                    <div class="d-sm-flex justify-content-center mb-2">
                         <div class="input-group btn-group" role="group" aria-label="Basic mixed styles example"
                              style="margin-top: 10px;">
                             <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-success" href="/studying">STUDY</a>
@@ -157,7 +157,8 @@
                             <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
                         </div>
                     </div>
-                </div>
+                    <div class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em;" th:text="${}"> 오늘의 학습 시간 : 9시간 32분 </div>
+                    </div>
 
                 <!-- Login (if member did not Log in) -->
                 <div class="card-header" th:if="${!check}">Log In</div>
@@ -242,7 +243,7 @@
                                     <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
                                        th:text="${recentPost.state}">공부 중</p>
                                 </div>
-                                <div class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;">
+                                <div th:id="'recent_post_times'+${recentPost.id}" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;">
                                     <p class="badge" th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185;'"
                                        th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
                                         <th:block
@@ -399,9 +400,9 @@
                                         <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
-                                        <button th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
-                                        <button type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
+                                        <input th:onkeyup="|javascript:enterKey(${post.id})|" th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
+                                        <button th:id="'comment_submit_btn'+${post.id}" th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
+                                        <button th:id="'comment_submit_btn'+${post.id}" type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
                                     </div>
                                 </div>
                                 <hr>
@@ -484,6 +485,16 @@
                 return false;
             }
         }
+
+
+
+        function enterKey(id) {
+            if (window.event.keyCode == 13) {
+                $("#comment_submit_btn" + id).click();
+            }
+
+        }
+
 
         function submit_comment(id) {
 
@@ -585,6 +596,12 @@
             var formData = $("#formPost").serializeArray();
             formData[formData.length - 1].value = simplemde.value(); // content
 
+            var times = [];
+            var idx = 0
+            for (var step = 1; step < formData.length-3; idx++, step++) {
+                times[idx] = formData[step];
+            }
+
             var title = formData[formData.length - 3].value;
             var introduce = formData[formData.length - 2].value;
             var content = formData[formData.length - 1].value;
@@ -595,7 +612,8 @@
                 var titleHtml = document.getElementById("title");
                 titleHtml.setAttribute('class','form-control is-invalid');
                 document.getElementById("times0").scrollIntoView();
-            } else {
+            }
+            else {
                 $.ajax({
                     url: '/posts/edit/' + id,
                     type: "POST",
@@ -607,7 +625,6 @@
                         postModal_content.setAttribute("id", "postModal_content"+id.toString());
 
 
-
                         var obj = document.getElementById("post"+ id);
                         if (obj) {
                             $('#post_title'+ id).replaceWith(
@@ -616,6 +633,40 @@
                             $('#post_introduce' + id).replaceWith(
                                 '<p id="post_introduce'+ id +'" class="small" style="margin: 3px">'+ introduce +'</p>'
                             )
+                            $('#post_times' + id).replaceWith(
+                                '<div id="post_times'+ id +'" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;"></div>'
+                            )
+                            var cnt = 0;
+                            for (var i = 1; i < times.length; i+=2, cnt++) {
+                                if (cnt % 2 != 0) {
+                                    $('#post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
+                                            times[i-1].value + '&nbsp;~&nbsp;' + times[i].value
+                                         + '</p>'
+                                    );
+                                } else {
+                                    $('#post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
+                                            times[i-1].value + '&nbsp;~&nbsp;' + times[i].value
+                                        + '</p>'
+                                    );
+                                }
+                            }
+                            if (times.length % 2 == 1) {
+                                if ((times.length - 1) % 4 == 0) {
+                                    $('#post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
+                                        times[times.length-1].value + '&nbsp;~'
+                                        + '</p>'
+                                    );
+                                } else {
+                                    $('#post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
+                                        times[times.length-1].value + '&nbsp;~'
+                                        + '</p>'
+                                    );
+                                }
+                            }
                         }
 
                         if (recentPostId == id){
@@ -625,6 +676,40 @@
                             $('#recent_post_introduce' + id).replaceWith(
                                 '<p id="recent_post_introduce' + id +'" class="small" style="margin: 3px">'+ introduce +'</p>'
                             )
+                            $('#recent_post_times' + id).replaceWith(
+                                '<div id="recent_post_times'+ id +'" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;"></div>'
+                            )
+                            var cnt1 = 0;
+                            for (var j = 1; j < times.length; j+=2, cnt1++) {
+                                if (cnt1 % 2 != 0) {
+                                    $('#recent_post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
+                                        times[j-1].value + '&nbsp;~&nbsp;' + times[j].value
+                                        + '</p>'
+                                    );
+                                } else {
+                                    $('#recent_post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
+                                        times[j-1].value + '&nbsp;~&nbsp;' + times[j].value
+                                        + '</p>'
+                                    );
+                                }
+                            }
+                            if (times.length % 2 == 1) {
+                                if ((times.length - 1) % 4 == 0) {
+                                    $('#recent_post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
+                                        times[times.length-1].value + '&nbsp;~'
+                                        + '</p>'
+                                    );
+                                } else {
+                                    $('#recent_post_times' + id).append(
+                                        '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
+                                        times[times.length-1].value + '&nbsp;~'
+                                        + '</p>'
+                                    );
+                                }
+                            }
                         }
 
                         document.getElementById("postModal_content"+id).scrollIntoView();
@@ -677,6 +762,7 @@
                             '<img id="recent_home_post_img'+ id +'" class="card-img-top d-sm-flex justify-content-center align-items-center"' +
                             ' src="'+imgSrc+'"alt="..." style="border: solid lightgray 1px; border: 0px;">'
                         )
+
                     }
 
 
@@ -684,7 +770,7 @@
                 }
                 ,error: function ()
                 {
-                    alert("업로드 실패");
+                    alert("업로드 실패, 잠시 후 다시 시도해주세요!");
                 }
             });
         }
