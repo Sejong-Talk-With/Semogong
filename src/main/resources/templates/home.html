@@ -624,7 +624,7 @@
                         total1 += (end1 - start1);
                     }
 
-                    result_hour = Math.round(total1 / 60);
+                    result_hour = Math.floor(total1 / 60);
                     result_min = total1 % 60;
 
                 } else {
@@ -656,7 +656,7 @@
 
                     total2 += (now_end - last_start);
 
-                    result_hour = Math.round(total2 / 60);
+                    result_hour = Math.floor(total2 / 60);
                     result_min = total2 % 60;
                 }
             }
