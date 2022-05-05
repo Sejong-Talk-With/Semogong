@@ -52,7 +52,7 @@ public class StateController {
                 int nowTime = Integer.parseInt(nowDateTime.format(timeFormatter));
 
                 // 최신 글이 해당 날짜에 작성한 글이면서 04시이후이냐를 판단
-                if (createDate.isEqual(nowDate) & createTime > 4) { // yes : 그 글 이어작성
+                if (createDate.isEqual(nowDate) & createTime > 3) { // yes : 그 글 이어작성
                     memberService.changeState(memberId, StudyState.STUDYING);
                     postService.changeState(post.getId(), StudyState.STUDYING);
                     postService.addTime(memberId, LocalDateTime.now());
@@ -62,7 +62,7 @@ public class StateController {
                     if (nowTime < 4) {
                         Period period = Period.between(createDate, nowDate);
                         // 그 전날 작성한 글이 존재하는 지 확인
-                        if (period.getDays() == 1 & createTime > 4) { // yes : 해당 글 이어 작성
+                        if (period.getDays() == 1 & createTime > 3) { // yes : 해당 글 이어 작성
                             memberService.changeState(memberId, StudyState.STUDYING);
                             postService.changeState(post.getId(), StudyState.STUDYING);
                             postService.addTime(memberId, LocalDateTime.now());

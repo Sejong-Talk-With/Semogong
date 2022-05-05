@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,11 +66,20 @@ public class HomeController {
 
             model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
-            if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
-                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
+            Optional<Post> optionalPost = postService.getRecentPost(member.getId());
+            PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
+
+            if ((member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) & memberRecentPostDto != null) {
                 model.addAttribute("recentPost", memberRecentPostDto);
                 if (! ids.contains(memberRecentPostDto.getId())) postModals.add(memberRecentPostDto);
             }
+
+            Times totalStudyTimes = null;
+            if (memberRecentPostDto != null) {
+                totalStudyTimes = getTotalStudyTimes(memberRecentPostDto);
+            }
+            model.addAttribute("sTime", totalStudyTimes);
+
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
             model.addAttribute("allMembers", memberDtos);
@@ -102,11 +113,19 @@ public class HomeController {
             MemberForm memberForm = createMemberForm(member);
             model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
-            if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
-                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
+            Optional<Post> optionalPost = postService.getRecentPost(member.getId());
+            PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
+
+            if ((member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) & memberRecentPostDto != null) {
                 model.addAttribute("recentPost", memberRecentPostDto);
                 if (! ids.contains(memberRecentPostDto.getId())) postModals.add(memberRecentPostDto);
             }
+
+            Times totalStudyTimes = null;
+            if (memberRecentPostDto != null) {
+                totalStudyTimes = getTotalStudyTimes(memberRecentPostDto);
+            }
+            model.addAttribute("sTime", totalStudyTimes);
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
             model.addAttribute("allMembers", memberDtos);
@@ -125,6 +144,8 @@ public class HomeController {
         return "home";
     }
 
+
+
     @GetMapping("/auth/login")
     public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model, Authentication authentication) throws IOException {
         model.addAttribute("error", error);
@@ -141,11 +162,19 @@ public class HomeController {
 
             model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
-            if (member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) {
-                PostViewDto memberRecentPostDto = new PostViewDto(postService.getRecentPost(member.getId()).get());
+            Optional<Post> optionalPost = postService.getRecentPost(member.getId());
+            PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
+
+            if ((member.getState() == StudyState.STUDYING || member.getState() == StudyState.BREAKING) & memberRecentPostDto != null) {
                 model.addAttribute("recentPost", memberRecentPostDto);
                 if (! ids.contains(memberRecentPostDto.getId())) postModals.add(memberRecentPostDto);
             }
+
+            Times totalStudyTimes = null;
+            if (memberRecentPostDto != null) {
+                totalStudyTimes = getTotalStudyTimes(memberRecentPostDto);
+            }
+            model.addAttribute("sTime", totalStudyTimes);
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
             model.addAttribute("allMembers", memberDtos);
@@ -180,6 +209,89 @@ public class HomeController {
         memberForm.setState(member.getState());
         memberForm.setImage(member.getImage());
         return memberForm;
+    }
+
+    private Times getTotalStudyTimes(PostViewDto memberRecentPostDto) {
+
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        LocalDateTime createDateTime = memberRecentPostDto.getCreateTime();
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH");
+        LocalDate createDate = createDateTime.toLocalDate();
+        LocalDate nowDate = nowDateTime.toLocalDate();
+        int nowTime = Integer.parseInt(nowDateTime.format(timeFormatter));
+        int createTime = Integer.parseInt(createDateTime.format(timeFormatter));
+        Period period = Period.between(createDate, nowDate);
+        List<String> times = memberRecentPostDto.getTimes();
+        Times resultTime = getTimes(nowDateTime, timeFormatter, times);
+
+        if (nowTime > 3 & nowTime < 24) {
+            if (createDate.isEqual(nowDate) & createTime > 3) {
+                return resultTime;
+            }
+        } else {
+            if (nowDate.isEqual(createDate)) {
+                return resultTime;
+            }
+            // 그 전날 작성한 글이 존재하는 지 확인
+            else if (period.getDays() == 1 & createTime > 3) {
+                return resultTime;
+            }
+        }
+
+
+
+        return null;
+    }
+
+    private Times getTimes(LocalDateTime nowDateTime, DateTimeFormatter timeFormatter, List<String> times) {
+        Times resultTime = null;
+        if (times.size() % 2 == 0) {
+            int total1 = 0;
+            for (int i = 1; i < times.size(); i += 2) {
+                String[] ends = times.get(i).split(":");
+                String[] starts = times.get(i - 1).split(":");
+                int endHour = Integer.parseInt(ends[0]);
+                int endMin = Integer.parseInt(ends[1]);
+                int end = endHour * 60 + endMin;
+
+                int startHour = Integer.parseInt(starts[0]);
+                int startMin = Integer.parseInt(starts[1]);
+                int start = startHour * 60 + startMin;
+
+                total1 += (end - start);
+            }
+            resultTime = new Times(total1);
+        } else {
+            int total2 = 0;
+            for (int i = 1; i < times.size(); i += 2) {
+                String[] ends = times.get(i).split(":");
+                String[] starts = times.get(i - 1).split(":");
+                int endHour = Integer.parseInt(ends[0]);
+                int endMin = Integer.parseInt(ends[1]);
+                int end = endHour * 60 + endMin;
+
+                int startHour = Integer.parseInt(starts[0]);
+                int startMin = Integer.parseInt(starts[1]);
+                int start = startHour * 60 + startMin;
+
+                total2 += (end - start);
+            }
+
+            DateTimeFormatter timeFormatter2 = DateTimeFormatter.ofPattern("mm");
+            String[] starts = times.get(times.size() - 1).split(":");
+
+            int endHour = Integer.parseInt(nowDateTime.format(timeFormatter));
+            int endMin = Integer.parseInt(nowDateTime.format(timeFormatter2));
+            int end = endHour * 60 + endMin;
+
+            int startHour = Integer.parseInt(starts[0]);
+            int startMin = Integer.parseInt(starts[1]);
+            int start = startHour * 60 + startMin;
+
+            total2 += (end - start);
+            resultTime = new Times(total2);
+        }
+        return resultTime;
     }
 
     @Data
@@ -278,6 +390,20 @@ public class HomeController {
             this.state = member.getState();
         }
     }
+
+    @Data
+    static class Times {
+
+        private int hour;
+        private int min;
+
+        public Times(int total) {
+            this.hour = Math.round(total / 60);
+            this.min = total % 60;
+        }
+
+    }
+
 
 
 }

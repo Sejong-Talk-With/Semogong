@@ -157,8 +157,10 @@
                             <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
                         </div>
                     </div>
-                    <div class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em;" th:text="${}"> 오늘의 학습 시간 : 9시간 32분 </div>
-                    </div>
+                    <div th:id="member_time" th:if="${sTime != null}" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;" th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
+                    <div th:if="${sTime == null}" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;" > 오늘의 학습 시간 : 0시간 0분 </div>
+
+                </div>
 
                 <!-- Login (if member did not Log in) -->
                 <div class="card-header" th:if="${!check}">Log In</div>
@@ -598,9 +600,67 @@
 
             var times = [];
             var idx = 0
+            var result_hour = 0;
+            var result_min = 0;
             for (var step = 1; step < formData.length-3; idx++, step++) {
                 times[idx] = formData[step];
             }
+
+            if (recentPostId == id) {
+                if (times.length % 2 == 0) {
+                    var total1 = 0;
+
+                    for (var i = 1; i < times.length; i += 2) {
+                        var ends1 = times[i].value.split(":");
+                        var starts1 = times[i - 1].value.split(":");
+                        var endHour1 = parseInt(ends1[0]);
+                        var endMin1 = parseInt(ends1[1]);
+                        var end1 = endHour1 * 60 + endMin1;
+
+                        var startHour1 = parseInt(starts1[0]);
+                        var startMin1 = parseInt(starts1[1]);
+                        var start1 = startHour1 * 60 + startMin1;
+
+                        total1 += (end1 - start1);
+                    }
+
+                    result_hour = Math.round(total1 / 60);
+                    result_min = total1 % 60;
+
+                } else {
+                    var total2 = 0;
+                    for (var i = 1; i < times.length; i += 2) {
+                        var ends = times[i].value.split(":");
+                        var starts = times[i - 1].value.split(":");
+                        var endHour = parseInt(ends[0]);
+                        var endMin = parseInt(ends[1]);
+                        var end = endHour * 60 + endMin;
+
+                        var startHour = parseInt(starts[0]);
+                        var startMin = parseInt(starts[1]);
+                        var start = startHour * 60 + startMin;
+
+                        total2 += (end - start);
+                    }
+
+                    var last_starts = times[times.length-1].value.split(":");
+                    var today = new Date();
+
+                    var sHour = parseInt(last_starts[0]);
+                    var sMin = parseInt(last_starts[1]);
+                    var last_start = sHour * 60 + sMin;
+
+                    var hours = parseInt(('0' + today.getHours()).slice(-2));
+                    var minutes = parseInt(('0' + today.getMinutes()).slice(-2));
+                    var now_end = hours * 60 + minutes;
+
+                    total2 += (now_end - last_start);
+
+                    result_hour = Math.round(total2 / 60);
+                    result_min = total2 % 60;
+                }
+            }
+
 
             var title = formData[formData.length - 3].value;
             var introduce = formData[formData.length - 2].value;
@@ -670,6 +730,9 @@
                         }
 
                         if (recentPostId == id){
+                            $('#member_time').replaceWith(
+                                '<div id="member_time" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;"> 오늘의 학습 시간 : ' + result_hour + '시간 '+ result_min +'분 </div>'
+                            )
                             $('#recent_post_title'+ id).replaceWith(
                                 '<h2 id="recent_post_title'+id+'" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" style="font-size: 20px; color: gray; height: 40px;">'+ title +'</h2>'
                             );
