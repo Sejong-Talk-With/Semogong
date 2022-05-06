@@ -157,7 +157,11 @@
                             <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
                         </div>
                     </div>
-                    <div th:id="member_time" th:if="${sTime != null}" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;" th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
+                    <div class="d-sm-flex justify-content-between border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;">
+                        <a th:onclick="|javascript:reload_times(${member.id})|" class="btn btn-sm" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img src="/images/reload.png" height="20px" width="20px"></a>
+                        <div th:id="member_time" th:if="${sTime != null}"  th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
+                        <a class="btn-sm invisible"></a>
+                    </div>
                     <div th:if="${sTime == null}" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;" > 오늘의 학습 시간 : 0시간 0분 </div>
 
                 </div>
@@ -402,7 +406,7 @@
                                         <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input th:onkeyup="|javascript:enterKey(${post.id})|" th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
+                                        <input th:onkeypress="|javascript:enterKey(${post.id})|" th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
                                         <button th:id="'comment_submit_btn'+${post.id}" th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
                                         <button th:id="'comment_submit_btn'+${post.id}" type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
                                     </div>
@@ -729,9 +733,10 @@
                             }
                         }
 
+
                         if (recentPostId == id){
                             $('#member_time').replaceWith(
-                                '<div id="member_time" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;"> 오늘의 학습 시간 : ' + result_hour + '시간 '+ result_min +'분 </div>'
+                                '<div id="member_time"> 오늘의 학습 시간 : ' + result_hour + '시간 '+ result_min +'분 </div>'
                             )
                             $('#recent_post_title'+ id).replaceWith(
                                 '<h2 id="recent_post_title'+id+'" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" style="font-size: 20px; color: gray; height: 40px;">'+ title +'</h2>'
@@ -836,6 +841,18 @@
                     alert("업로드 실패, 잠시 후 다시 시도해주세요!");
                 }
             });
+        }
+
+        function reload_times(memberId) {
+            $.ajax({
+                url: 'members/times/' + memberId,
+                type: "GET"
+            })
+                .done(function (response) {
+                    $('#member_time').replaceWith(
+                        '<div id="member_time"> 오늘의 학습 시간 : ' + response.hour + '시간 '+ response.min +'분 </div>'
+                    )
+                })
         }
 
     </script>

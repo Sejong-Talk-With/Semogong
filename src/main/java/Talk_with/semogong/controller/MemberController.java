@@ -93,6 +93,7 @@ public class MemberController {
         return "redirect:/"; //주소 요청으로 변경
     }
 
+
     // "Entity -> DTO" Method
     private MemberEditForm createMemberEditFrom(Member member) {
         MemberEditForm memberEditForm = new MemberEditForm();
@@ -105,6 +106,7 @@ public class MemberController {
         memberEditForm.setImage(member.getImage());
         return memberEditForm;
     }
+
 
 
 

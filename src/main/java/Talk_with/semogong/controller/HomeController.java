@@ -192,6 +192,19 @@ public class HomeController {
         return "home";
     }
 
+    // 회원 총 학습 시간
+    @ResponseBody
+    @GetMapping("/members/times/{id}")
+    public Times times(@PathVariable("id") Long id, Model model) {
+        Optional<Post> optionalPost = postService.getRecentPost(id);
+        PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
+        Times totalStudyTimes = new Times(0);
+        if (memberRecentPostDto != null) {
+            totalStudyTimes = getTotalStudyTimes(memberRecentPostDto);
+        }
+        return totalStudyTimes;
+    }
+
     private Member getLoginMember(Authentication authentication) {
         MyUserDetail userDetail = (MyUserDetail) authentication.getPrincipal();  //userDetail 객체를 가져옴 (로그인 되어 있는 놈)
         String loginId = userDetail.getEmail();
