@@ -157,10 +157,10 @@
                             <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
                         </div>
                     </div>
-                    <div class="d-sm-flex justify-content-between border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;">
+                    <div th:if="${sTime != null}" class="d-sm-flex justify-content-between border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;">
                         <a th:onclick="|javascript:reload_times(${member.id})|" class="btn btn-sm" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img src="/images/reload.png" height="20px" width="20px"></a>
-                        <div th:id="member_time" th:if="${sTime != null}"  th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
-                        <a class="btn-sm invisible"></a>
+                        <div th:id="member_time"  th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
+                        <a class="btn btn-sm invisible" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img src="/images/reload.png" height="20px" width="20px"></a>
                     </div>
                     <div th:if="${sTime == null}" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;" > 오늘의 학습 시간 : 0시간 0분 </div>
 
@@ -438,7 +438,7 @@
 
         /*<![CDATA[*/
         var recentPostId = [[ ${recentPost?.id}]];
-
+        var focuedPostId = [[ ${focusedId}]];
         /*]]*/
         function alert_error(){
             alert("로그인 후 댓글을 달 수 있습니다!");
@@ -594,10 +594,6 @@
             }
         }
 
-        function upload_check() {
-            setTimeout(function(){alert("이미지 변경이 완료 되었습니다!");location.reload();},500);
-        }
-
         function post_edit(id) {
             var formData = $("#formPost").serializeArray();
             formData[formData.length - 1].value = simplemde.value(); // content
@@ -610,7 +606,7 @@
                 times[idx] = formData[step];
             }
 
-            if (recentPostId == id) {
+            if (focuedPostId == id) {
                 if (times.length % 2 == 0) {
                     var total1 = 0;
 
@@ -733,20 +729,22 @@
                             }
                         }
 
-
-                        if (recentPostId == id){
+                        if (focuedPostId == id) {
                             $('#member_time').replaceWith(
                                 '<div id="member_time"> 오늘의 학습 시간 : ' + result_hour + '시간 '+ result_min +'분 </div>'
                             )
+                        }
+
+                        if (recentPostId == id){
                             $('#recent_post_title'+ id).replaceWith(
                                 '<h2 id="recent_post_title'+id+'" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" style="font-size: 20px; color: gray; height: 40px;">'+ title +'</h2>'
                             );
                             $('#recent_post_introduce' + id).replaceWith(
                                 '<p id="recent_post_introduce' + id +'" class="small" style="margin: 3px">'+ introduce +'</p>'
-                            )
+                            );
                             $('#recent_post_times' + id).replaceWith(
                                 '<div id="recent_post_times'+ id +'" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;"></div>'
-                            )
+                            );
                             var cnt1 = 0;
                             for (var j = 1; j < times.length; j+=2, cnt1++) {
                                 if (cnt1 % 2 != 0) {

@@ -75,10 +75,13 @@ public class HomeController {
             }
 
             Times totalStudyTimes = null;
+            Long focusedPostId = null;
             if (memberRecentPostDto != null) {
                 totalStudyTimes = getTotalStudyTimes(memberRecentPostDto);
+                focusedPostId = memberRecentPostDto.getId();
             }
             model.addAttribute("sTime", totalStudyTimes);
+            model.addAttribute("focusedId", focusedPostId);
 
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
@@ -122,10 +125,13 @@ public class HomeController {
             }
 
             Times totalStudyTimes = null;
+            Long focusedPostId = null;
             if (memberRecentPostDto != null) {
                 totalStudyTimes = getTotalStudyTimes(memberRecentPostDto);
+                focusedPostId = memberRecentPostDto.getId();
             }
             model.addAttribute("sTime", totalStudyTimes);
+            model.addAttribute("focusedId", focusedPostId);
             List<Member> members = memberService.findAll();
             List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
             model.addAttribute("allMembers", memberDtos);
@@ -195,7 +201,7 @@ public class HomeController {
     // 회원 총 학습 시간
     @ResponseBody
     @GetMapping("/members/times/{id}")
-    public Times times(@PathVariable("id") Long id, Model model) {
+    public Times times(@PathVariable("id") Long id) {
         Optional<Post> optionalPost = postService.getRecentPost(id);
         PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
         Times totalStudyTimes = new Times(0);
