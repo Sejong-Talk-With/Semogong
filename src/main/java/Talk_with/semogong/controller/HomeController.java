@@ -270,10 +270,17 @@ public class HomeController {
                 String[] ends = times.get(i).split(":");
                 String[] starts = times.get(i - 1).split(":");
                 int endHour = Integer.parseInt(ends[0]);
+                if (0 <= endHour & endHour < 4) {
+                    endHour += 24;
+                }
                 int endMin = Integer.parseInt(ends[1]);
                 int end = endHour * 60 + endMin;
 
+
                 int startHour = Integer.parseInt(starts[0]);
+                if (0 <= startHour & startHour < 4) {
+                    startHour += 24;
+                }
                 int startMin = Integer.parseInt(starts[1]);
                 int start = startHour * 60 + startMin;
 
@@ -286,10 +293,16 @@ public class HomeController {
                 String[] ends = times.get(i).split(":");
                 String[] starts = times.get(i - 1).split(":");
                 int endHour = Integer.parseInt(ends[0]);
+                if (0 <= endHour & endHour < 4) {
+                    endHour += 24;
+                }
                 int endMin = Integer.parseInt(ends[1]);
                 int end = endHour * 60 + endMin;
 
                 int startHour = Integer.parseInt(starts[0]);
+                if (0 <= startHour & startHour < 4) {
+                    startHour += 24;
+                }
                 int startMin = Integer.parseInt(starts[1]);
                 int start = startHour * 60 + startMin;
 
@@ -300,10 +313,16 @@ public class HomeController {
             String[] starts = times.get(times.size() - 1).split(":");
 
             int endHour = Integer.parseInt(nowDateTime.format(timeFormatter));
+            if (0 <= endHour & endHour < 4) {
+                endHour += 24;
+            }
             int endMin = Integer.parseInt(nowDateTime.format(timeFormatter2));
             int end = endHour * 60 + endMin;
 
             int startHour = Integer.parseInt(starts[0]);
+            if (0 <= startHour & startHour < 4) {
+                startHour += 24;
+            }
             int startMin = Integer.parseInt(starts[1]);
             int start = startHour * 60 + startMin;
 

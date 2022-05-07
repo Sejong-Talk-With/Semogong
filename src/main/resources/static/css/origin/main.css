@@ -59,3 +59,16 @@
         width:20% !important;
     }
 }
+
+.reload {
+    transform:             rotate( 360deg );
+    -moz-transform:    rotate( 360deg );
+    -ms-transform:     rotate( 360deg );
+    -o-transform:      rotate( 360deg );
+    -webkit-transform: rotate( 360deg );
+    transition:             transform 1000ms ease;
+    -moz-transition:    -moz-transform 1000ms ease;
+    -ms-transition:     -ms-transform 1000ms ease;
+    -o-transition:      -o-transform 1000ms ease;
+    -webkit-transition: -webkit-transform 1000ms ease;
+}

@@ -158,8 +158,8 @@
                         </div>
                     </div>
                     <div th:if="${sTime != null}" class="d-sm-flex justify-content-between border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;">
-                        <a th:onclick="|javascript:reload_times(${member.id})|" class="btn btn-sm" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img src="/images/reload.png" height="20px" width="20px"></a>
-                        <div th:id="member_time"  th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
+                        <a th:onclick="|javascript:reload_times(${member.id})|" class="btn btn-sm" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img id="reload" src="/images/reload.png" height="20px" width="20px"></a>
+                        <div id="member_time"  th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
                         <a class="btn btn-sm invisible" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img src="/images/reload.png" height="20px" width="20px"></a>
                     </div>
                     <div th:if="${sTime == null}" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;" > 오늘의 학습 시간 : 0시간 0분 </div>
@@ -614,15 +614,23 @@
                         var ends1 = times[i].value.split(":");
                         var starts1 = times[i - 1].value.split(":");
                         var endHour1 = parseInt(ends1[0]);
+                        if (0 <= endHour1 && endHour1 < 4) {
+                            endHour1 += 24;
+                        }
                         var endMin1 = parseInt(ends1[1]);
                         var end1 = endHour1 * 60 + endMin1;
 
                         var startHour1 = parseInt(starts1[0]);
+                        if (0 <= startHour1 && startHour1 < 4) {
+                            startHour1 += 24;
+                        }
                         var startMin1 = parseInt(starts1[1]);
                         var start1 = startHour1 * 60 + startMin1;
 
                         total1 += (end1 - start1);
+
                     }
+
 
                     result_hour = Math.floor(total1 / 60);
                     result_min = total1 % 60;
@@ -633,10 +641,16 @@
                         var ends = times[i].value.split(":");
                         var starts = times[i - 1].value.split(":");
                         var endHour = parseInt(ends[0]);
+                        if (0 <= endHour && endHour < 4) {
+                            endHour += 24;
+                        }
                         var endMin = parseInt(ends[1]);
                         var end = endHour * 60 + endMin;
 
                         var startHour = parseInt(starts[0]);
+                        if (0 <= startHour && startHour < 4) {
+                            startHour += 24;
+                        }
                         var startMin = parseInt(starts[1]);
                         var start = startHour * 60 + startMin;
 
@@ -647,10 +661,16 @@
                     var today = new Date();
 
                     var sHour = parseInt(last_starts[0]);
+                    if (0 <= sHour && sHour < 4) {
+                        sHour += 24;
+                    }
                     var sMin = parseInt(last_starts[1]);
                     var last_start = sHour * 60 + sMin;
 
                     var hours = parseInt(('0' + today.getHours()).slice(-2));
+                    if (0 <= hours && hours < 4) {
+                        hours += 24;
+                    }
                     var minutes = parseInt(('0' + today.getMinutes()).slice(-2));
                     var now_end = hours * 60 + minutes;
 
@@ -658,6 +678,7 @@
 
                     result_hour = Math.floor(total2 / 60);
                     result_min = total2 % 60;
+
                 }
             }
 
@@ -852,6 +873,15 @@
                     )
                 })
         }
+
+        var rotate = document.getElementById('reload')
+
+        rotate.addEventListener('click', function() {
+            this.className = 'reload';
+            window.setTimeout(function() {
+                rotate.className = ''
+            }, 1000);
+        }, false);
 
     </script>
 </div>
