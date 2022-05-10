@@ -8,6 +8,8 @@
 
 Demo version : http://semogong.site
 
+Development log : [Notion](https://pleasant-rook-2ba.notion.site/SEMOGONG-ab2812f5c7b746c29a694ea6587c43a9)
+
 <br>
 
 ### 서비스 구성도
