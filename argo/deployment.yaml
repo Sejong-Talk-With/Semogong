@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: semogong
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: web
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: semogong-container
-        image: wjdqlsdlsp/semogong:1.0.11
+        image: wjdqlsdlsp/semogong:1.0.11-for-replicas
         ports:
         - containerPort: 8080
         envFrom:
