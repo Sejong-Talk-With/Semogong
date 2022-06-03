@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: semogong
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: web
