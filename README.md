@@ -6,7 +6,7 @@
 
 서비스 보완 및 디자인 변경 후 출시 예정
 
-Demo version : http://semogong.site
+Demo version : [SeMoGong](http://semogong.site)
 
 Description : [Description](https://bob8dod.github.io/2022/04/23/SEMOGONG-Description/)
 
