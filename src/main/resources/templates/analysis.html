@@ -18,7 +18,139 @@
     </div>
 </header>
 
-<img width="100%" height="100%" th:src="${plot}">
+<div class="container" style="padding: 0 20px">
+    <!-- Blog entries-->
+    <!-- Area Chart -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary"> <span
+                        class="ml-1 h5 font-weight-bolder">"Weekly Statics"</span></h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myAreaChart" width="1217" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Bootstrap core JS-->
 <script src="/js/bootstrap.bundle.min.js"></script>
+<!-- Page level plugins -->
+<script src="/vendor/chart.js/Chart.min.js"></script>
+<script src="/js/chart/chart-area-demo.js"></script>
+<script th:inline="javascript" type="text/javascript">
+    var pointList = [[ ${pointList}]];
+    var staticDays = [[ ${staticDays}]];
+
+    function enterKey() {
+        if (window.event.keyCode == 13) {
+            $("#search_button").click();
+        }
+    }
+
+    console.log([[${staticsDataMap}]]);
+    var datasets = [];
+    [# th:each="user, stat : ${staticsDataMap}"]
+    var user[[${stat.count}]] = [[${user.value}]];
+    var randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+    datasets.push({
+        label: [[${user.key.name}]],
+        lineTension: 0.3,
+        backgroundColor: "rgba(33,37,41,0)",
+        borderColor: randomColor,
+        pointRadius: 3,
+        pointBackgroundColor: randomColor,
+        pointBorderColor: randomColor,
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: randomColor,
+        pointHoverBorderColor: randomColor,
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [user[[${stat.count}]][staticDays[0]].hour, user[[${stat.count}]][staticDays[1]].hour,user[[${stat.count}]][staticDays[2]].hour,user[[${stat.count}]][staticDays[3]].hour,user[[${stat.count}]][staticDays[4]].hour,user[[${stat.count}]][staticDays[5]].hour,user[[${stat.count}]][staticDays[6]].hour],
+    });
+
+
+    [/]
+
+    // Area Chart Example
+    var ctx = document.getElementById("myAreaChart");
+
+    var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [staticDays[0],staticDays[1],staticDays[2],staticDays[3],staticDays[4],staticDays[5],staticDays[6]],
+            datasets: datasets,
+        },
+        options: {
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                }
+            },
+            scales: {
+                xAxes: [{
+                    time: {
+                        unit: 'date'
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 7
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        maxTicksLimit: 5,
+                        padding: 10,
+                        // Include a dollar sign in the ticks
+                        callback: function (value, index, values) {
+                            return number_format(value) + '시간';
+                        }
+                    },
+                    gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        borderDash: [2],
+                        zeroLineBorderDash: [2]
+                    }
+                }],
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                titleMarginBottom: 10,
+                titleFontColor: '#6e707e',
+                titleFontSize: 14,
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                intersect: false,
+                mode: 'index',
+                caretPadding: 10,
+                callbacks: {
+                    label: function (tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        return datasetLabel + " : "+ number_format(tooltipItem.yLabel) + '시간';
+                    }
+                }
+            }
+        }
+    });
+</script>
 </body>

@@ -27,7 +27,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security' // spring-security
 	implementation 'org.springframework.security:spring-security-test' // spring-security-test
 	implementation 'com.atlassian.commonmark:commonmark:0.17.0' // for using markdown (SimpleMDE)
-	implementation 'org.apache.commons:commons-lang3:3.12.0' // for easy using
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	implementation 'org.projectlombok:lombok:1.18.20'// for easy using
 	compileOnly 'org.projectlombok:lombok' // for annotation
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0' //for tracking sql query
 	runtimeOnly 'mysql:mysql-connector-java' // for Real _ in AWS RDS

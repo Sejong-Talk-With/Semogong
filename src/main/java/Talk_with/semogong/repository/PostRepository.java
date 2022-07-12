@@ -46,6 +46,7 @@ public class PostRepository {
                 .getResultList();
     }
 
+
     // 게시글 단일 삭제
     public void deleteOne(Post post) {
         em.remove(post);

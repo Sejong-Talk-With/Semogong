@@ -26,7 +26,6 @@ public class S3Service {
     @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey;
 
-
     @Value("${cloud.aws.credentials.secretKey}")
     private String secretKey;
 
@@ -49,9 +48,6 @@ public class S3Service {
     public Image upload(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         String pathName = RandomStringUtils.randomAlphanumeric(16) + fileName;
-        System.out.println("bucket = " + bucket);
-        System.out.println("pathName = " + pathName);
-        System.out.println("file.getInputStream() = " + file.getInputStream());
         s3Client.putObject(new PutObjectRequest(bucket, pathName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
@@ -59,8 +55,4 @@ public class S3Service {
         return image;
     }
 
-    public String load() throws IOException {
-        String imgName = "my_plot.png";
-        return s3Client.getUrl(bucket, imgName).toString();
-    }
 }
