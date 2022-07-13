@@ -21,15 +21,59 @@
 <div class="container" style="padding: 0 20px">
     <!-- Blog entries-->
     <!-- Area Chart -->
-    <div class="col-xl-8 col-lg-7">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary"> <span
-                        class="ml-1 h5 font-weight-bolder">"Weekly Statics"</span></h6>
+    <div class="row">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary"> <span
+                            class="ml-1 h5 font-weight-bolder">Weekly Statics</span></h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myAreaChart" height="350"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <canvas id="myAreaChart" width="1217" height="400"></canvas>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header d-sm-flex justify-content-between" style="color: black !important;">
+                    Weekly Ranking
+                </div>
+                <div class="card-body">
+                    <div class="row" th:each="mem: ${members}">
+                        <div class="card-text d-flex justify-content-between" style="margin: 3px 0px 5px 3px;">
+                            <div class="d-flex">
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                    <img th:if="${mem.image != null}"
+                                         th:src="${mem.image.imgSrc}" alt="profile">
+                                    <img th:if="${mem.image == null}" src="/images/profile.png">
+                                </div>
+                                <div style="display:inline-block; margin-left: 3px" th:text="${mem.name}"></div>
+                                <div th:if="${mem.time != null}" th:text="${mem.time.hour}+ '시간 ' + ${mem.time.min} + '분'" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px; margin-left: 10px"></div>
+                                <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px" > 0시간 0분 </div>
+                            </div>
+                            <div style="margin-left: 10px">
+                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:#198754;" viewBox="0 0 16 16">
+                                    <circle cx="8" cy="8" r="8"/>
+                                </svg>
+                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:#ffc107;" viewBox="0 0 16 16">
+                                    <circle cx="8" cy="8" r="8"/>
+                                </svg>
+                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:rgba(33,37,41,0.53);" viewBox="0 0 16 16">
+                                    <circle cx="8" cy="8" r="8"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
+                        <!--                            <circle cx="8" cy="8" r="8"/>-->
+                        <!--                        </svg>-->
+                        <!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
+                        <!--                            <circle cx="8" cy="8" r="8"/>-->
+                        <!--                        </svg>-->
+                        <hr th:if="${!memStat.last}" class="mb-2">
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,23 +100,29 @@
     var datasets = [];
     [# th:each="user, stat : ${staticsDataMap}"]
     var user[[${stat.count}]] = [[${user.value}]];
-    var randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-    datasets.push({
-        label: [[${user.key.name}]],
-        lineTension: 0.3,
-        backgroundColor: "rgba(33,37,41,0)",
-        borderColor: randomColor,
-        pointRadius: 3,
-        pointBackgroundColor: randomColor,
-        pointBorderColor: randomColor,
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: randomColor,
-        pointHoverBorderColor: randomColor,
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: [user[[${stat.count}]][staticDays[0]].hour, user[[${stat.count}]][staticDays[1]].hour,user[[${stat.count}]][staticDays[2]].hour,user[[${stat.count}]][staticDays[3]].hour,user[[${stat.count}]][staticDays[4]].hour,user[[${stat.count}]][staticDays[5]].hour,user[[${stat.count}]][staticDays[6]].hour],
-    });
-
+    if (user[[${stat.count}]][staticDays[6]].hour !== 0) {
+        datasets.push({
+            label: [[${user.key.name}]],
+            lineTension: 0.3,
+            backgroundColor: "rgba(33,37,41,0)",
+            borderColor: [[${user.key.color}]],
+            pointRadius: 3,
+            pointBackgroundColor: [[${user.key.color}]],
+            pointBorderColor: [[${user.key.color}]],
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: [[${user.key.color}]],
+            pointHoverBorderColor: [[${user.key.color}]],
+            pointHitRadius: 10,
+            pointBorderWidth: 2,
+            data: [user[[${stat.count}]][staticDays[0]].hour + Math.round(user[[${stat.count}]][staticDays[0]].min/60),
+                user[[${stat.count}]][staticDays[1]].hour+ Math.round(user[[${stat.count}]][staticDays[1]].min/60),
+                user[[${stat.count}]][staticDays[2]].hour+ Math.round(user[[${stat.count}]][staticDays[2]].min/60),
+                user[[${stat.count}]][staticDays[3]].hour+ Math.round(user[[${stat.count}]][staticDays[3]].min/60),
+                user[[${stat.count}]][staticDays[4]].hour+ Math.round(user[[${stat.count}]][staticDays[4]].min/60),
+                user[[${stat.count}]][staticDays[5]].hour+ Math.round(user[[${stat.count}]][staticDays[5]].min/60),
+                user[[${stat.count}]][staticDays[6]].hour+ Math.round(user[[${stat.count}]][staticDays[6]].min/60)],
+        });
+    }
 
     [/]
 
@@ -82,7 +132,7 @@
     var myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [staticDays[0],staticDays[1],staticDays[2],staticDays[3],staticDays[4],staticDays[5],staticDays[6]],
+            labels: [staticDays[0]+'일',staticDays[1]+'일',staticDays[2]+'일',staticDays[3]+'일',staticDays[4]+'일',staticDays[5]+'일',staticDays[6]+'일'],
             datasets: datasets,
         },
         options: {

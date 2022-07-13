@@ -13,8 +13,7 @@ public interface PostNativeRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT * " +
             "FROM post p " +
             "where p.member_id = :m_id " +
-            "and p.create_time > DATE_SUB(CONVERT_TZ( NOW(),'SYSTEM','Asia/Seoul'), INTERVAL 7+ :off DAY) " +
-            "and p.create_time < DATE_SUB(CONVERT_TZ( NOW(),'SYSTEM','Asia/Seoul'), INTERVAL :off DAY);", nativeQuery = true)
-    List<Post> getLast7(@Param(value = "m_id") Long id, @Param(value = "off") int offset);
+            "and p.create_time BETWEEN :start_date and :end_date ;", nativeQuery = true)
+    List<Post> getLast7(@Param(value = "m_id") Long id, @Param(value="start_date") String start, @Param(value = "end_date") String end);
 
 }

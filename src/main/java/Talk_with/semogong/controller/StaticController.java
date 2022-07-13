@@ -14,10 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.awt.*;
 import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -37,12 +39,18 @@ public class StaticController {
         List<MemberDto> members = memberService.findAll().stream().map(MemberDto::new).collect(Collectors.toList());
         Map<MemberDto, Map<Integer, Times>> memberStatic = new HashMap<>();
         for (MemberDto member : members) {
+            Random rand = new Random();
+            int r = rand.nextInt(255);
+            int g = rand.nextInt(255);
+            int b = rand.nextInt(255);
+            member.setColor("rgba("+String.valueOf(r)+","+String.valueOf(g)+","+String.valueOf(b)+","+"1)");
             memberStatic.put(member, getStaticsData(member));
         }
         model.addAttribute("staticDays", memberStatic.get(members.get(0)).keySet().toArray());
         model.addAttribute("nav", "data");
         model.addAttribute("check", true);
         model.addAttribute("staticsDataMap", memberStatic);
+        model.addAttribute("members",members);
         return "analysis";
     }
 
@@ -50,23 +58,38 @@ public class StaticController {
 
         List<Post> posts;
         Map<Integer, Times> dayTimes = new HashMap<>();
-
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // 0-4 사이 요청 (이틀전까지의 데이터)
         if (0 < LocalDateTime.now().getHour() & LocalDateTime.now().getHour() < 4) {
-            posts = postNativeRepository.getLast7(member.getId(), 2);
+            String end = LocalDateTime.now().minusDays(1).format(dateTimeFormatter);
+            String start = LocalDateTime.now().minusDays(8).format(dateTimeFormatter);
+            posts = postNativeRepository.getLast7(member.getId(),start,end);
             for (int i = 8; i > 1; i--) {
                 dayTimes.put(LocalDateTime.now().minusDays(i).getDayOfMonth(), new Times(0));
             }
         } else { // 이외
-            posts = postNativeRepository.getLast7(member.getId(),1);
+            String end = LocalDateTime.now().format(dateTimeFormatter);
+            String start = LocalDateTime.now().minusDays(7).format(dateTimeFormatter);
+            posts = postNativeRepository.getLast7(member.getId(),start, end);
             for (int i = 7; i > 0; i--) {
                 dayTimes.put(LocalDateTime.now().minusDays(i).getDayOfMonth(), new Times(0));
             }
         }
-
+        int total = 0;
         for (Post post : posts) {
-            dayTimes.put(post.getCreateTime().getDayOfMonth(), getTimes(post.getTimes()));
+            Times time = getTimes(post.getTimes());
+            total += (time.getHour() * 60 + time.getMin());
+            Times totalTimes = new Times(total);
+            dayTimes.put(post.getCreateTime().getDayOfMonth(), totalTimes);
         }
+        Object[] array = dayTimes.keySet().toArray();
+        for (int i = 1; i < array.length; i++) {
+            Times times = dayTimes.get((Integer) array[i]);
+            if (times.getHour() == 0) {
+                dayTimes.put((Integer) array[i], dayTimes.get((Integer) array[i-1]));
+            }
+        }
+
         return dayTimes;
     }
 
