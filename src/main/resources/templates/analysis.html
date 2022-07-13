@@ -25,7 +25,7 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary"> <span
+                    <h6 class="m-0 font-weight-bold"> <span
                             class="ml-1 h5 font-weight-bolder">Weekly Statics</span></h6>
                 </div>
                 <div class="card-body">
@@ -37,13 +37,15 @@
         </div>
         <div class="col-lg-6">
             <div class="card mb-4">
-                <div class="card-header d-sm-flex justify-content-between" style="color: black !important;">
-                    Weekly Ranking
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold"> <span
+                            class="ml-1 h5 font-weight-bolder">Weekly Ranking</span></h6>
                 </div>
                 <div class="card-body">
                     <div class="row" th:each="mem: ${members}">
                         <div class="card-text d-flex justify-content-between" style="margin: 3px 0px 5px 3px;">
                             <div class="d-flex">
+                                <div style="margin-right: 10px" th:text="|${memStat.count}등|">1</div>
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${mem.image != null}"
                                          th:src="${mem.image.imgSrc}" alt="profile">
@@ -54,13 +56,7 @@
                                 <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px" > 0시간 0분 </div>
                             </div>
                             <div style="margin-left: 10px">
-                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:#198754;" viewBox="0 0 16 16">
-                                    <circle cx="8" cy="8" r="8"/>
-                                </svg>
-                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:#ffc107;" viewBox="0 0 16 16">
-                                    <circle cx="8" cy="8" r="8"/>
-                                </svg>
-                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:rgba(33,37,41,0.53);" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block;" th:styleappend=" |fill:${mem.color}|" viewBox="0 0 16 16">
                                     <circle cx="8" cy="8" r="8"/>
                                 </svg>
                             </div>
@@ -72,8 +68,9 @@
                         <!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
                         <!--                            <circle cx="8" cy="8" r="8"/>-->
                         <!--                        </svg>-->
-                        <hr th:if="${!memStat.last}" class="mb-2">
+                        <hr class="mb-2">
                     </div>
+                    <span class="text-secondary">❕ &nbsp;&nbsp;1시간 미만의 이용자는 표시되지 않습니다.</span>
                 </div>
             </div>
         </div>

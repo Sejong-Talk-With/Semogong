@@ -38,20 +38,45 @@ public class StaticController {
         }
         List<MemberDto> members = memberService.findAll().stream().map(MemberDto::new).collect(Collectors.toList());
         Map<MemberDto, Map<Integer, Times>> memberStatic = new HashMap<>();
+        List<Integer> days = getDays(LocalDateTime.now());
         for (MemberDto member : members) {
-            Random rand = new Random();
-            int r = rand.nextInt(255);
-            int g = rand.nextInt(255);
-            int b = rand.nextInt(255);
-            member.setColor("rgba("+String.valueOf(r)+","+String.valueOf(g)+","+String.valueOf(b)+","+"1)");
-            memberStatic.put(member, getStaticsData(member));
+            Map<Integer, Times> staticsData = getStaticsData(member);
+            memberStatic.put(member, staticsData);
+            member.setTime(staticsData.get(days.get(days.size()-1)));
+            if (member.getTime().getHour() != 0) {
+                Random rand = new Random();
+                int r = rand.nextInt(255);
+                int g = rand.nextInt(255);
+                int b = rand.nextInt(255);
+                member.setColor("rgba(" + String.valueOf(r) + "," + String.valueOf(g) + "," + String.valueOf(b) + "," + "1)");
+            } else {
+                member.setColor("rgba(236,236,236,1)");
+            }
         }
-        model.addAttribute("staticDays", memberStatic.get(members.get(0)).keySet().toArray());
+
+        members.sort(new TimeSorter());
+
+        model.addAttribute("staticDays", days);
         model.addAttribute("nav", "data");
         model.addAttribute("check", true);
         model.addAttribute("staticsDataMap", memberStatic);
         model.addAttribute("members",members);
         return "analysis";
+    }
+
+    private List<Integer> getDays(LocalDateTime now) {
+        List<Integer> days = new ArrayList<>();
+        if (0 < now.getHour() & now.getHour() < 4) {
+            for (int i = 8; i > 1; i--) {
+                days.add(LocalDateTime.now().minusDays(i).getDayOfMonth());
+            }
+        } else { // 이외
+            for (int i = 7; i > 0; i--) {
+                days.add(LocalDateTime.now().minusDays(i).getDayOfMonth());
+            }
+        }
+
+        return days;
     }
 
     private Map<Integer, Times> getStaticsData(MemberDto member) {
