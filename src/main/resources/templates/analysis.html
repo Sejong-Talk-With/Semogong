@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col">
             <div class="card mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold"> <span
@@ -56,21 +56,14 @@
                                 <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px" > 0시간 0분 </div>
                             </div>
                             <div style="margin-left: 10px">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block;" th:styleappend=" |fill:${mem.color}|" viewBox="0 0 16 16">
-                                    <circle cx="8" cy="8" r="8"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="14" style="display:inline-block;" th:styleappend=" |fill:${mem.color}|" viewBox="0 0 16 16">
+                                    <rect rx="5" ry="5" width="30" height="10"/>
                                 </svg>
                             </div>
                         </div>
-
-                        <!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
-                        <!--                            <circle cx="8" cy="8" r="8"/>-->
-                        <!--                        </svg>-->
-                        <!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
-                        <!--                            <circle cx="8" cy="8" r="8"/>-->
-                        <!--                        </svg>-->
                         <hr class="mb-2">
                     </div>
-                    <span class="text-secondary">❕ &nbsp;&nbsp;1시간 미만의 이용자는 표시되지 않습니다.</span>
+                    <span class="text-secondary">❕ 1시간 미만의 이용자는 표시되지 않습니다.</span>
                 </div>
             </div>
         </div>
@@ -93,7 +86,6 @@
         }
     }
 
-    console.log([[${staticsDataMap}]]);
     var datasets = [];
     [# th:each="user, stat : ${staticsDataMap}"]
     var user[[${stat.count}]] = [[${user.value}]];

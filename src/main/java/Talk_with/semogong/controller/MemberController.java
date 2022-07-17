@@ -3,18 +3,22 @@ package Talk_with.semogong.controller;
 import Talk_with.semogong.domain.att.DesiredJob;
 import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Member;
+import Talk_with.semogong.domain.form.LoginForm;
 import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.domain.form.MemberForm;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -84,6 +88,38 @@ public class MemberController {
         MultipartFile file = files[0];
         Image image = s3Service.upload(file);
         memberService.editMemberImg(id, image);
+    }
+
+    @GetMapping("/members/login")
+    public String login(Model model) {
+        model.addAttribute("loginForm", new LoginForm());
+        return "login";
+    }
+
+    @PostMapping("/members/login")
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/") String redirectURL,
+                        HttpServletRequest request) {
+
+
+        // form 형식에 맞지 않은 제출
+        if (bindingResult.hasErrors()) {
+            return "login";
+        }
+
+        // 로그인 검증         // Global Error -> Object 단 오류! (직접 처리해야 되는 부분)
+        Member loginMember = memberService.findByLoginId(loginForm.getLoginId());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (loginMember == null || !passwordEncoder.matches(loginForm.getPassword(), loginMember.getPassword())) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "login";
+        }
+
+        // 로그인 성공
+        HttpSession session = request.getSession();
+        // 세션에 로그인 회원 정보 보관
+        session.setAttribute("loginMember", loginMember.getId());
+        return "redirect:"+ redirectURL;
     }
 
     // 회원 로그아웃

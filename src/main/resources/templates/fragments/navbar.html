@@ -9,10 +9,8 @@
                 class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a th:class="${nav == 'home'}? 'nav-link active' : 'nav-link'" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" aria-current="page" href="/">Today</a></li>
-                <li class="nav-item" th:if="${check}"><a th:class="${nav == 'data'}? 'nav-link active' : 'nav-link'" href="/data">Data</a></li>
-                <li class="nav-item" th:if="${!check}"><a role="button" th:class="${nav == 'data'}? 'nav-link active' : 'nav-link'" onclick="login_check()">Data</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${nav == 'home'}? 'active' : _" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${nav == 'data'}? 'active' : _" href="/data">Data</a></li>
             </ul>
         </div>
     </div>

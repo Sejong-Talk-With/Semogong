@@ -14,7 +14,6 @@ import Talk_with.semogong.service.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,18 +41,14 @@ public class CommentApiController {
 
     // 댓글 작성
     @PostMapping("/comment/api/new/{id}")
-    public String create(@PathVariable("id") Long postId, Authentication authentication, Model model, @RequestParam Map<String, Object> paramMap) {
-        MyUserDetail userDetail =  (MyUserDetail) authentication.getPrincipal();  //userDetail 객체를 가져옴 (로그인 되어 있는 놈)
-        String loginId = userDetail.getEmail();
-        Member member = memberService.findByLoginId(loginId);
+    public String create(@PathVariable("id") Long postId, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model, @RequestParam Map<String, Object> paramMap) {
+        Member member = memberService.findOne(loginMemberId);
         Post post = postService.findOne(postId);
         Comment comment = Comment.makeComment(paramMap.get("comment").toString(), post, member, LocalDateTime.now());
         commentService.save(comment);
 
         PostViewDto postViewDto = new PostViewDto(post);
         MemberDto memberDto = new MemberDto(member);
-//        List<Comment> commentList = commentService.findAll(postId);
-//        List<CommentViewDto> commentViewDtoList = commentList.stream().map(CommentViewDto::new).collect(Collectors.toList());
 
         model.addAttribute("post", postViewDto);
         model.addAttribute("check", true);
@@ -64,17 +59,13 @@ public class CommentApiController {
 
     // 댓글 삭제
     @DeleteMapping("/comment/delete/{id}")
-    public String commentDelete(@PathVariable("id") Long id, Authentication authentication, Model model, @RequestParam Long postId) {
+    public String commentDelete(@PathVariable("id") Long id, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model, @RequestParam Long postId) {
         commentService.deleteComment(id);
-        MyUserDetail userDetail =  (MyUserDetail) authentication.getPrincipal();  //userDetail 객체를 가져옴 (로그인 되어 있는 놈)
-        String loginId = userDetail.getEmail();
-        Member member = memberService.findByLoginId(loginId);
+        Member member = memberService.findOne(loginMemberId);
         Post post = postService.findOne(postId);
 
         PostViewDto postViewDto = new PostViewDto(post);
         MemberDto memberDto = new MemberDto(member);
-//        List<Comment> commentList = commentService.findAll(postId);
-//        List<CommentViewDto> commentViewDtoList = commentList.stream().map(CommentViewDto::new).collect(Collectors.toList());
 
         model.addAttribute("post", postViewDto);
         model.addAttribute("check", true);

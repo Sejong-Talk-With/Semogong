@@ -1,15 +1,12 @@
 package Talk_with.semogong.controller;
 
-import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.att.Times;
 import Talk_with.semogong.domain.dto.MemberDto;
-import Talk_with.semogong.domain.dto.PostViewDto;
 import Talk_with.semogong.repository.PostNativeRepository;
 import Talk_with.semogong.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +29,7 @@ public class StaticController {
     private final PostNativeRepository postNativeRepository;
 
     @GetMapping("/data")
-    public String data(Model model, Authentication authentication) throws IOException {
-        if (authentication == null) {
-            return "redirect:/";
-        }
+    public String data(Model model) throws IOException {
         List<MemberDto> members = memberService.findAll().stream().map(MemberDto::new).collect(Collectors.toList());
         Map<MemberDto, Map<Integer, Times>> memberStatic = new HashMap<>();
         List<Integer> days = getDays(LocalDateTime.now());

@@ -169,25 +169,8 @@
                 <!-- Login (if member did not Log in) -->
                 <div class="card-header" th:if="${!check}">Log In</div>
                 <div class="card-body" th:if="${!check}">
-                    <form action="/member/login" method="post">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Id">
-                            <label for="username">Id</label>
-                        </div>
-                        <div class="form-floating mb-2">
-                            <input type="password" class="form-control" id="password" name="password"
-                                   placeholder="Password">
-                            <label for="password">Password</label>
-                        </div>
-                        <!--                        <div class="checkbox mb-3">-->
-                        <!--                            <label>-->
-                        <!--                                <input type="checkbox" value="remember-me"> Remember me-->
-                        <!--                            </label>-->
-                        <!--                        </div>-->
-                        <p id="valid" th:if="${error}" th:text="${exception}" class="alert alert-danger mb-2"></p>
-                        <button class="w-100 btn btn-lg btn-primary" type="submit">LOG IN</button>
-                    </form>
-                    <a style="margin-top: 5px" class="w-100 btn btn-lg btn-primary" href="/members/signup">SIGN UP</a>
+                    <a class="w-100 btn btn-lg btn-primary mb-2" href="/members/login">LOG IN</a>
+                    <a class="w-100 btn btn-lg btn-primary mb-2" href="/members/signup">SIGN UP</a>
                 </div>
             </div>
 

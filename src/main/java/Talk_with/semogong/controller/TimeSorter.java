@@ -1,8 +1,6 @@
 package Talk_with.semogong.controller;
 
-import Talk_with.semogong.domain.att.Times;
 import Talk_with.semogong.domain.dto.MemberDto;
-import lombok.Data;
 
 import java.util.Comparator;
 

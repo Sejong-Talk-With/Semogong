@@ -17,6 +17,8 @@ spring:
       maxFileSize: 10MB
       maxRequestSize: 20MB
 
+
+
 cloud:
   aws:
     credentials:
@@ -33,3 +35,9 @@ logging:
   level:
     org.hibernate.SQL: debug
 #    org.hibernate.type: trace # p6spy로 대체
+
+
+server:
+  servlet:
+    session:
+      timeout: 36000

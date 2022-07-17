@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/addheader :: addheader"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body class="bg-light">
+<nav th:replace="fragments/navbar :: navbar"/>
+<section class="w-100 p-4 d-flex justify-content-center pb-4">
+        <div class="card mb-4">
+            <!-- Profile (if member did Log in) -->
+
+
+
+            <!-- Login (if member did not Log in) -->
+            <div class="card-header">LOG IN</div>
+            <div class="card-body" >
+                <img class="card-img-top d-sm-flex justify-content-center align-items-center mb-2" src="/images/semogong.jpg">
+                <form action="/members/login" th:object="${loginForm}" method="post">
+                    <div class="form-floating mb-2">
+                        <input type="text" class="form-control" id="loginId" th:field="*{loginId}" placeholder="Id" th:errorclass = "field-error">
+                        <label for="loginId">Id</label>
+                        <div class="field-error" th:errors="*{loginId}"> ID 오류 </div>
+                    </div>
+                    <div class="form-floating mb-2">
+                        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Password" th:errorclass = "field-error">
+                        <label for="password">Password</label>
+                        <div class="field-error" th:errors="*{password}"> Password 오류</div>
+                    </div>
+                    <div th:if="${#fields.hasGlobalErrors()}"> <!--Object단 오류 확인-->
+                        <p class="alert alert-danger mb-2" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+                    </div>
+                    <button class="w-100 btn btn-lg btn-primary mb-2" type="submit">LOG IN</button>
+                </form>
+                <a class="w-100 btn btn-lg btn-primary mb-2" href="/members/signup">SIGN UP</a>
+
+
+            </div>
+        </div>
+</section>
+</body>
+</html>
