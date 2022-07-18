@@ -45,6 +45,13 @@
     }
 }
 
+@media (max-width: 400px) {
+    #media-hide {
+        display: none !important;
+    }
+}
+
+
 @media (min-width: 1400px) {
     .container {
         max-width: 1600px !important;

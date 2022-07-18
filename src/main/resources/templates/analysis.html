@@ -45,7 +45,11 @@
                     <div class="row" th:each="mem: ${members}">
                         <div class="card-text d-flex justify-content-between" style="margin: 3px 0px 5px 3px;">
                             <div class="d-flex">
-                                <div style="margin-right: 10px" th:text="|${memStat.count}등|">1</div>
+                                <div style="margin-right: 20px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="14" style="display:inline-block;" th:styleappend=" |fill:${mem.color}|" viewBox="0 0 16 16">
+                                        <rect rx="5" ry="5" width="30" height="10"/>
+                                    </svg>
+                                </div>
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${mem.image != null}"
                                          th:src="${mem.image.imgSrc}" alt="profile">
@@ -55,11 +59,7 @@
                                 <div th:if="${mem.time != null}" th:text="${mem.time.hour}+ '시간 ' + ${mem.time.min} + '분'" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px; margin-left: 10px"></div>
                                 <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px" > 0시간 0분 </div>
                             </div>
-                            <div style="margin-left: 10px">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="14" style="display:inline-block;" th:styleappend=" |fill:${mem.color}|" viewBox="0 0 16 16">
-                                    <rect rx="5" ry="5" width="30" height="10"/>
-                                </svg>
-                            </div>
+                            <div id="media-hide" class="d-sm-flex justify-content-end" style="padding: 2.5px 2.5px; margin-left: 10px">최근 7일 중&nbsp;<strong th:text="|${mem.workCnt}일|"></strong>&nbsp;공부</div>
                         </div>
                         <hr class="mb-2">
                     </div>

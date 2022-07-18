@@ -102,12 +102,15 @@ public class StaticController {
             dayTimes.put(post.getCreateTime().getDayOfMonth(), totalTimes);
         }
         Object[] array = dayTimes.keySet().toArray();
-        for (int i = 1; i < array.length; i++) {
+        int cnt = 0;
+        for (int i = 0; i < array.length; i++) {
             Times times = dayTimes.get((Integer) array[i]);
             if (times.getHour() == 0) {
-                dayTimes.put((Integer) array[i], dayTimes.get((Integer) array[i-1]));
+                cnt += 1;
+                if (i != 0) dayTimes.put((Integer) array[i], dayTimes.get((Integer) array[i-1]));
             }
         }
+        member.setWorkCnt(7-cnt);
 
         return dayTimes;
     }

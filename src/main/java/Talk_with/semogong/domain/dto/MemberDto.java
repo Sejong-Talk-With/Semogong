@@ -18,6 +18,7 @@ public class MemberDto {
     private StudyState state;
     private Times time;
     private String color;
+    private int workCnt;
 
     public MemberDto(Member member) {
         this.id = member.getId();
