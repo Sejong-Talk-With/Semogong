@@ -18,7 +18,6 @@ spring:
       maxRequestSize: 20MB
 
 
-
 cloud:
   aws:
     credentials:
@@ -41,3 +40,6 @@ server:
   servlet:
     session:
       timeout: 36000
+      tracking-modes: 'cookie'
+
+
