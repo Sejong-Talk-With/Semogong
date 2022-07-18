@@ -49,12 +49,15 @@ public class StaticController {
         }
 
         members.sort(new TimeSorter());
+        List<MemberDto> attendSorted = new ArrayList<>(members);
+        attendSorted.sort(new AttendSorter());
 
         model.addAttribute("staticDays", days);
         model.addAttribute("nav", "data");
         model.addAttribute("check", true);
         model.addAttribute("staticsDataMap", memberStatic);
-        model.addAttribute("members",members);
+        model.addAttribute("members",members.subList(0,4));
+        model.addAttribute("attendTop", attendSorted.get(0));
         return "analysis";
     }
 

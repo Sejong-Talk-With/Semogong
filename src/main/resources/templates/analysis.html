@@ -63,7 +63,45 @@
                         </div>
                         <hr class="mb-2">
                     </div>
-                    <span class="text-secondary">❕ 1시간 미만의 이용자는 표시되지 않습니다.</span>
+                    <div class="text-secondary" style="margin-top: 10px;">❕ 1시간 이상의 이용자만 표시됩니다.</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-center">
+                            <h6 class="m-0 font-weight-bold"> <span
+                                    class="ml-1 h6 fw-bold">금주의 공부왕 👑</span></h6>
+                        </div>
+                        <div class="card-body" th:with="mem=${members[0]}">
+                            <div class="d-flex justify-content-center">
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                    <img th:if="${mem.image != null}"
+                                         th:src="${mem.image.imgSrc}" alt="profile">
+                                    <img th:if="${mem.image == null}" src="/images/profile.png">
+                                </div>
+                                <div style="display:inline-block; margin-left: 3px; font-size: larger" class="fw-bold" th:text="${mem.name}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-center">
+                            <h6 class="m-0 font-weight-bold"> <span
+                                    class="ml-1 h6 fw-bold">금주의 출석왕 🏅</span></h6>
+                        </div>
+                        <div class="card-body" th:with="mem=${attendTop}">
+                            <div class="d-flex justify-content-center">
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                    <img th:if="${mem.image != null}"
+                                         th:src="${mem.image.imgSrc}" alt="profile">
+                                    <img th:if="${mem.image == null}" src="/images/profile.png">
+                                </div>
+                                <div style="display:inline-block; margin-left: 3px; font-size: larger" class="fw-bold" th:text="${mem.name}"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
