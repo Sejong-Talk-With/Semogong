@@ -29,24 +29,33 @@
             <div class="row">
                 <div class="col-lg-6" th:if="${posts != null}" th:each="post:${posts}">
                     <!-- Blog post-->
-                    <div th:id="'post'+${post.id}" class="card mb-4" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${post.id}" >
-                        <div class="overflow-hidden d-sm-flex justify-content-center align-items-center w-100" style= "height: 175px; background-color: white; border: solid 1px lightgray;">
-                            <img th:id="'home_post_img'+${post.id}" th:if="${post.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
+                    <div th:id="'post'+${post.id}" class="card mb-4" data-bs-toggle="modal"
+                         th:attr="data-bs-target='#postModal'+${post.id}">
+                        <div class="overflow-hidden d-sm-flex justify-content-center align-items-center w-100"
+                             style="height: 175px; background-color: white; border: solid 1px lightgray;">
+                            <img th:id="'home_post_img'+${post.id}" th:if="${post.postImg != null}"
+                                 class="card-img-top d-sm-flex justify-content-center align-items-center"
                                  th:src="${post.postImg?.imgSrc}" alt="..."
                                  style="border: solid lightgray 1px; border: 0px; "/>
-                            <img th:id="'home_post_img'+${post.id}" th:if="${post.postImg == null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
+                            <img th:id="'home_post_img'+${post.id}" th:if="${post.postImg == null}"
+                                 class="card-img-top d-sm-flex justify-content-center align-items-center"
                                  src="/images/semogong_light.jpg" alt="..."
                                  style="border: solid lightgray 1px; border: 0px; "/>
                         </div>
                         <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
                             <div th:id="'commentDiv'+${post.id}" class="d-sm-flex">
-                                <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;" th:text="${post.formatCreateDate}">Post Date</p>
+                                <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;"
+                                   th:text="${post.formatCreateDate}">Post Date</p>
                                 <th:block th:if="${post.commentCount != 0}">
                                     <img src="/images/comment.png" width="14px" height="14px"/>
-                                    <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:id="'commentCount'+${post.id}" th:text="${post.commentCount}"> 1 </p>
+                                    <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px"
+                                       th:id="'commentCount'+${post.id}" th:text="${post.commentCount}"> 1 </p>
                                 </th:block>
                             </div>
-                            <p th:id="'post_title' + ${post.id}" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${post.title}" style="font-size: 20px;  color: gray; height: 30px;">Post Title</p>
+                            <p th:id="'post_title' + ${post.id}"
+                               class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold"
+                               th:text="${post.title}" style="font-size: 20px;  color: gray; height: 30px;">Post
+                                Title</p>
                             <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${post.memberImg != null}"
@@ -60,15 +69,20 @@
                                    th:text="${post.memberDesiredJob}"></p>
                             </div>
                             <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                                   class="badge" style="margin: 3px; background-color: #198754;"
                                    th:text="${post.state}">공부 중</p>
-                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}"
+                                   class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
                                    th:text="${post.state}">공부 중</p>
-                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
+                                <p th:if="${post.state == T(Talk_with.semogong.domain.att.StudyState).END}"
+                                   class="badge" style="margin: 3px; background-color: #212529;"
                                    th:text="${post.state}">공부 중</p>
                             </div>
-                            <div th:id="'post_times'+${post.id}" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;" >
-                                <p class="badge" th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185'"
+                            <div th:id="'post_times'+${post.id}" class="card-text overflow-hidden d-sm-flex"
+                                 style="margin: 2px 0px 0px 0px; max-width: 100%;">
+                                <p class="badge"
+                                   th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185'"
                                    th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}">
                                     <th:block th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|"> 19:00 ~
                                         20:00
@@ -80,8 +94,10 @@
                                     </th:block>
                                 </p>
                             </div>
-                            <div class="card-text d-sm-flex text-truncate" style="margin: 6px 0px 0px 0px; height: 30px;" >
-                                <p th:id="'post_introduce' + ${post.id}"class="small" style="margin: 3px" th:text="${post.introduce}"></p>
+                            <div class="card-text d-sm-flex text-truncate"
+                                 style="margin: 6px 0px 0px 0px; height: 30px;">
+                                <p th:id="'post_introduce' + ${post.id}" class="small" style="margin: 3px"
+                                   th:text="${post.introduce}"></p>
                             </div>
                         </div>
                     </div>
@@ -110,9 +126,18 @@
                 <!-- Profile (if member did Log in) -->
                 <div class="card-header d-sm-flex justify-content-between" th:if="${check}">
                     <div style="margin-top: 5px" class="input-group">
-                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #198754;"> 공부중</div>
-                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge rounded-pill text-dark" th:text="${member.state}" style="background-color: #ffc107;"> 공부중</div>
-                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge rounded-pill" th:text="${member.state}" style="background-color: #212529;"> 공부중</div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                             class="badge rounded-pill" th:text="${member.state}" style="background-color: #198754;">
+                            공부중
+                        </div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}"
+                             class="badge rounded-pill text-dark" th:text="${member.state}"
+                             style="background-color: #ffc107;"> 공부중
+                        </div>
+                        <div th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}"
+                             class="badge rounded-pill" th:text="${member.state}" style="background-color: #212529;">
+                            공부중
+                        </div>
                     </div>
                     <div class="d-sm-flex justify-content-center">
                         <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id})}">
@@ -134,7 +159,7 @@
                     </div>
                 </div>
                 <div class="card-body" th:if="${check}" th:object="${member}">
-                    <a href="members/my-page" class="member-detail">
+                    <a href="members/my-page" class="member-detail" style="text-decoration: none">
                         <div class="d-sm-flex justify-content-center">
                             <div class="d-sm-flex justify-content-center profile_img_box1">
                                 <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
@@ -142,7 +167,8 @@
                                 <img th:if="${member.image == null}" src="/images/profile.png">
                             </div>
                         </div>
-                        <div class="d-sm-flex justify-content-center fw-bold" th:text="*{name}" style="font-size: 20px; margin-top: 10px; color: black">
+                        <div class="d-sm-flex justify-content-center fw-bold" th:text="*{name}"
+                             style="font-size: 20px; margin-top: 10px; color: black">
                             NONE
                         </div>
                         <div class="d-sm-flex justify-content-center fw-bold" th:text="*{desiredJob}"
@@ -151,20 +177,41 @@
                     <div class="d-sm-flex justify-content-center mb-2">
                         <div class="input-group btn-group" role="group" aria-label="Basic mixed styles example"
                              style="margin-top: 10px;">
-                            <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-success" href="/studying">STUDY</a>
-                            <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-success" type="button" onclick="state_error()">STUDY</button>
-                            <a th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-warning" href="/breaking">BREAK</a>
-                            <button th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="btn btn-warning" type="button" onclick="state_error()">BREAK</button>
-                            <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" href="/end">END</a>
-                            <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="btn btn-secondary" type="button" onclick="state_error()">END</button>
+                            <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                               class="btn btn-success" href="/studying">STUDY</a>
+                            <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                                    class="btn btn-success" type="button" onclick="state_error()">STUDY
+                            </button>
+                            <a th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                               class="btn btn-warning" href="/breaking">BREAK</a>
+                            <button th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                                    class="btn btn-warning" type="button" onclick="state_error()">BREAK
+                            </button>
+                            <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).END}"
+                               class="btn btn-secondary" href="/end">END</a>
+                            <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}"
+                                    class="btn btn-secondary" type="button" onclick="state_error()">END
+                            </button>
                         </div>
                     </div>
-                    <div th:if="${sTime != null}" class="d-sm-flex justify-content-between border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;">
-                        <a th:onclick="|javascript:reload_times(${member.id})|" class="btn btn-sm" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img id="reload" src="/images/reload.png" height="20px" width="20px"></a>
-                        <div id="member_time"  th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습 시간 : 9시간 32분 </div>
-                        <a class="btn btn-sm invisible" style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img src="/images/reload.png" height="20px" width="20px"></a>
+                    <div th:if="${sTime != null}" class="d-sm-flex justify-content-between border small"
+                         style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;">
+                        <a th:onclick="|javascript:reload_times(${member.id})|" class="btn btn-sm"
+                           style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img id="reload"
+                                                                                                 src="/images/reload.png"
+                                                                                                 height="20px"
+                                                                                                 width="20px"></a>
+                        <div id="member_time" th:text="'오늘의 학습 시간 : '+${sTime.hour}+ '시간 ' + ${sTime.min} + '분'"> 오늘의 학습
+                            시간 : 9시간 32분
+                        </div>
+                        <a class="btn btn-sm invisible"
+                           style="cursor:pointer; padding: 0px 4px; border-top-width: 0px;"><img
+                                src="/images/reload.png" height="20px" width="20px"></a>
                     </div>
-                    <div th:if="${sTime == null}" class="d-sm-flex justify-content-center border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;" > 오늘의 학습 시간 : 0시간 0분 </div>
+                    <div th:if="${sTime == null}" class="d-sm-flex justify-content-center border small"
+                         style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px;"> 오늘의 학습
+                        시간 : 0시간 0분
+                    </div>
 
                 </div>
 
@@ -182,7 +229,7 @@
                     Today Ranking
                     <div class="d-sm-flex justify-content-center">
                         <a class="btn btn-outline-dark btn-sm" href="/data">
-                            <div> 더보기 </div>
+                            <div> 더보기</div>
                         </a>
                     </div>
                 </div>
@@ -190,35 +237,47 @@
                     <div class="row" th:each="mem: ${rankings}">
                         <div class="card-text d-flex justify-content-between" style="margin: 3px 0px 5px 3px;">
                             <div class="d-flex">
-                            <div style="margin-right: 10px" th:text="|${memStat.count}등|">1</div>
-                            <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                <img th:if="${mem.image != null}"
-                                     th:src="${mem.image.imgSrc}" alt="profile">
-                                <img th:if="${mem.image == null}" src="/images/profile.png">
-                            </div>
-                            <div style="display:inline-block; margin-left: 3px" th:text="${mem.name}"></div>
-                            <div th:if="${mem.time != null}" th:text="${mem.time.hour}+ '시간 ' + ${mem.time.min} + '분'" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px; margin-left: 10px"></div>
-                            <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px" > 0시간 0분 </div>
+                                <div style="margin-right: 10px" th:text="|${memStat.count}등|">1</div>
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                    <img th:if="${mem.image != null}"
+                                         th:src="${mem.image.imgSrc}" alt="profile">
+                                    <img th:if="${mem.image == null}" src="/images/profile.png">
+                                </div>
+                                <div style="display:inline-block; margin-left: 3px" th:text="${mem.name}"></div>
+                                <div th:if="${mem.time != null}"
+                                     th:text="${mem.time.hour}+ '시간 ' + ${mem.time.min} + '분'"
+                                     class="d-sm-flex justify-content-end border small"
+                                     style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px; margin-left: 10px"></div>
+                                <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small"
+                                     style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px">
+                                    0시간 0분
+                                </div>
                             </div>
                             <div style="margin-left: 10px">
-                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:#198754;" viewBox="0 0 16 16">
+                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                                     xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                     style="display:inline-block; fill:#198754;" viewBox="0 0 16 16">
                                     <circle cx="8" cy="8" r="8"/>
                                 </svg>
-                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:#ffc107;" viewBox="0 0 16 16">
+                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}"
+                                     xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                     style="display:inline-block; fill:#ffc107;" viewBox="0 0 16 16">
                                     <circle cx="8" cy="8" r="8"/>
                                 </svg>
-                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="12" height="12" style="display:inline-block; fill:rgba(33,37,41,0.53);" viewBox="0 0 16 16">
+                                <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}"
+                                     xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                     style="display:inline-block; fill:rgba(33,37,41,0.53);" viewBox="0 0 16 16">
                                     <circle cx="8" cy="8" r="8"/>
                                 </svg>
                             </div>
                         </div>
 
-<!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
-<!--                            <circle cx="8" cy="8" r="8"/>-->
-<!--                        </svg>-->
-<!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
-<!--                            <circle cx="8" cy="8" r="8"/>-->
-<!--                        </svg>-->
+                        <!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
+                        <!--                            <circle cx="8" cy="8" r="8"/>-->
+                        <!--                        </svg>-->
+                        <!--                        <svg th:if="${mem.state == T(Talk_with.semogong.domain.att.StudyState).END}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="display:inline-block; fill:darkred;" viewBox="0 0 16 16">-->
+                        <!--                            <circle cx="8" cy="8" r="8"/>-->
+                        <!--                        </svg>-->
                         <hr th:if="${!memStat.last}" class="mb-2">
                     </div>
                 </div>
@@ -230,24 +289,35 @@
                 <div class="card-body" th:if="${recentPost}">
                     <!-- My post-->
                     <div>
-                        <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${recentPost.id}">
-                            <div class="overflow-hidden d-sm-flex justify-content-center align-items-center" style= "height: 150px; background-color: white; border: solid 1px lightgray;">
-                                <img th:id="'recent_home_post_img'+${recentPost.id}" th:if="${recentPost.postImg != null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
+                        <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal"
+                             th:attr="data-bs-target='#postModal'+${recentPost.id}">
+                            <div class="overflow-hidden d-sm-flex justify-content-center align-items-center"
+                                 style="height: 150px; background-color: white; border: solid 1px lightgray;">
+                                <img th:id="'recent_home_post_img'+${recentPost.id}"
+                                     th:if="${recentPost.postImg != null}"
+                                     class="card-img-top d-sm-flex justify-content-center align-items-center"
                                      th:src="${recentPost.postImg?.imgSrc}" alt="..."
                                      style="border: solid lightgray 1px; border: 0px; "/>
-                                <img th:id="'recent_home_post_img'+${recentPost.id}" th:if="${recentPost.postImg == null}" class="card-img-top d-sm-flex justify-content-center align-items-center"
+                                <img th:id="'recent_home_post_img'+${recentPost.id}"
+                                     th:if="${recentPost.postImg == null}"
+                                     class="card-img-top d-sm-flex justify-content-center align-items-center"
                                      src="/images/semogong_light.jpg" alt="..."
                                      style="border: solid lightgray 1px; border: 0px; "/>
                             </div>
                             <div class="card_box" style="border: solid 1px lightgray; padding: 5px 5px 5px 5px;">
                                 <div th:id="'recent_commentDiv'+${recentPost.id}" class="d-sm-flex">
-                                    <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;" th:text="${recentPost.formatCreateDate}">Post Date</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.75em; margin-right:auto;"
+                                       th:text="${recentPost.formatCreateDate}">Post Date</p>
                                     <th:block th:if="${recentPost.commentCount != 0}">
                                         <img src="/images/comment.png" width="14px" height="14px"/>
-                                        <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px" th:id="'recent_commentCount'+${recentPost.id}" th:text="${recentPost.commentCount}"> 1 </p>
+                                        <p class="text-muted mb-0" style="font-size: 0.7em; margin-left: 3px"
+                                           th:id="'recent_commentCount'+${recentPost.id}"
+                                           th:text="${recentPost.commentCount}"> 1 </p>
                                     </th:block>
                                 </div>
-                                <h2 th:id="'recent_post_title'+${recentPost.id}" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" th:text="${recentPost.title}"
+                                <h2 th:id="'recent_post_title'+${recentPost.id}"
+                                    class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold"
+                                    th:text="${recentPost.title}"
                                     style="font-size: 20px; color: gray; height: 40px;">Post
                                     Title</h2>
                                 <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
@@ -264,15 +334,21 @@
                                        th:text="${recentPost.memberDesiredJob}"></p>
                                 </div>
                                 <div class="card-text" style="margin: 2px 0px 0px 0px;">
-                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge" style="margin: 3px; background-color: #198754;"
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                                       class="badge" style="margin: 3px; background-color: #198754;"
                                        th:text="${recentPost.state}">공부 중</p>
-                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}"
+                                       class="badge text-dark" style="margin: 3px; background-color: #ffc107;"
                                        th:text="${recentPost.state}">공부 중</p>
-                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="margin: 3px; background-color: #212529;"
+                                    <p th:if="${recentPost.state == T(Talk_with.semogong.domain.att.StudyState).END}"
+                                       class="badge" style="margin: 3px; background-color: #212529;"
                                        th:text="${recentPost.state}">공부 중</p>
                                 </div>
-                                <div th:id="'recent_post_times'+${recentPost.id}" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;">
-                                    <p class="badge" th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185;'"
+                                <div th:id="'recent_post_times'+${recentPost.id}"
+                                     class="card-text overflow-hidden d-sm-flex"
+                                     style="margin: 2px 0px 0px 0px; max-width: 100%;">
+                                    <p class="badge"
+                                       th:style="${iStat.even}? 'margin: 3px; background-color:#8AA6A3;' : 'margin: 3px;  background-color:#A1A185;'"
                                        th:each="i: ${#numbers.sequence(1, #lists.size(recentPost.times)-1,2)}">
                                         <th:block
                                                 th:text="|${recentPost.times[i -1]}| + ' ~ '+|${recentPost.times[i]}|">
@@ -289,7 +365,8 @@
                                     </p>
                                 </div>
                                 <div class="card-text text-truncate" style="margin: 6px 0px 0px 0px;">
-                                    <p th:id="'recent_post_introduce' + ${recentPost.id}" class="small" style="margin: 3px" th:text="${recentPost.introduce}"></p>
+                                    <p th:id="'recent_post_introduce' + ${recentPost.id}" class="small"
+                                       style="margin: 3px" th:text="${recentPost.introduce}"></p>
                                 </div>
                             </div>
                         </div>
@@ -304,7 +381,7 @@
 
             <!-- All Members-->
             <div class="card mb-4">
-                <div class="card-header"> All Members </div>
+                <div class="card-header"> All Members</div>
                 <div class="card-body">
                     <div class="row" th:each="otherMember: ${allMembers}">
                         <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
@@ -315,9 +392,15 @@
                             </div>
                             <div style="display:inline-block; margin-left: 3px" th:text="${otherMember.name}"></div>
                             <div style="margin-left: 10px">
-                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}" class="badge" style="display:inline-block; background-color: #198754;" th:text="${otherMember.state}"></div>
-                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}" class="badge text-dark" style="display:inline-block; background-color: #ffc107;" th:text="${otherMember.state}"></div>
-                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).END}" class="badge" style="display:inline-block; background-color: #212529;" th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
+                                     class="badge" style="display:inline-block; background-color: #198754;"
+                                     th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).BREAKING}"
+                                     class="badge text-dark" style="display:inline-block; background-color: #ffc107;"
+                                     th:text="${otherMember.state}"></div>
+                                <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).END}"
+                                     class="badge" style="display:inline-block; background-color: #212529;"
+                                     th:text="${otherMember.state}"></div>
                             </div>
                         </div>
                     </div>
@@ -327,7 +410,8 @@
     </div>
 
     <!-- Post Modals -->
-    <div th:if="${postModals != null}" th:each="post:${postModals}" class="portfolio-modal modal fade" th:id="'postModal' + ${post.id}" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
+    <div th:if="${postModals != null}" th:each="post:${postModals}" class="portfolio-modal modal fade"
+         th:id="'postModal' + ${post.id}" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header border-0">
@@ -374,12 +458,15 @@
                                         <div class="property_subtext1">학습시간</div>
                                     </div>
                                     <div class="flex-wrap">
-                                        <p class="border border-2 rounded" style="margin: 0px 4px 0px 0px; display: inline-block;"
-                                           th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}" th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|">
+                                        <p class="border border-2 rounded"
+                                           style="margin: 0px 4px 0px 0px; display: inline-block;"
+                                           th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}"
+                                           th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|">
                                             19:00 ~ 20:00
                                         </p>
                                         <p class="border border-2 rounded" th:if="${#lists.size(post.times)%2!=0}"
-                                           style="margin: 0px 2px 0px 0px; display: inline-block;" th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'">
+                                           style="margin: 0px 2px 0px 0px; display: inline-block;"
+                                           th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'">
                                             19:00 ~
                                         </p>
                                     </div>
@@ -412,24 +499,45 @@
                                                          th:src="${comment.memberImg?.imgSrc}">
                                                     <img th:if="${comment.memberImg == null}" src="/images/profile.png">
                                                 </div>
-                                                <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                                <div class="align-middle" style="margin-left:5px;"><p class="mb-0"
+                                                                                                      th:text="${comment.memberName}">
+                                                    작성자</p></div>
                                                 <div class="align-middle" style="margin-left:20px; margin-top: 2px">
-                                                    <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
-                                                    <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
-                                                    <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                    <p th:if="${comment.diffMin < 60}"
+                                                       th:text="${comment.diffMin} + '분 전'"
+                                                       class=" mb-0 small text-secondary">분 전</p>
+                                                    <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}"
+                                                       th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'"
+                                                       class="mb-0 small text-secondary">시간 전</p>
+                                                    <p th:if="${comment.diffMin >= 24*60}"
+                                                       th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'"
+                                                       class=" mb-0 small text-secondary">분 전</p>
                                                 </div>
                                             </div>
                                             <div class="p-2">
-                                                <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${post.id},${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                                <a role="button"
+                                                   th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}"
+                                                   th:onclick="|javascript:delete_check(${post.id},${comment.id})|"
+                                                   class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
                                             </div>
                                         </div>
 
-                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1"
+                                                                                                           th:text="${comment.content}">
+                                            댓글 내용</p></div>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input th:onkeypress="|javascript:enterKey(${post.id})|" th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
-                                        <button th:id="'comment_submit_btn'+${post.id}" th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
-                                        <button th:id="'comment_submit_btn'+${post.id}" type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
+                                        <input th:onkeypress="|javascript:enterKey(${post.id})|"
+                                               th:id="'comment_content'+${post.id}" type="text" class="form-control"
+                                               placeholder="댓글을 작성해 보세요!">
+                                        <button th:id="'comment_submit_btn'+${post.id}" th:if="${check}"
+                                                class="btn btn-outline-secondary"
+                                                th:onclick="|javascript:submit_comment(${post.id})|" type="submit">
+                                            Submit
+                                        </button>
+                                        <button th:id="'comment_submit_btn'+${post.id}" type="button" th:if="${!check}"
+                                                class="btn btn-outline-secondary" onclick="alert_error()">Submit
+                                        </button>
                                     </div>
                                 </div>
                                 <hr>
@@ -437,7 +545,8 @@
                                 <div class="content_text">
                                     <p class="mb-4" th:utext="${post.html}"> Content by HTML </p>
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
-                                        <a th:if="${check and member.id == post.memberId}" class="btn btn-secondary btn-sm"
+                                        <a th:if="${check and member.id == post.memberId}"
+                                           class="btn btn-secondary btn-sm"
                                            th:onclick="|javascript:edit_post(${post.id})|" type="button">Edit</a>
                                     </div>
                                 </div>
@@ -454,14 +563,15 @@
 
     <!-- Custome JS -->
     <script th:inline="javascript" type="text/javascript">
-        var recentPostId = [[ ${recentPost?.id} ]];
-        var focuedPostId = [[ ${focusedId} ]];
+        var recentPostId = [[ ${recentPost?.id}]];
+        var focuedPostId = [[ ${focusedId}]];
         var simplemde;
     </script>
     <script src="/js/origin/main.js"></script>
 
 
 </div>
-<div th:replace="fragments/footer :: footer" />
+<div th:replace="fragments/footer :: footer"/>
 </body>
+</html>
 </html>
