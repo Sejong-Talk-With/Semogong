@@ -63,7 +63,8 @@ public class StaticController {
 
     private List<Integer> getDays(LocalDateTime now) {
         List<Integer> days = new ArrayList<>();
-        if (0 < now.getHour() & now.getHour() < 4) {
+        // 0-4 사이 요청 (이틀전까지의 데이터)
+        if (now.getHour() < 4) {
             for (int i = 8; i > 1; i--) {
                 days.add(LocalDateTime.now().minusDays(i).getDayOfMonth());
             }
@@ -82,7 +83,7 @@ public class StaticController {
         Map<Integer, Times> dayTimes = new HashMap<>();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // 0-4 사이 요청 (이틀전까지의 데이터)
-        if (0 < LocalDateTime.now().getHour() & LocalDateTime.now().getHour() < 4) {
+        if (LocalDateTime.now().getHour() < 4) {
             String end = LocalDateTime.now().minusDays(1).format(dateTimeFormatter);
             String start = LocalDateTime.now().minusDays(8).format(dateTimeFormatter);
             posts = postNativeRepository.getLast7(member.getId(),start,end);
@@ -104,13 +105,15 @@ public class StaticController {
             Times totalTimes = new Times(total);
             dayTimes.put(post.getCreateTime().getDayOfMonth(), totalTimes);
         }
-        Object[] array = dayTimes.keySet().toArray();
+
+        List<Integer> array = new ArrayList<>(dayTimes.keySet());
+        array.sort(Comparator.naturalOrder());
         int cnt = 0;
-        for (int i = 0; i < array.length; i++) {
-            Times times = dayTimes.get((Integer) array[i]);
-            if (times.getHour() == 0) {
+        for (int i = 0; i < array.size(); i++) {
+            Times times = dayTimes.get(array.get(i));
+            if (times.getHour() == 0 & times.getMin() == 0) {
                 cnt += 1;
-                if (i != 0) dayTimes.put((Integer) array[i], dayTimes.get((Integer) array[i-1]));
+                if (i != 0) dayTimes.put(array.get(i), dayTimes.get(array.get(i-1)));
             }
         }
         member.setWorkCnt(7-cnt);
