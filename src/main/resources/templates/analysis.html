@@ -19,9 +19,8 @@
 </header>
 
 <div class="container" style="padding: 0 20px">
-    <!-- Blog entries-->
-    <!-- Area Chart -->
     <div class="row">
+        <!-- Area Chart -->
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -36,7 +35,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card mb-4">
+            <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold"> <span
                             class="ml-1 h5 font-weight-bolder">Weekly Ranking</span></h6>
@@ -55,7 +54,7 @@
                                          th:src="${mem.image.imgSrc}" alt="profile">
                                     <img th:if="${mem.image == null}" src="/images/profile.png">
                                 </div>
-                                <div style="display:inline-block; margin-left: 3px" th:text="${mem.name}"></div>
+                                <div class="fw-bold" style="display:inline-block; margin-left: 5px" th:text="${mem.name}"></div>
                                 <div th:if="${mem.time != null}" th:text="${mem.time.hour}+ '시간 ' + ${mem.time.min} + '분'" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px; margin-left: 10px"></div>
                                 <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px" > 0시간 0분 </div>
                             </div>
@@ -68,7 +67,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <div class="card mb-4">
+                    <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-center">
                             <h6 class="m-0 font-weight-bold"> <span
                                     class="ml-1 h6 fw-bold">금주의 공부왕👑</span></h6>
@@ -86,7 +85,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card mb-4">
+                    <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-center">
                             <h6 class="m-0 font-weight-bold"> <span
                                     class="ml-1 h6 fw-bold">금주의 출석왕🏅</span></h6>
@@ -115,7 +114,6 @@
 <script src="/vendor/chart.js/Chart.min.js"></script>
 <script src="/js/chart/chart-area-demo.js"></script>
 <script th:inline="javascript" type="text/javascript">
-    var pointList = [[ ${pointList}]];
     var staticDays = [[ ${staticDays}]];
 
     function enterKey() {

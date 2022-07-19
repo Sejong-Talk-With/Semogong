@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/addheader :: addheader"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+<!-- Responsive navbar-->
+<nav th:replace="fragments/navbar :: navbar"/>
+<!-- Page header with logo and tagline-->
+<div class="container" style="padding: 0 20px; margin-top: 20px">
+    <div class="row">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header" style="padding: 10px 16px;">
+                    <h6 class="m-0 font-weight-bold"> <span
+                            class="ml-1 h5 fw-bold">주간 통계</span></h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myBarChart" height="395"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow mb-4">
+                <!-- Profile -->
+                <div class="card-header d-sm-flex justify-content-between">
+                    <div style="margin-top: 5px" class="input-group">
+                        <h6 class="m-0 font-weight-bold"> <span
+                                class="ml-1 h5 fw-bold">프로필</span></h6>
+                    </div>
+                    <div class="d-sm-flex justify-content-center">
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id})}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-gear" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                            </svg>
+                        </a>
+                        <a class="btn btn-outline-dark btn-sm" href="/members/logout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                <path fill-rule="evenodd"
+                                      d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body" th:object="${member}">
+                    <div class="d-sm-flex justify-content-center">
+                        <div class="d-sm-flex justify-content-center profile_img_box1">
+                            <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
+                                 alt="profile img">
+                            <img th:if="${member.image == null}" src="/images/profile.png">
+                        </div>
+                    </div>
+                    <div class="d-sm-flex justify-content-center fw-bold">
+                        <div class="d-sm-flex justify-content-center fw-bold" th:text="*{name}"
+                             style="font-size: 20px; margin-top: 10px; color: black">
+                            NONE
+                        </div>
+                        <div class="d-sm-flex justify-content-center fw-bold" th:text="|(*{nickname})|"
+                             style="font-size: 15px; margin-top: 15px; color: gray; margin-left: 3px;"></div>
+                    </div>
+                    <hr style="margin: 8px 0 !important;">
+                    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                        <div style="color: black; width:120px;">아이디</div>
+                        <div th:if="*{loginId}"  th:text="*{loginId}" style="color: gray;">아이디 값</div>
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:120px;">희망직무</div>
+                        <div th:if="*{desiredJob}" th:text="*{desiredJob}" style="color: gray;">희망직무 값</div>
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:120px;">자기 소개</div>
+                        <div th:if="*{introduce}" th:text="*{introduce}" style="color: gray;">소개 값</div>
+                    </div>
+                    <div class="d-sm-flex fw-bold my-2" style="font-size: 18px;">
+                        <div style="color: black; width:120px;">링크</div>
+                        <div>
+                            <a th:if="*{links}" th:href="@{https://{location} (location=${link})}" target="_blank" th:each="link:*{links}" class="d-block text-decoration-none" th:text="${link}" style="color: gray;">링크 값</a>
+                        </div>
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                        <div style="color: black; width:120px;">총 공부시간</div>
+                        <div th:if="*{time != null}" th:text="|*{time.hour}시간 *{time.min}분|" style="color: lightseagreen;">상태 값</div>
+                        <div th:if="*{time == null}" style="color: gray;">0시간 0분</div>
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                        <div style="color: black; width:120px;">현재 상태</div>
+                        <div th:if="*{state}" th:text="*{state}" style="color: gray;">상태 값</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JS-->
+<script src="/js/bootstrap.bundle.min.js"></script>
+<!-- Page level plugins -->
+<script src="/vendor/chart.js/Chart.min.js"></script>
+<script src="/js/chart/chart-bar-demo.js"></script>
+<script th:inline="javascript" type="text/javascript">
+
+    var staticDays = [[ ${staticDays}]];
+    var data = [[ ${staticData} ]]
+
+
+    // Bar Chart Example
+    var ctx = document.getElementById("myBarChart");
+    var myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [staticDays[0]+'일',staticDays[1]+'일',staticDays[2]+'일',staticDays[3]+'일',staticDays[4]+'일',staticDays[5]+'일',staticDays[6]+'일'],
+            datasets: [{
+                label: "공부 시간",
+                backgroundColor: "lightseagreen",
+                hoverBackgroundColor: "lightseagreen",
+                borderColor: "lightseagreen",
+                data: [data[staticDays[0]].hour + Math.round(data[staticDays[0]].min/60),
+                    data[staticDays[1]].hour + Math.round(data[staticDays[1]].min/60),
+                    data[staticDays[2]].hour + Math.round(data[staticDays[2]].min/60),
+                    data[staticDays[3]].hour + Math.round(data[staticDays[3]].min/60),
+                    data[staticDays[4]].hour + Math.round(data[staticDays[4]].min/60),
+                    data[staticDays[5]].hour + Math.round(data[staticDays[5]].min/60),
+                    data[staticDays[6]].hour + Math.round(data[staticDays[6]].min/60)],
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                }
+            },
+            scales: {
+                xAxes: [{
+                    time: {
+                        unit: 'day'
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 6
+                    },
+                    maxBarThickness: 70,
+                }],
+                yAxes: [{
+                    ticks: {
+                        min: 0,
+                        max: 12,
+                        maxTicksLimit: 15,
+                        padding: 10,
+                        // Include a dollar sign in the ticks
+                        callback: function (value, index, values) {
+                            return number_format(value) + '시간';
+                        }
+                    },
+                    gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        borderDash: [2],
+                        zeroLineBorderDash: [2]
+                    }
+                }],
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                titleMarginBottom: 10,
+                titleFontColor: '#6e707e',
+                titleFontSize: 14,
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                caretPadding: 10,
+                callbacks: {
+                    label: function (tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + '시간';
+                    }
+                }
+            },
+        }
+    });
+</script>
+
+</body>

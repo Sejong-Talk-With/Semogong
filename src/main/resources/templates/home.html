@@ -134,18 +134,20 @@
                     </div>
                 </div>
                 <div class="card-body" th:if="${check}" th:object="${member}">
-                    <div class="d-sm-flex justify-content-center">
-                        <div class="d-sm-flex justify-content-center profile_img_box1">
-                            <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
-                                 alt="profile img">
-                            <img th:if="${member.image == null}" src="/images/profile.png">
+                    <a href="members/my-page" class="member-detail">
+                        <div class="d-sm-flex justify-content-center">
+                            <div class="d-sm-flex justify-content-center profile_img_box1">
+                                <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
+                                     alt="profile img">
+                                <img th:if="${member.image == null}" src="/images/profile.png">
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-sm-flex justify-content-center fw-bold" th:text="*{name}" style="font-size: 20px; margin-top: 10px;">
-                        NONE
-                    </div>
-                    <div class="d-sm-flex justify-content-center fw-bold" th:text="*{desiredJob}"
-                         style="font-size: 15px; color: gray;"></div>
+                        <div class="d-sm-flex justify-content-center fw-bold" th:text="*{name}" style="font-size: 20px; margin-top: 10px; color: black">
+                            NONE
+                        </div>
+                        <div class="d-sm-flex justify-content-center fw-bold" th:text="*{desiredJob}"
+                             style="font-size: 15px; color: gray;"></div>
+                    </a>
                     <div class="d-sm-flex justify-content-center mb-2">
                         <div class="input-group btn-group" role="group" aria-label="Basic mixed styles example"
                              style="margin-top: 10px;">

@@ -4,7 +4,6 @@ import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.att.Times;
-import Talk_with.semogong.domain.auth.MyUserDetail;
 import Talk_with.semogong.domain.dto.MemberDto;
 import Talk_with.semogong.domain.dto.PostViewDto;
 import Talk_with.semogong.domain.form.CommentForm;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -36,11 +34,14 @@ public class HomeController {
     private final PostService postService;
     private final MemberService memberService;
 
+    @ModelAttribute("check")
+    public boolean check(@SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+        return loginMemberId != null;
+    }
 
     @RequestMapping({"/", "/{page}"})
-    public String home_page(@PathVariable(name = "page", required = false) Integer page, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model){
+    public String home_page(@PathVariable(name = "page", required = false) Integer page, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model) {
         log.info("paging home");
-        log.info("page: ", page);
         if (page == null) page = 1;
         List<Post> posts = postService.findByPage((page - 1) * 12);
         List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
@@ -52,7 +53,6 @@ public class HomeController {
         if (loginMemberId != null) {
             Member loginMember = memberService.findOne(loginMemberId);
             MemberForm memberForm = createMemberForm(loginMember);
-            model.addAttribute("check", true);
             model.addAttribute("member", memberForm);
             Optional<Post> optionalPost = postService.getRecentPost(loginMember.getId());
             PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
@@ -70,8 +70,6 @@ public class HomeController {
             }
             model.addAttribute("sTime", totalStudyTimes);
             model.addAttribute("focusedId", focusedPostId);
-        } else {
-            model.addAttribute("check", false);
         }
 
 
@@ -94,13 +92,12 @@ public class HomeController {
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("allMembers", memberDtos);
-        model.addAttribute("rankings", memberRanking.subList(0,3));
+        model.addAttribute("rankings", memberRanking.subList(0, 3));
         model.addAttribute("nav", "home");
 
 
         return "home";
     }
-
 
     // 회원 총 학습 시간
     @ResponseBody

@@ -1,11 +1,13 @@
 package Talk_with.semogong.repository;
 
 import Talk_with.semogong.domain.Member;
+import Talk_with.semogong.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -36,8 +38,9 @@ public class MemberRepository {
     }
 
     // LoginId로 회원 조회
-    public Member findByLoginId(String loginId){
+    public Optional<Member> findByLoginId(String loginId){
         return em.createQuery("select m from Member as m where m.loginId = :login_id", Member.class)
-                .setParameter("login_id", loginId).getSingleResult();
+                .setParameter("login_id", loginId)
+                .getResultList().stream().findAny();
     }
 }

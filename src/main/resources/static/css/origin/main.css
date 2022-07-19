@@ -1,6 +1,15 @@
 
 /* css 추가 */
 
+.member-detail {
+    text-decoration: none;
+}
+
+.member-detail:hover {
+    background-color: lightgray !important;
+}
+
+
 .profile_img_box1{
     width:100px;
     height:100px;

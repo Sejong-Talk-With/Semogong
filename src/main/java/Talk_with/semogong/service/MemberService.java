@@ -16,11 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService{
 
     private final MemberRepository memberRepository;
 
@@ -63,7 +64,7 @@ public class MemberService implements UserDetailsService {
 
     // LoginId를 통해 회원 조회 (레포지토리 단순 위임)
     @Transactional(readOnly = true)
-    public Member findByLoginId(String loginId){
+    public Optional<Member> findByLoginId(String loginId){
         return memberRepository.findByLoginId(loginId);
     }
 
@@ -78,14 +79,6 @@ public class MemberService implements UserDetailsService {
     public void changeState(Long memberId, StudyState state) {
         Member curr_member = memberRepository.findOne(memberId);
         curr_member.changeState(state);
-    }
-
-    // 로그인 인증 (Spring Security)
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        //여기서 받은 유저 패스워드와 비교하여 로그인 인증
-        Member user = memberRepository.findByLoginId(email);
-        return new MyUserDetail(user);
     }
 
     // 회원 정보 수정 (수정 로직은 엔티티 자체 메서드로 진행)
