@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form id="editForm" class="card shadow" method="post" th:action="@{/members/edit/{id}/goal (id=${id})}" th:object="${goalDto}">
+    <div class="card-header d-sm-flex justify-content-between">
+        <div style="margin-top: 5px" class="input-group">
+            <h6 class="m-0 font-weight-bold"> <span
+                    class="ml-1 h5 fw-bold">공부 목표</span></h6>
+        </div>
+        <div class="d-sm-flex justify-content-center">
+            <button class="btn btn-secondary" type="submit">변경</button>
+        </div>
+    </div>
+    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+        <div style="color: black; width:200px;">목표 공부시간 (하루)</div>
+        <input th:field="*{dayGoalTimes.hour}"></input>
+        <div> 시간</div>
+        <input th:field="*{dayGoalTimes.min}"></input>
+        <div> 분</div>
+    </div>
+    <div class="d-sm-flex fw-bold align-items-center my-2"
+         style="font-size: 18px;">
+        <div style="color: black; width:200px;">목표 공부시간 (일주일)</div>
+        <input th:field="*{weekGoalTimes.hour}"></input>
+        <div> 시간</div>
+        <input th:field="*{weekGoalTimes.min}"></input>
+        <div> 분</div>
+    </div>
+</form>
+
+</body>
+</html>

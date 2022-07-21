@@ -1,6 +1,7 @@
 package Talk_with.semogong.controller;
 
 
+import Talk_with.semogong.configuration.SessionConst;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.att.StudyState;
@@ -29,7 +30,7 @@ public class StateController {
 
     // 공부중 클릭
     @GetMapping("/studying")
-    public String studying(@SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public String studying(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
 
         Member loginMember = memberService.findOne(loginMemberId);
         StudyState state = memberService.checkState(loginMember.getId()); // 현재 로그인된 회원의 상태를 조회
@@ -96,7 +97,7 @@ public class StateController {
 
     // 휴식중 클릭
     @GetMapping("/breaking")
-    public String breaking(@SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public String breaking(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
 
         Member loginMember = memberService.findOne(loginMemberId);
         StudyState state = memberService.checkState(loginMember.getId()); // 현재 로그인된 회원의 상태를 조회
@@ -116,7 +117,7 @@ public class StateController {
 
     // 완료 클릭
     @GetMapping("/end")
-    public String end(@SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public String end(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
 
         Member loginMember = memberService.findOne(loginMemberId);
         StudyState state = memberService.checkState(loginMember.getId()); // 현재 로그인된 회원의 상태를 조회

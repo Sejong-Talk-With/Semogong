@@ -22,7 +22,7 @@ function delete_check(postId, commentId) {
 
     if (check){ //확인
         $.ajax({
-            url: 'comment/delete/' + commentId,
+            url: '/comment/delete/' + commentId,
             type: "DELETE",
             data: deleteForm
         })
@@ -69,7 +69,7 @@ function submit_comment(id) {
     };
 
     $.ajax({
-        url: 'comment/api/new/' + id,
+        url: '/comment/api/new/' + id,
         type: "POST",
         data: commentForm,
     })
@@ -127,7 +127,7 @@ function submit_comment(id) {
 
 function edit_post(id) {
     $.ajax({
-        url: 'posts/edit/' + id,
+        url: '/posts/edit/' + id,
         type: "GET",
     })
         .done(function (fragment) {
@@ -142,7 +142,7 @@ function post_delete_check(id) {
     if (check){    //확인
         alert("삭제가 완료 되었습니다.")
         $.ajax({
-            url: 'posts/delete/' + id,
+            url: '/posts/delete/' + id,
             type: "DELETE"
         })
             .done(function () {
@@ -423,7 +423,7 @@ function image_upload(id){
 
 function reload_times(memberId) {
     $.ajax({
-        url: 'members/times/' + memberId,
+        url: '/members/times/' + memberId,
         type: "GET"
     })
         .done(function (response) {

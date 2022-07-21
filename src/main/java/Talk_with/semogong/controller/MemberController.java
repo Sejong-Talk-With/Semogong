@@ -1,12 +1,15 @@
 package Talk_with.semogong.controller;
 
+import Talk_with.semogong.configuration.SessionConst;
+import Talk_with.semogong.domain.att.Goal;
 import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.att.DesiredJob;
 import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.att.Times;
-import Talk_with.semogong.domain.dto.MemberDto;
+import Talk_with.semogong.domain.dto.PostViewDto;
+import Talk_with.semogong.domain.form.CommentForm;
 import Talk_with.semogong.domain.form.LoginForm;
 import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.domain.form.MemberForm;
@@ -14,6 +17,7 @@ import Talk_with.semogong.repository.PostNativeRepository;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.PostService;
 import Talk_with.semogong.service.S3Service;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +29,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -47,6 +48,7 @@ public class MemberController {
     private final MemberService memberService;
     private final S3Service s3Service;
     private final PostNativeRepository postNativeRepository;
+    private final PostService postService;
 
     // 회원가입 폼
     @GetMapping("/signup")
@@ -83,7 +85,8 @@ public class MemberController {
 
     // 회원 정보 수정 (이미지 업로드 및 수정 폼 포함)
     @PostMapping("/edit/{id}")
-    public String memberEdit(@PathVariable("id") Long id, @Valid MemberEditForm memberEditForm, BindingResult result){
+    public String memberEdit(@PathVariable("id") Long id, @Valid MemberEditForm memberEditForm, BindingResult result,
+                             @RequestParam(defaultValue = "/") String redirectURL){
         List<String> links = memberEditForm.getLinks(); while (links.remove("")){ }
         memberEditForm.setLinks(links);
         if (result.hasErrors()) {
@@ -91,7 +94,7 @@ public class MemberController {
             return "member/editMemberForm";
         }
         memberService.editMember(id, memberEditForm);
-        return "redirect:/";
+        return "redirect:"+redirectURL;
     }
 
     // 회원 이미지 업로드 및 수정
@@ -110,7 +113,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/") String redirectURL,
+                        @RequestParam(defaultValue = "/", name = "redirectURL") String redirectURL,
                         HttpServletRequest request) {
 
 
@@ -130,7 +133,7 @@ public class MemberController {
         // 로그인 성공
         HttpSession session = request.getSession();
         // 세션에 로그인 회원 정보 보관
-        session.setAttribute("loginMember", loginMember.get().getId());
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.get().getId());
         return "redirect:"+ redirectURL;
     }
 
@@ -142,21 +145,88 @@ public class MemberController {
     }
 
     @GetMapping("/my-page")
-    public String myPage(@SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model) {
-        if (loginMemberId == null) {
-            return "redirect:/";
-        }
+    public String myPage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId,
+                         Model model,
+                         @RequestParam(name = "month",required = false) Integer month) {
         Member oriMember = memberService.findOne(loginMemberId);
         MemberInfo member = new MemberInfo(oriMember);
         List<Integer> days = getDays(LocalDateTime.now());
         Map<Integer, Times> staticsData = getStaticsData(member);
         member.setTime(getAllTimes(oriMember));
+        int year = LocalDateTime.now().getYear();
+        LocalDateTime focusedDate;
+        if (month == null) {
+            month = LocalDateTime.now().getMonthValue();
+            focusedDate = LocalDateTime.of(year, month, 1, 0, 0);
+        } else {
+            focusedDate = LocalDateTime.of(year, month, 1, 0, 0);
+        }
+        List<Post> monthPosts = postService.getMonthPosts(member.getId(), month);
+        List<PostViewDto> monthPostDtos = monthPosts.stream().map(PostViewDto::new).collect(Collectors.toList());
+        int[] dayData = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        List<String> weekDay = Arrays.asList( "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
+        List<Integer> calenderDays = new ArrayList<>();
+        Map<Integer, PostViewDto> calenderData = new HashMap<>();
+        for (int i = 1; i <= dayData[month-1]; i++) {
+            calenderDays.add(i);
+            calenderData.put(i, null);
+        }
+        for (PostViewDto monthPostDto : monthPostDtos) {
+            int dayOfMonth = monthPostDto.getCreateTime().getDayOfMonth();
+            calenderData.put(dayOfMonth, monthPostDto);
+        }
+        ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
 
-        model.addAttribute("staticDays", days);
+
         model.addAttribute("nav", "myPage");
         model.addAttribute("member", member);
+        model.addAttribute("staticDays", days);
         model.addAttribute("staticData", staticsData);
+        model.addAttribute("month", month);
+        model.addAttribute("calenderInfo", CalenderInfo);
+        model.addAttribute("calenderDays", calenderDays);
+        model.addAttribute("calenderData", calenderData);
+        model.addAttribute("postModals", monthPostDtos);
+        model.addAttribute("commentForm", new CommentForm());
+
+
         return "member/memberDetail";
+    }
+
+/*    @GetMapping("/edit/{id}/goal")
+    public String editGoal(@PathVariable(name = "id") Long id, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("goalDto", new GoalDto());
+        return "components/editGoal :: #editForm";
+    }
+
+    @PostMapping("/edit/{id}/goal")
+    public String editGoalRedirect(@PathVariable(name = "id") Long id, @ModelAttribute(name = "goalDto") GoalDto goalDto) {
+        log.info(String.valueOf(goalDto));
+        Goal goal = new Goal(goalDto.dayGoalTimes.getHour()*60 + goalDto.dayGoalTimes.getMin(), goalDto.weekGoalTimes.getHour()*60 + goalDto.weekGoalTimes.getMin());
+        memberService.editMemberGoal(id, goal);
+        return "redirect:/members/my-page";
+    }
+
+    @Data
+    static class GoalDto {
+
+        private Times dayGoalTimes;
+        private Times weekGoalTimes;
+
+        public GoalDto() {
+
+        }
+    }*/
+
+
+    private ForCalender getCalenderInfo(List<String> emptyDate, LocalDateTime date) {
+
+        String month = date.getMonth().toString();
+        int year = date.getYear();
+        int start = emptyDate.indexOf(date.getDayOfWeek().toString().toLowerCase(Locale.ENGLISH));
+        ForCalender CalenderInfo = new ForCalender(year, month, start);
+        return CalenderInfo;
     }
 
     // "Entity -> DTO" Method
@@ -191,6 +261,7 @@ public class MemberController {
 
         private Times time;
         private int workCnt;
+        private Goal goal;
 
         public MemberInfo(Member member) {
             this.setId(member.getId());
@@ -202,6 +273,7 @@ public class MemberController {
             this.setLinks(member.getLinks());
             this.setImage(member.getImage());
             this.setState(member.getState());
+            this.setGoal(member.getGoal());
         }
     }
 
@@ -230,14 +302,14 @@ public class MemberController {
         if (LocalDateTime.now().getHour() < 4) {
             String end = LocalDateTime.now().minusDays(1).format(dateTimeFormatter);
             String start = LocalDateTime.now().minusDays(8).format(dateTimeFormatter);
-            posts = postNativeRepository.getLast7(member.getId(),start,end);
+            posts = postService.getLast7(member.getId(),start,end);
             for (int i = 8; i > 1; i--) {
                 dayTimes.put(LocalDateTime.now().minusDays(i).getDayOfMonth(), new Times(0));
             }
         } else { // 이외
             String end = LocalDateTime.now().format(dateTimeFormatter);
             String start = LocalDateTime.now().minusDays(7).format(dateTimeFormatter);
-            posts = postNativeRepository.getLast7(member.getId(),start, end);
+            posts = postService.getLast7(member.getId(),start, end);
             for (int i = 7; i > 0; i--) {
                 dayTimes.put(LocalDateTime.now().minusDays(i).getDayOfMonth(), new Times(0));
             }
@@ -294,6 +366,18 @@ public class MemberController {
         }
         return resultTime;
     }
+
+
+    @Data
+    @AllArgsConstructor
+    static class ForCalender {
+
+        private int year;
+        private String month;
+        private int startDay;
+
+    }
+
 
 
 

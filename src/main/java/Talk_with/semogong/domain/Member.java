@@ -1,5 +1,6 @@
 package Talk_with.semogong.domain;
 
+import Talk_with.semogong.domain.att.Goal;
 import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.form.MemberEditForm;
@@ -37,6 +38,8 @@ public class Member {
     private List<String> links = new ArrayList<>();
     @Embedded
     private Image image;
+    @Embedded
+    private Goal goal;
     private String introduce;
 
     @OneToMany(mappedBy = "member")
@@ -59,6 +62,7 @@ public class Member {
     public void setImage(Image image) {
         this.image = image;
     }
+    public void setGoal(Goal goal) { this.goal = goal; }
 
     //==수정 메서드==//
     public void changeState(StudyState state){

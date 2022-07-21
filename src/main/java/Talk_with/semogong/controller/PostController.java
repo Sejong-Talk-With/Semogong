@@ -1,5 +1,6 @@
 package Talk_with.semogong.controller;
 
+import Talk_with.semogong.configuration.SessionConst;
 import Talk_with.semogong.domain.att.Image;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
@@ -44,7 +45,7 @@ public class PostController {
 
     // 게시글 생성 폼
     @GetMapping("/posts/new/{id}")
-    public String create(@PathVariable("id") Long id, Model model, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public String create(@PathVariable("id") Long id, Model model, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
         log.info("posting");
         if (loginMemberId == null) {
             return "redirect:/"; // 오류 처리 필요
@@ -62,7 +63,7 @@ public class PostController {
 
     // 게시글 수정 폼
     @GetMapping("/posts/edit/{id}")
-    public String to_edit(@PathVariable("id") Long id, Model model, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public String to_edit(@PathVariable("id") Long id, Model model, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
         log.info("posting");
         Member loginMember = memberService.findOne(loginMemberId);
         Post post = postService.findOne(id);
@@ -77,7 +78,7 @@ public class PostController {
 
     // 게시글 수정
     @PostMapping("/posts/edit/{id}")
-    public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute("postForm") PostEditForm postEditForm, Model model, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute("postForm") PostEditForm postEditForm, Model model, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
         postEditForm.setHtml(markdownToHTML(postEditForm.getContent()));
         postService.edit(postEditForm);
         Member loginMember = memberService.findOne(loginMemberId);
@@ -103,7 +104,7 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/posts/delete/{id}")
-    public String postDelete(@PathVariable("id") Long id, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public String postDelete(@PathVariable("id") Long id, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
         if (loginMemberId == null) {
             return "redirect:/"; // 오류 처리 필요
         }

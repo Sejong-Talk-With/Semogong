@@ -16,7 +16,7 @@
             <div class="card-header">LOG IN</div>
             <div class="card-body" >
                 <img class="card-img-top d-sm-flex justify-content-center align-items-center mb-2" src="/images/semogong.jpg">
-                <form action="/members/login" th:object="${loginForm}" method="post">
+                <form th:object="${loginForm}" method="post">
                     <div class="form-floating mb-2">
                         <input type="text" class="form-control" id="loginId" th:field="*{loginId}" placeholder="Id" th:errorclass = "field-error">
                         <label for="loginId">Id</label>

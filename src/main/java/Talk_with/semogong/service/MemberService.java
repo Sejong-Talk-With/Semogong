@@ -1,15 +1,12 @@
 package Talk_with.semogong.service;
 
+import Talk_with.semogong.domain.att.Goal;
 import Talk_with.semogong.domain.att.Image;
-import Talk_with.semogong.domain.auth.MyUserDetail;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.form.MemberEditForm;
 import Talk_with.semogong.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +88,12 @@ public class MemberService{
     public void editMemberImg(Long id, Image image) {
         Member member = memberRepository.findOne(id);
         member.setImage(image);
+    }
+
+    // 회원 목표 업로드
+    public void editMemberGoal(Long id, Goal goal) {
+        Member member = memberRepository.findOne(id);
+        member.setGoal(goal);
     }
 
 }

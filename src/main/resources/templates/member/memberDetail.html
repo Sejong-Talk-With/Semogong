@@ -4,35 +4,308 @@
 <head th:replace="fragments/header :: header"/>
 <head th:replace="fragments/addheader :: addheader"/>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .clearfix::after,
+    .calendar ol::after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+    /* ================
+    Calendar Styling */
+    .calendar {
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .month {
+        font-size: 2rem;
+    }
+
+    @media (min-width: 992px) {
+        .month {
+            font-size: 2.5rem;
+        }
+    }
+
+    .year {
+        font-size: 1.5rem;
+    }
+
+
+    .calendar ol li {
+        float: left;
+        width: 14.28571%;
+    }
+
+    .calendar .day-names {
+        border-bottom: 1px solid #eee;
+    }
+
+    .calendar .day-names li {
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .calendar .days li {
+        border-bottom: 1px solid #eee;
+        min-height: 5rem;
+    }
+
+    .calendar .days li .date {
+        margin: 0.5rem 0;
+    }
+
+    .calendar .days li .event {
+        font-size: 0.85rem;
+        padding: 0.4rem;
+        color: black;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 0.5rem;
+        border: none;
+        margin-bottom: 1px;
+        background-color: lightgray;
+        clear: both;
+        float: left;
+        max-width: 90%;
+        cursor: pointer;
+    }
+
+    .calendar .days li .event:hover {
+        font-size: 0.85rem;
+        padding: 0.4rem;
+        color: black;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 0.5rem;
+        border: none;
+        margin-bottom: 1px;
+        background-color: rgba(134, 133, 133, 0.5);
+        clear: both;
+        float: left;
+        max-width: 90%;
+        cursor: pointer;
+
+    }
+
+    .calendar .days li .event.span-2 {
+        width: 200%;
+    }
+
+    .calendar .days li .event.begin {
+        border-radius: 1rem 0 0 1rem;
+    }
+
+    .calendar .days li .event.end {
+        border-radius: 0 1rem 1rem 0;
+    }
+
+    .calendar .days li .event.clear {
+        background: none;
+    }
+
+    .calendar .days li:nth-child(n+29) {
+        border-bottom: none;
+    }
+
+    .calendar .days li.outside .date {
+        color: #ddd;
+    }
+
+    .card {
+        border-radius: 10px !important;
+    }
+
+    #profile {
+        margin-bottom: auto;
+    }
+
+    @media (max-width: 990px) {
+        #profile {
+            margin-bottom: 20px;
+        }
+        #goal {
+            margin-bottom: 20px;
+        }
+    }
+
+    /*
+    *
+    * ==========================================
+    * FOR DEMO PURPOSES
+    * ==========================================
+    *
+    */
+    body {
+        min-height: 100vh;
+/*        background-color: #3ca55c;
+        background-image: linear-gradient(147deg, #3ca55c 0%, #b5ac49 100%);*/
+    }
+
+    .help-tip{
+
+        position: absolute;
+
+/*        text-align: center;
+
+        width: 24px;
+
+        height: 24px;
+
+        font-size: 14px;
+
+        line-height: 26px;
+
+        cursor: default;*/
+
+    }
+
+
+
+    .help-tip:hover p{
+
+        display:block;
+
+        transform-origin: 100% 0%;
+
+
+
+        -webkit-animation: fadeIn 0.3s ease-in-out;
+
+        animation: fadeIn 0.3s ease-in-out;
+
+
+
+    }
+
+
+
+    .help-tip p{
+
+        display: none;
+
+        text-align: left;
+
+        background-color: #1E2021;
+
+        padding: 20px;
+
+        width: 300px;
+
+        position: absolute;
+
+        border-radius: 3px;
+
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+
+        right: -4px;
+
+        color: #FFF;
+
+        font-size: 13px;
+
+        line-height: 1.4;
+
+    }
+
+
+
+    .help-tip p:before{
+
+        position: absolute;
+
+        content: '';
+
+        width:0;
+
+        height: 0;
+
+        border:6px solid transparent;
+
+        border-bottom-color:#1E2021;
+
+        right:10px;
+
+        top:-12px;
+
+    }
+
+
+
+    .help-tip p:after{
+
+        width:100%;
+
+        height:40px;
+
+        content:'';
+
+        position: absolute;
+
+        top:-40px;
+
+        left:0;
+
+    }
+
+
+
+    @-webkit-keyframes fadeIn {
+
+        0% {
+
+            opacity:0;
+
+            transform: scale(0.6);
+
+        }
+
+
+
+        100% {
+
+            opacity:100%;
+
+            transform: scale(1);
+
+        }
+
+    }
+
+
+
+    @keyframes fadeIn {
+
+        0% { opacity:0; }
+
+        100% { opacity:100%; }
+
+    }
+</style>
 <body>
 <!-- Responsive navbar-->
 <nav th:replace="fragments/navbar :: navbar"/>
 <!-- Page header with logo and tagline-->
-<div class="container" style="padding: 0 20px; margin-top: 20px">
-    <div class="row">
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <div class="card-header" style="padding: 10px 16px;">
-                    <h6 class="m-0 font-weight-bold"> <span
-                            class="ml-1 h5 fw-bold">주간 통계</span></h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="myBarChart" height="395"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card shadow mb-4">
-                <!-- Profile -->
+<div class="container" style="padding: 0 20px; margin: 20px 0;">
+    <div class="row mb-4">
+        <!-- Profile -->
+        <div class="col d-flex flex-column">
+            <div id="profile" class="card shadow">
                 <div class="card-header d-sm-flex justify-content-between">
                     <div style="margin-top: 5px" class="input-group">
                         <h6 class="m-0 font-weight-bold"> <span
                                 class="ml-1 h5 fw-bold">프로필</span></h6>
                     </div>
                     <div class="d-sm-flex justify-content-center">
-                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id})}">
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id},redirectURL='/members/my-page')}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-gear" viewBox="0 0 16 16">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -92,9 +365,282 @@
                         <div th:if="*{time != null}" th:text="|*{time.hour}시간 *{time.min}분|" style="color: lightseagreen;">상태 값</div>
                         <div th:if="*{time == null}" style="color: gray;">0시간 0분</div>
                     </div>
-                    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                    <!--<div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
                         <div style="color: black; width:120px;">현재 상태</div>
                         <div th:if="*{state}" th:text="*{state}" style="color: gray;">상태 값</div>
+                    </div>-->
+                </div>
+            </div>
+            <!-- Goal -->
+            <div id="goal" class="card shadow">
+                <div class="card-header d-sm-flex justify-content-between">
+                    <div style="margin-top: 5px" class="input-group">
+                        <h6 class="m-0 font-weight-bold"> <span
+                                class="ml-1 h5 fw-bold">공부 목표 <div style="color: gray; display: inline-block">&nbsp;(서비스 준비 중)</div></span></h6>
+                    </div>
+                    <div class="d-sm-flex justify-content-center">
+                        <a class="btn btn-outline-dark btn-sm" type="button"> <!-- th:onclick="|javascript:edit_goal(${member.id})|"-->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-gear" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div id="editGoal" class="card-body" th:object="${member}">
+                    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                        <div style="color: black; width:200px;">목표 공부시간 (하루)</div>
+                        <div th:if="*{goal.dayGoalTimes}"  th:text="*{goal.dayGoalTimes}" style="color: gray;">아이디 값</div>
+<!--                        <div style="color: gray;">서비스 준비 중</div>-->
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:200px;">목표 공부시간 (일주일)</div>
+                        <div th:if="*{goal.weekGoalTimes}" th:text="*{goal.weekGoalTimes}" style="color: gray;">희망직무 값</div>
+<!--                        <div style="color: gray;">서비스 준비 중</div>-->
+                    </div>
+<!--                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:200px;">목표 출석수 (일주일)</div>
+                        <div th:if="*{introduce}" th:text="*{nickname}" style="color: gray;">소개 값</div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+        <!-- Calendar -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="calendar shadow bg-white">
+                <div class="card-header d-sm-flex justify-content-between">
+                    <div style="margin-top: 5px" class="input-group">
+                        <h6 class="m-0 font-weight-bold"> <span
+                                class="ml-1 h5 fw-bold">공부 캘린더</span></h6>
+                    </div>
+                    <div class="d-sm-flex justify-content-center">
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/my-page (month=(${month}-1))}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                                <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+                            </svg>
+                        </a>
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/my-page (month=(${month}+1))}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                                <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div style="padding: 20px 40px;">
+                    <div class="d-flex align-items-center">
+                        <h4 th:text="${calenderInfo.month}" class="month font-weight-bold mb-0 text-uppercase" style="margin-right: 20px">July</h4>
+                        <span th:text="${calenderInfo.year}" class="year font-weight-bold mb-0 text-uppercase align-bottom">2022</span>
+                    </div>
+                    <ol class="day-names list-unstyled">
+                        <li class="font-weight-bold text-uppercase">Sun</li>
+                        <li class="font-weight-bold text-uppercase">Mon</li>
+                        <li class="font-weight-bold text-uppercase">Tue</li>
+                        <li class="font-weight-bold text-uppercase">Wed</li>
+                        <li class="font-weight-bold text-uppercase">Thu</li>
+                        <li class="font-weight-bold text-uppercase">Fri</li>
+                        <li class="font-weight-bold text-uppercase">Sat</li>
+                    </ol>
+                    <!--<ol class="days list-unstyled">
+                        <li>
+                            <div class="date">1</div>
+                            <div class="event bg-success">Event with Long Name</div>
+                        </li>
+                        <li>
+                            <div class="date">2</div>
+                        </li>
+                        <li>
+                            <div class="date">3</div>
+                        </li>
+                        <li>
+                            <div class="date">4</div>
+                        </li>
+                        <li>
+                            <div class="date">5</div>
+                        </li>
+                        <li>
+                            <div class="date">6</div>
+                        </li>
+                        <li>
+                            <div class="date">7</div>
+                        </li>
+                        <li>
+                            <div class="date">8</div>
+                        </li>
+                        <li>
+                            <div class="date">9</div>
+                        </li>
+                        <li>
+                            <div class="date">10</div>
+                        </li>
+                        <li>
+                            <div class="date">11</div>
+                        </li>
+                        <li>
+                            <div class="date">12</div>
+                        </li>
+                        <li>
+                            <div class="date">13</div>
+                            <div class="event all-day begin span-2 bg-warning">Event Name</div>
+                        </li>
+                        <li>
+                            <div class="date">14</div>
+                        </li>
+                        <li>
+                            <div class="date">15</div>
+                            <div class="event all-day end bg-warning">Event Name</div>
+                        </li>
+                        <li>
+                            <div class="date">16</div>
+                        </li>
+                        <li>
+                            <div class="date">17</div>
+                        </li>
+                        <li>
+                            <div class="date">18</div>
+                        </li>
+                        <li>
+                            <div class="date">19</div>
+                        </li>
+                        <li>
+                            <div class="date">20</div>
+                        </li>
+                        <li>
+                            <div class="date">21</div>
+                            <div class="event bg-primary">Event Name</div>
+                            <div class="event bg-success">Event Name</div>
+                        </li>
+                        <li>
+                            <div class="date">22</div>
+                            <div class="event bg-info">Event with Longer Name</div>
+                        </li>
+                        <li>
+                            <div class="date">23</div>
+                        </li>
+                        <li>
+                            <div class="date">24</div>
+                        </li>
+                        <li>
+                            <div class="date">25</div>
+                        </li>
+                        <li>
+                            <div class="date">26</div>
+                        </li>
+                        <li>
+                            <div class="date">27</div>
+                        </li>
+                        <li>
+                            <div class="date">28</div>
+                        </li>
+                        <li>
+                            <div class="date">29</div>
+                        </li>
+                        <li>
+                            <div class="date">30</div>
+                        </li>
+                        <li>
+                            <div class="date">31</div>
+                        </li>
+                        <li class="outside">
+                            <div class="date">1</div>
+                        </li>
+                        <li class="outside">
+                            <div class="date">2</div>
+                        </li>
+                        <li class="outside">
+                            <div class="date">3</div>
+                        </li>
+                        <li class="outside">
+                            <div class="date">4</div>
+                        </li>
+                    </ol>-->
+
+                    <ol class="days list-unstyled">
+                        <li th:if="${calenderInfo.startDay != 0}" th:each="day:${#numbers.sequence(1,calenderInfo.startDay)}">
+                        </li>
+                        <li th:each="day:${calenderDays}">
+                            <div class="date" th:text="${dayStat.count}">일</div>
+                            <div class="event "
+                                 th:if="${calenderData[day.intValue()]}" th:text="${calenderData[day.intValue()]?.title}"
+                                 data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${calenderData[day.intValue()]?.id}">Event with Long Name</div>
+<!--                            <div class="help-tip">tep<p>Info</p></div>-->
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Bar Graph -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header" style="padding: 10px 16px;">
+                    <h6 class="m-0 font-weight-bold"> <span
+                            class="ml-1 h5 fw-bold">주간 공부 그래프</span></h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myBarChart" height="395"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Static -->
+        <div class="col">
+            <div class="card shadow mb-4">
+                <!-- Profile Main-->
+                <div class="card-header d-sm-flex justify-content-between">
+                    <div style="margin-top: 5px" class="input-group">
+                        <h6 class="m-0 font-weight-bold"> <span
+                                class="ml-1 h5 fw-bold">공부 통계<div style="color: gray; display: inline-block">&nbsp;(서비스 준비 중)</div></span></h6>
+                    </div>
+                    <!--<div class="d-sm-flex justify-content-center">
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id},redirectURL='/members/my-page')}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-gear" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                            </svg>
+                        </a>
+                        <a class="btn btn-outline-dark btn-sm" href="/members/logout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                <path fill-rule="evenodd"
+                                      d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
+                        </a>
+                    </div>-->
+                </div>
+                <div class="card-body">
+                    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                        <div style="color: black; width:180px;">일주일 총 공부시간</div>
+                        <!--                        <div th:if="*{loginId}"  th:text="*{loginId}" style="color: gray;">아이디 값</div>-->
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">일주일 평균 공부시간</div>
+<!--                        <div th:if="*{desiredJob}" th:text="*{desiredJob}" style="color: gray;">희망직무 값</div>-->
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">한달 총 공부시간</div>
+<!--                        <div th:if="*{introduce}" th:text="*{introduce}" style="color: gray;">소개 값</div>-->
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">한달 평균 공부시간</div>
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">한달 출석률</div>
+                    </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">목표 달성률</div>
                     </div>
                 </div>
             </div>
@@ -102,6 +648,150 @@
     </div>
 </div>
 
+<!-- Post Modals -->
+<div th:if="${postModals != null}" th:each="post:${postModals}" class="portfolio-modal modal fade"
+     th:id="'postModal' + ${post.id}" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pb-4"> <!-- text-center-->
+                <div th:id="'postModal_content'+${post.id}" class="container">
+                    <div class="row justify-content-center"> <!--justify-content-center-->
+                        <div class="col-lg-8">
+                            <!-- Post Modal - Image-->
+                            <div class="text-center">
+                                <img th:if="${post.postImg != null}" class="img-fluid rounded"
+                                     th:src="${post.postImg?.imgSrc}"
+                                     alt="..."/>
+                            </div>
+                            <!-- Post Modal - Title-->
+                            <h4 class="display-3 fw-bold" th:text="${post.title}"
+                                style="font-size:50px; margin:40px 0px 15px 0px;"></h4>
+
+                            <!-- Portfolio Modal - Text-->
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="width:150px;">
+                                    <img width="32px" height="24px" src="/images/user-solid.svg">
+                                    <div>작성자</div>
+                                </div>
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                    <img th:if="${post.memberImg == null}" src="/images/profile.png">
+                                    <img th:if="${post.memberImg != null}"
+                                         th:src="${post.memberImg?.imgSrc}"></div>
+                                <div class="card-text" th:text="${post.memberName}"> Member's Name</div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/gratipay-brands.svg"></div>
+                                    <div class="property_subtext1">희망직무</div>
+                                </div>
+                                <div class="card-text" th:text="${post.memberDesiredJob}"> Member's Name</div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="min-width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/clock-solid.svg"></div>
+                                    <div class="property_subtext1">학습시간</div>
+                                </div>
+                                <div class="flex-wrap">
+                                    <p class="border border-2 rounded"
+                                       style="margin: 0px 4px 0px 0px; display: inline-block;"
+                                       th:each="i: ${#numbers.sequence(1, #lists.size(post.times)-1,2)}"
+                                       th:text="|${post.times[i -1]}| + ' ~ '+|${post.times[i]}|">
+                                        19:00 ~ 20:00
+                                    </p>
+                                    <p class="border border-2 rounded" th:if="${#lists.size(post.times)%2!=0}"
+                                       style="margin: 0px 2px 0px 0px; display: inline-block;"
+                                       th:text="|${post.times[#lists.size(post.times)-1]}| + ' ~'">
+                                        19:00 ~
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="min-width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/circle-play-solid.svg"></div>
+                                    <div class="property_subtext1">상태</div>
+                                </div>
+                                <div class="card-text" th:text="${post.state}"> Member's Name</div>
+                            </div>
+
+                            <div class="d-sm-flex align-items-center my-2">
+                                <div class="d-sm-flex" style="min-width:150px;">
+                                    <div><img width="32px" height="24px" src="/images/align-left-solid.svg"></div>
+                                    <div class="property_subtext1">오늘의 한줄평</div>
+                                </div>
+                                <div class="card-text" th:text="${post.introduce}"> Member's Name</div>
+                            </div>
+                            <hr>
+
+                            <!-- comment -->
+                            <div th:id="'commentPart'+${post.id}">
+                                <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
+                                    <div class="d-flex bd-highlight">
+                                        <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
+                                            <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                                <img th:if="${comment.memberImg != null}"
+                                                     th:src="${comment.memberImg?.imgSrc}">
+                                                <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                            </div>
+                                            <div class="align-middle" style="margin-left:5px;"><p class="mb-0"
+                                                                                                  th:text="${comment.memberName}">
+                                                작성자</p></div>
+                                            <div class="align-middle" style="margin-left:20px; margin-top: 2px">
+                                                <p th:if="${comment.diffMin < 60}"
+                                                   th:text="${comment.diffMin} + '분 전'"
+                                                   class=" mb-0 small text-secondary">분 전</p>
+                                                <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}"
+                                                   th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'"
+                                                   class="mb-0 small text-secondary">시간 전</p>
+                                                <p th:if="${comment.diffMin >= 24*60}"
+                                                   th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'"
+                                                   class=" mb-0 small text-secondary">분 전</p>
+                                            </div>
+                                        </div>
+                                        <div class="p-2">
+                                            <a role="button"
+                                               th:if="${member.id == comment.memberId or member.id == post.memberId}"
+                                               th:onclick="|javascript:delete_check(${post.id},${comment.id})|"
+                                               class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1"
+                                                                                                       th:text="${comment.content}">
+                                        댓글 내용</p></div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input th:onkeypress="|javascript:enterKey(${post.id})|"
+                                           th:id="'comment_content'+${post.id}" type="text" class="form-control"
+                                           placeholder="댓글을 작성해 보세요!">
+                                    <button th:id="'comment_submit_btn'+${post.id}"
+                                            class="btn btn-outline-secondary"
+                                            th:onclick="|javascript:submit_comment(${post.id})|" type="submit">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="content_text">
+                                <p class="mb-4" th:utext="${post.html}"> Content by HTML </p>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+                                    <a th:if="${member.id == post.memberId}"
+                                       class="btn btn-secondary btn-sm"
+                                       th:onclick="|javascript:edit_post(${post.id})|" type="button">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Bootstrap core JS-->
 <script src="/js/bootstrap.bundle.min.js"></script>
@@ -202,6 +892,23 @@
             },
         }
     });
+
+    function edit_goal(id) {
+        $.ajax({
+            url: '/members/edit/' + id + '/goal',
+            type: "GET",
+        })
+            .done(function (fragment) {
+                $('#goal').replaceWith(fragment);
+            });
+    }
 </script>
+<!-- Custome JS -->
+<script th:inline="javascript" type="text/javascript">
+    var recentPostId = [[ ${recentPost?.id}]];
+    var focuedPostId = [[ ${focusedId}]];
+    var simplemde;
+</script>
+<script src="/js/origin/main.js"></script>
 
 </body>

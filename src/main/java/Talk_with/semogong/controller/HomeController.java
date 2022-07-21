@@ -1,5 +1,6 @@
 package Talk_with.semogong.controller;
 
+import Talk_with.semogong.configuration.SessionConst;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.att.StudyState;
@@ -35,12 +36,12 @@ public class HomeController {
     private final MemberService memberService;
 
     @ModelAttribute("check")
-    public boolean check(@SessionAttribute(name = "loginMember", required = false) Long loginMemberId) {
+    public boolean check(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
         return loginMemberId != null;
     }
 
     @RequestMapping({"/", "/{page}"})
-    public String home_page(@PathVariable(name = "page", required = false) Integer page, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model) {
+    public String home_page(@PathVariable(name = "page", required = false) Integer page, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model) {
         log.info("paging home");
         if (page == null) page = 1;
         List<Post> posts = postService.findByPage((page - 1) * 12);

@@ -16,4 +16,10 @@ public interface PostNativeRepository extends JpaRepository<Post, Long> {
             "and p.create_time BETWEEN :start_date and :end_date ;", nativeQuery = true)
     List<Post> getLast7(@Param(value = "m_id") Long id, @Param(value="start_date") String start, @Param(value = "end_date") String end);
 
+    @Query(value = "SELECT * " +
+            "FROM post p " +
+            "where p.member_id = :m_id " +
+            "and MONTH(p.create_time) = :request_month ;", nativeQuery = true)
+    List<Post> getMonthPost(@Param(value = "m_id") Long id, @Param(value="request_month") int month);
+
 }

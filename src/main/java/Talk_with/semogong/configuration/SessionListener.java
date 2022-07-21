@@ -15,7 +15,7 @@ public class SessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        se.getSession().setMaxInactiveInterval(timeOut); //세션만료60분
+        se.getSession().setMaxInactiveInterval(timeOut); //세션만료10시간
     }
 
 

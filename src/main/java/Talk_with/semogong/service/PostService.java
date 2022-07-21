@@ -5,8 +5,10 @@ import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.form.PostEditForm;
 import Talk_with.semogong.repository.MemberRepository;
+import Talk_with.semogong.repository.PostNativeRepository;
 import Talk_with.semogong.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,7 @@ public class PostService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-
+    private final PostNativeRepository postNativeRepository;
 
     // 게시글 저장
     public Long save(Long memberId, LocalDateTime createTime) {
@@ -70,6 +72,14 @@ public class PostService {
     @Transactional(readOnly = true)
     public Optional<Post> getRecentPost(Long memberId) {
         return postRepository.findByMember(memberId);
+    }
+
+    public List<Post> getLast7(Long id, String start, String end) {
+        return postNativeRepository.getLast7(id, start, end);
+    }
+
+    public List<Post> getMonthPosts(Long id, int month) {
+        return postNativeRepository.getMonthPost(id, month);
     }
 
     // 게시글 이미지 업로드 및 변경

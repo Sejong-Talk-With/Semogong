@@ -1,5 +1,6 @@
 package Talk_with.semogong.controller.api;
 
+import Talk_with.semogong.configuration.SessionConst;
 import Talk_with.semogong.controller.HomeController;
 import Talk_with.semogong.domain.Comment;
 import Talk_with.semogong.domain.Member;
@@ -41,7 +42,7 @@ public class CommentApiController {
 
     // 댓글 작성
     @PostMapping("/comment/api/new/{id}")
-    public String create(@PathVariable("id") Long postId, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model, @RequestParam Map<String, Object> paramMap) {
+    public String create(@PathVariable("id") Long postId, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model, @RequestParam Map<String, Object> paramMap) {
         Member member = memberService.findOne(loginMemberId);
         Post post = postService.findOne(postId);
         Comment comment = Comment.makeComment(paramMap.get("comment").toString(), post, member, LocalDateTime.now());
@@ -59,7 +60,7 @@ public class CommentApiController {
 
     // 댓글 삭제
     @DeleteMapping("/comment/delete/{id}")
-    public String commentDelete(@PathVariable("id") Long id, @SessionAttribute(name = "loginMember", required = false) Long loginMemberId, Model model, @RequestParam Long postId) {
+    public String commentDelete(@PathVariable("id") Long id, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model, @RequestParam Long postId) {
         commentService.deleteComment(id);
         Member member = memberService.findOne(loginMemberId);
         Post post = postService.findOne(postId);

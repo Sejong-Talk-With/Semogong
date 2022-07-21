@@ -5,6 +5,7 @@ import Talk_with.semogong.domain.att.Times;
 import Talk_with.semogong.domain.dto.MemberDto;
 import Talk_with.semogong.repository.PostNativeRepository;
 import Talk_with.semogong.service.MemberService;
+import Talk_with.semogong.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 public class StaticController {
 
     private final MemberService memberService;
-    private final PostNativeRepository postNativeRepository;
+    private final PostService postService;
 
     @GetMapping("/data")
     public String data(Model model) throws IOException {
@@ -86,14 +87,14 @@ public class StaticController {
         if (LocalDateTime.now().getHour() < 4) {
             String end = LocalDateTime.now().minusDays(1).format(dateTimeFormatter);
             String start = LocalDateTime.now().minusDays(8).format(dateTimeFormatter);
-            posts = postNativeRepository.getLast7(member.getId(),start,end);
+            posts = postService.getLast7(member.getId(),start,end);
             for (int i = 8; i > 1; i--) {
                 dayTimes.put(LocalDateTime.now().minusDays(i).getDayOfMonth(), new Times(0));
             }
         } else { // 이외
             String end = LocalDateTime.now().format(dateTimeFormatter);
             String start = LocalDateTime.now().minusDays(7).format(dateTimeFormatter);
-            posts = postNativeRepository.getLast7(member.getId(),start, end);
+            posts = postService.getLast7(member.getId(),start, end);
             for (int i = 7; i > 0; i--) {
                 dayTimes.put(LocalDateTime.now().minusDays(i).getDayOfMonth(), new Times(0));
             }
