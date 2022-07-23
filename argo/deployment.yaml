@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: semogong-container
-        image: wjdqlsdlsp/semogong:1.1.5-demo
+        image: wjdqlsdlsp/semogong:1.1.5
         ports:
         - containerPort: 8080
         envFrom:

@@ -1,10 +1,11 @@
 package Talk_with.semogong.domain.att;
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@ToString
-@Getter
+@Data
 public class Times {
 
     private int hour;

@@ -132,6 +132,7 @@
         #profile {
             margin-bottom: 20px;
         }
+
         #goal {
             margin-bottom: 20px;
         }
@@ -146,36 +147,34 @@
     */
     body {
         min-height: 100vh;
-/*        background-color: #3ca55c;
-        background-image: linear-gradient(147deg, #3ca55c 0%, #b5ac49 100%);*/
+        /*        background-color: #3ca55c;
+                background-image: linear-gradient(147deg, #3ca55c 0%, #b5ac49 100%);*/
     }
 
-    .help-tip{
+    .help-tip {
 
         position: absolute;
 
-/*        text-align: center;
+        /*        text-align: center;
 
-        width: 24px;
+                width: 24px;
 
-        height: 24px;
+                height: 24px;
 
-        font-size: 14px;
+                font-size: 14px;
 
-        line-height: 26px;
+                line-height: 26px;
 
-        cursor: default;*/
+                cursor: default;*/
 
     }
 
 
+    .help-tip:hover p {
 
-    .help-tip:hover p{
-
-        display:block;
+        display: block;
 
         transform-origin: 100% 0%;
-
 
 
         -webkit-animation: fadeIn 0.3s ease-in-out;
@@ -183,12 +182,10 @@
         animation: fadeIn 0.3s ease-in-out;
 
 
-
     }
 
 
-
-    .help-tip p{
+    .help-tip p {
 
         display: none;
 
@@ -217,62 +214,58 @@
     }
 
 
-
-    .help-tip p:before{
+    .help-tip p:before {
 
         position: absolute;
 
         content: '';
 
-        width:0;
+        width: 0;
 
         height: 0;
 
-        border:6px solid transparent;
+        border: 6px solid transparent;
 
-        border-bottom-color:#1E2021;
+        border-bottom-color: #1E2021;
 
-        right:10px;
+        right: 10px;
 
-        top:-12px;
+        top: -12px;
 
     }
 
 
+    .help-tip p:after {
 
-    .help-tip p:after{
+        width: 100%;
 
-        width:100%;
+        height: 40px;
 
-        height:40px;
-
-        content:'';
+        content: '';
 
         position: absolute;
 
-        top:-40px;
+        top: -40px;
 
-        left:0;
+        left: 0;
 
     }
-
 
 
     @-webkit-keyframes fadeIn {
 
         0% {
 
-            opacity:0;
+            opacity: 0;
 
             transform: scale(0.6);
 
         }
 
 
-
         100% {
 
-            opacity:100%;
+            opacity: 100%;
 
             transform: scale(1);
 
@@ -281,12 +274,15 @@
     }
 
 
-
     @keyframes fadeIn {
 
-        0% { opacity:0; }
+        0% {
+            opacity: 0;
+        }
 
-        100% { opacity:100%; }
+        100% {
+            opacity: 100%;
+        }
 
     }
 </style>
@@ -305,7 +301,8 @@
                                 class="ml-1 h5 fw-bold">프로필</span></h6>
                     </div>
                     <div class="d-sm-flex justify-content-center">
-                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id},redirectURL='/members/my-page')}">
+                        <a class="btn btn-outline-dark btn-sm"
+                           th:href="@{/members/edit/{id} (id=${member.id},redirectURL='/members/my-page')}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-gear" viewBox="0 0 16 16">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -342,7 +339,7 @@
                     <hr style="margin: 8px 0 !important;">
                     <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
                         <div style="color: black; width:120px;">아이디</div>
-                        <div th:if="*{loginId}"  th:text="*{loginId}" style="color: gray;">아이디 값</div>
+                        <div th:if="*{loginId}" th:text="*{loginId}" style="color: gray;">아이디 값</div>
                     </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2"
                          style="font-size: 18px;">
@@ -357,12 +354,16 @@
                     <div class="d-sm-flex fw-bold my-2" style="font-size: 18px;">
                         <div style="color: black; width:120px;">링크</div>
                         <div>
-                            <a th:if="*{links}" th:href="@{https://{location} (location=${link})}" target="_blank" th:each="link:*{links}" class="d-block text-decoration-none" th:text="${link}" style="color: gray;">링크 값</a>
+                            <a th:if="*{links}" th:href="@{https://{location} (location=${link})}" target="_blank"
+                               th:each="link:*{links}" class="d-block text-decoration-none" th:text="${link}"
+                               style="color: gray;">링크 값</a>
                         </div>
                     </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
                         <div style="color: black; width:120px;">총 공부시간</div>
-                        <div th:if="*{time != null}" th:text="|*{time.hour}시간 *{time.min}분|" style="color: lightseagreen;">상태 값</div>
+                        <div th:if="*{time != null}" th:text="|*{time.hour}시간 *{time.min}분|"
+                             style="color: lightseagreen;">상태 값
+                        </div>
                         <div th:if="*{time == null}" style="color: gray;">0시간 0분</div>
                     </div>
                     <!--<div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
@@ -376,10 +377,12 @@
                 <div class="card-header d-sm-flex justify-content-between">
                     <div style="margin-top: 5px" class="input-group">
                         <h6 class="m-0 font-weight-bold"> <span
-                                class="ml-1 h5 fw-bold">공부 목표 <div style="color: gray; display: inline-block">&nbsp;(서비스 준비 중)</div></span></h6>
+                                class="ml-1 h5 fw-bold">공부 목표</span>
+                        </h6>
                     </div>
                     <div class="d-sm-flex justify-content-center">
-                        <a class="btn btn-outline-dark btn-sm" type="button"> <!-- th:onclick="|javascript:edit_goal(${member.id})|"-->
+                        <a class="btn btn-outline-dark btn-sm" type="button"
+                           th:onclick="|javascript:edit_goal(${member.id})|">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-gear" viewBox="0 0 16 16">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -391,20 +394,30 @@
                 <div id="editGoal" class="card-body" th:object="${member}">
                     <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
                         <div style="color: black; width:200px;">목표 공부시간 (하루)</div>
-                        <div th:if="*{goal.dayGoalTimes}"  th:text="*{goal.dayGoalTimes}" style="color: gray;">아이디 값</div>
-<!--                        <div style="color: gray;">서비스 준비 중</div>-->
+                        <div th:if="*{goal.dayGoalTimes}" th:text="${@thymeMath.floor(member.goal.dayGoalTimes, 60)}"
+                             style="color: gray">시간
+                        </div>
+                        <div style="color: gray">&nbsp;시간&nbsp;</div>
+                        <div th:if="*{goal.dayGoalTimes}" th:text="*{goal.dayGoalTimes%60}" style="color: gray">아이디 값
+                        </div>
+                        <div style="color: gray">&nbsp;분</div>
                     </div>
-                    <div class="d-sm-flex fw-bold align-items-center my-2"
-                         style="font-size: 18px;">
+                    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
                         <div style="color: black; width:200px;">목표 공부시간 (일주일)</div>
-                        <div th:if="*{goal.weekGoalTimes}" th:text="*{goal.weekGoalTimes}" style="color: gray;">희망직무 값</div>
-<!--                        <div style="color: gray;">서비스 준비 중</div>-->
+                        <div th:if="*{goal.weekGoalTimes}" th:text="${@thymeMath.floor(member.goal.weekGoalTimes, 60)}"
+                             style="color: gray">시간
+                        </div>
+                        <div style="color: gray">&nbsp;시간&nbsp;</div>
+                        <div th:if="*{goal.weekGoalTimes}" th:text="*{goal.weekGoalTimes%60}" style="color: gray">아이디
+                            값
+                        </div>
+                        <div style="color: gray">&nbsp;분</div>
                     </div>
-<!--                    <div class="d-sm-flex fw-bold align-items-center my-2"
-                         style="font-size: 18px;">
-                        <div style="color: black; width:200px;">목표 출석수 (일주일)</div>
-                        <div th:if="*{introduce}" th:text="*{nickname}" style="color: gray;">소개 값</div>
-                    </div>-->
+                    <!--                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                                             style="font-size: 18px;">
+                                            <div style="color: black; width:200px;">목표 출석수 (일주일)</div>
+                                            <div th:if="*{introduce}" th:text="*{nickname}" style="color: gray;">소개 값</div>
+                                        </div>-->
                 </div>
             </div>
         </div>
@@ -418,12 +431,14 @@
                     </div>
                     <div class="d-sm-flex justify-content-center">
                         <a class="btn btn-outline-dark btn-sm" th:href="@{/members/my-page (month=(${month}-1))}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-caret-left" viewBox="0 0 16 16">
                                 <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
                             </svg>
                         </a>
                         <a class="btn btn-outline-dark btn-sm" th:href="@{/members/my-page (month=(${month}+1))}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-caret-right" viewBox="0 0 16 16">
                                 <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
                             </svg>
                         </a>
@@ -431,8 +446,10 @@
                 </div>
                 <div style="padding: 20px 40px;">
                     <div class="d-flex align-items-center">
-                        <h4 th:text="${calenderInfo.month}" class="month font-weight-bold mb-0 text-uppercase" style="margin-right: 20px">July</h4>
-                        <span th:text="${calenderInfo.year}" class="year font-weight-bold mb-0 text-uppercase align-bottom">2022</span>
+                        <h4 th:text="${calenderInfo.month}" class="month font-weight-bold mb-0 text-uppercase"
+                            style="margin-right: 20px">July</h4>
+                        <span th:text="${calenderInfo.year}"
+                              class="year font-weight-bold mb-0 text-uppercase align-bottom">2022</span>
                     </div>
                     <ol class="day-names list-unstyled">
                         <li class="font-weight-bold text-uppercase">Sun</li>
@@ -556,16 +573,20 @@
                             <div class="date">4</div>
                         </li>
                     </ol>-->
-
                     <ol class="days list-unstyled">
-                        <li th:if="${calenderInfo.startDay != 0}" th:each="day:${#numbers.sequence(1,calenderInfo.startDay)}">
+                        <li th:if="${calenderInfo.startDay != 0}"
+                            th:each="day:${#numbers.sequence(1,calenderInfo.startDay)}">
                         </li>
                         <li th:each="day:${calenderDays}">
                             <div class="date" th:text="${dayStat.count}">일</div>
                             <div class="event "
-                                 th:if="${calenderData[day.intValue()]}" th:text="${calenderData[day.intValue()]?.title}"
-                                 data-bs-toggle="modal" th:attr="data-bs-target='#postModal'+${calenderData[day.intValue()]?.id}">Event with Long Name</div>
-<!--                            <div class="help-tip">tep<p>Info</p></div>-->
+                                 th:if="${calenderData[day.intValue()]}"
+                                 th:text="${calenderData[day.intValue()]?.title}"
+                                 data-bs-toggle="modal"
+                                 th:attr="data-bs-target='#postModal'+${calenderData[day.intValue()]?.id}">Event with
+                                Long Name
+                            </div>
+                            <!--                            <div class="help-tip">tep<p>Info</p></div>-->
                         </li>
                     </ol>
                 </div>
@@ -582,66 +603,78 @@
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
-                        <canvas id="myBarChart" height="395"></canvas>
+                        <canvas id="myBarChart" height="325"></canvas>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Static -->
         <div class="col">
-            <div class="card shadow mb-4">
+            <div class="card shadow mb-4" th:object="${allStatic}">
                 <!-- Profile Main-->
                 <div class="card-header d-sm-flex justify-content-between">
                     <div style="margin-top: 5px" class="input-group">
                         <h6 class="m-0 font-weight-bold"> <span
-                                class="ml-1 h5 fw-bold">공부 통계<div style="color: gray; display: inline-block">&nbsp;(서비스 준비 중)</div></span></h6>
+                                class="ml-1 h5 fw-bold">공부 통계</span>
+                        </h6>
                     </div>
-                    <!--<div class="d-sm-flex justify-content-center">
-                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/edit/{id} (id=${member.id},redirectURL='/members/my-page')}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-gear" viewBox="0 0 16 16">
-                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-                            </svg>
-                        </a>
-                        <a class="btn btn-outline-dark btn-sm" href="/members/logout">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                                <path fill-rule="evenodd"
-                                      d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                            </svg>
-                        </a>
-                    </div>-->
                 </div>
                 <div class="card-body">
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">전체 공부시간</div>
+                        <div th:if="*{allTimes}"  th:text="|*{allTimes.hour}시간 *{allTimes.min}분|" style="color: gray;">아이디 값</div>
+                    </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
                         <div style="color: black; width:180px;">일주일 총 공부시간</div>
-                        <!--                        <div th:if="*{loginId}"  th:text="*{loginId}" style="color: gray;">아이디 값</div>-->
+                        <div th:if="*{weekAllTimes}"  th:text="|*{weekAllTimes.hour}시간 *{weekAllTimes.min}분|" style="color: gray;">아이디 값</div>
                     </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2"
                          style="font-size: 18px;">
                         <div style="color: black; width:180px;">일주일 평균 공부시간</div>
-<!--                        <div th:if="*{desiredJob}" th:text="*{desiredJob}" style="color: gray;">희망직무 값</div>-->
+                        <div th:if="*{weekAvgTimes}"  th:text="|*{weekAvgTimes.hour}시간 *{weekAvgTimes.min}분|" style="color: gray;">아이디 값</div>
                     </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2"
                          style="font-size: 18px;">
-                        <div style="color: black; width:180px;">한달 총 공부시간</div>
-<!--                        <div th:if="*{introduce}" th:text="*{introduce}" style="color: gray;">소개 값</div>-->
+                        <div style="color: black; width:180px;"> <span th:text="|${month}월|"></span>&nbsp;총 공부시간</div>
+                        <div th:if="*{monthAllTimes}"  th:text="|*{monthAllTimes.hour}시간 *{monthAllTimes.min}분|" style="color: gray;">아이디 값</div>
                     </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2"
                          style="font-size: 18px;">
-                        <div style="color: black; width:180px;">한달 평균 공부시간</div>
+                        <div style="color: black; width:180px;"><span th:text="|${month}월|"></span>&nbsp;평균 공부시간</div>
+                        <div th:if="*{monthAvgTimes}"  th:text="|*{monthAvgTimes.hour}시간 *{monthAvgTimes.min}분|" style="color: gray;">아이디 값</div>
                     </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2"
                          style="font-size: 18px;">
-                        <div style="color: black; width:180px;">한달 출석률</div>
+                        <div style="color: black; width:180px;"><span th:text="|${month}월|"></span>&nbsp; 출석률</div>
+                        <div th:if="*{monthAttendanceRate}"  th:text="|*{monthAttendanceRate}% (*{monthAttendanceCnt}/*{monthDate})|" style="color: gray;">아이디 값</div>
                     </div>
                     <div class="d-sm-flex fw-bold align-items-center my-2"
                          style="font-size: 18px;">
-                        <div style="color: black; width:180px;">목표 달성률</div>
+                        <div style="color: black; width:180px;">목표 달성률 (하루)</div>
+                        <div th:if="*{goalAttainmentToday}"  th:text="|*{goalAttainmentToday}%|" style="color: gray;">아이디 값</div>
                     </div>
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">목표 달성률 (일주일)</div>
+                        <div th:if="*{goalAttainmentWeek}"  th:text="|*{goalAttainmentWeek}%|" style="color: gray;">아이디 값</div>
+                    </div>
+                    <!--                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">공부 효율</div>
+                    </div>-->
+                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                         style="font-size: 18px;">
+                        <div style="color: black; width:180px;">공부 랭크</div>
+                        <div th:if="*{studyRankRate >= 90}" style="color: lightgoldenrodyellow;">다이아&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate >= 80 and studyRankRate < 90}" style="color: lightblue;">플레티넘&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate >= 70 and studyRankRate < 80}" style="color: gold;">골드&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate >= 60 and studyRankRate < 70}" style="color: silver;">실버&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate >= 50 and studyRankRate < 60}" style="color: darkgoldenrod;">브론즈&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate >= 40 and studyRankRate < 50}" style="color: dimgray;">아이언&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate < 40}" style="color: #523e02;">스톤즈&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -801,7 +834,7 @@
 <script th:inline="javascript" type="text/javascript">
 
     var staticDays = [[ ${staticDays}]];
-    var data = [[ ${staticData} ]]
+    var data = [[ ${staticData}]]
 
 
     // Bar Chart Example
@@ -809,19 +842,19 @@
     var myBarChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: [staticDays[0]+'일',staticDays[1]+'일',staticDays[2]+'일',staticDays[3]+'일',staticDays[4]+'일',staticDays[5]+'일',staticDays[6]+'일'],
+            labels: [staticDays[0] + '일', staticDays[1] + '일', staticDays[2] + '일', staticDays[3] + '일', staticDays[4] + '일', staticDays[5] + '일', staticDays[6] + '일'],
             datasets: [{
                 label: "공부 시간",
                 backgroundColor: "lightseagreen",
                 hoverBackgroundColor: "lightseagreen",
                 borderColor: "lightseagreen",
-                data: [data[staticDays[0]].hour + Math.round(data[staticDays[0]].min/60),
-                    data[staticDays[1]].hour + Math.round(data[staticDays[1]].min/60),
-                    data[staticDays[2]].hour + Math.round(data[staticDays[2]].min/60),
-                    data[staticDays[3]].hour + Math.round(data[staticDays[3]].min/60),
-                    data[staticDays[4]].hour + Math.round(data[staticDays[4]].min/60),
-                    data[staticDays[5]].hour + Math.round(data[staticDays[5]].min/60),
-                    data[staticDays[6]].hour + Math.round(data[staticDays[6]].min/60)],
+                data: [data[staticDays[0]].hour + Math.round(data[staticDays[0]].min / 60),
+                    data[staticDays[1]].hour + Math.round(data[staticDays[1]].min / 60),
+                    data[staticDays[2]].hour + Math.round(data[staticDays[2]].min / 60),
+                    data[staticDays[3]].hour + Math.round(data[staticDays[3]].min / 60),
+                    data[staticDays[4]].hour + Math.round(data[staticDays[4]].min / 60),
+                    data[staticDays[5]].hour + Math.round(data[staticDays[5]].min / 60),
+                    data[staticDays[6]].hour + Math.round(data[staticDays[6]].min / 60)],
             }],
         },
         options: {
@@ -852,7 +885,7 @@
                     ticks: {
                         min: 0,
                         max: 12,
-                        maxTicksLimit: 15,
+                        maxTicksLimit: 10,
                         padding: 10,
                         // Include a dollar sign in the ticks
                         callback: function (value, index, values) {

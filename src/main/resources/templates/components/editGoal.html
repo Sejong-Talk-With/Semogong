@@ -6,32 +6,88 @@
 </head>
 <body>
 
-<form id="editForm" class="card shadow" method="post" th:action="@{/members/edit/{id}/goal (id=${id})}" th:object="${goalDto}">
+<form id="editForm" class="card shadow" method="post" th:action="@{/members/edit/{id}/goal (id=${id})}"
+      th:object="${goalDto}">
     <div class="card-header d-sm-flex justify-content-between">
         <div style="margin-top: 5px" class="input-group">
             <h6 class="m-0 font-weight-bold"> <span
-                    class="ml-1 h5 fw-bold">공부 목표</span></h6>
+                    class="ml-1 h5 fw-bold">공부 목표</span>
+            </h6>
         </div>
         <div class="d-sm-flex justify-content-center">
-            <button class="btn btn-secondary" type="submit">변경</button>
+            <button class="btn btn-outline-dark btn-sm" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                </svg>
+            </button>
         </div>
     </div>
-    <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
-        <div style="color: black; width:200px;">목표 공부시간 (하루)</div>
-        <input th:field="*{dayGoalTimes.hour}"></input>
-        <div> 시간</div>
-        <input th:field="*{dayGoalTimes.min}"></input>
-        <div> 분</div>
-    </div>
-    <div class="d-sm-flex fw-bold align-items-center my-2"
-         style="font-size: 18px;">
-        <div style="color: black; width:200px;">목표 공부시간 (일주일)</div>
-        <input th:field="*{weekGoalTimes.hour}"></input>
-        <div> 시간</div>
-        <input th:field="*{weekGoalTimes.min}"></input>
-        <div> 분</div>
+
+    <div class="card-body">
+        <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+            <div style="color: black; width:200px;">목표 공부시간 (하루)</div>
+            <label>
+                <input style="width: 30px;" type="text" th:field="*{dayHour}">
+            </label>
+            <div> 시간</div>
+            <label>
+                <input style="width: 30px; margin-left: 10px;" type="text" th:field="*{dayMin}">
+            </label>
+            <div> 분</div>
+        </div>
+        <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+            <div style="color: black; width:200px;">목표 공부시간 (일주일)</div>
+
+            <label>
+                <input style="width: 30px;" th:field="*{weekHour}">
+            </label>
+            <div> 시간</div>
+            <label>
+                <input style="width: 30px; margin-left: 10px;" th:field="*{weekMin}">
+            </label>
+            <div> 분</div>
+        </div>
     </div>
 </form>
+
+<div id="goal" class="card shadow">
+    <div class="card-header d-sm-flex justify-content-between">
+        <div style="margin-top: 5px" class="input-group">
+            <h6 class="m-0 font-weight-bold"> <span
+                    class="ml-1 h5 fw-bold">공부 목표 <div style="color: gray; display: inline-block">&nbsp;(서비스 준비 중)</div></span></h6>
+        </div>
+        <div class="d-sm-flex justify-content-center">
+            <a class="btn btn-outline-dark btn-sm" type="button" th:onclick="|javascript:edit_goal(${member.id})|">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-gear" viewBox="0 0 16 16">
+                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+    <div id="editGoal" class="card-body" th:object="${member}">
+        <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+            <div style="color: black; width:200px;">목표 공부시간 (하루)</div>
+            <div th:if="*{goal.dayGoalTimes}"  th:text="${@thymeMath.floor(member.goal.dayGoalTimes, 60)}" style="color: gray">시간</div>
+            <div style="color: gray">&nbsp;시간&nbsp;</div>
+            <div th:if="*{goal.dayGoalTimes}"  th:text="*{goal.dayGoalTimes%60}" style="color: gray">아이디 값</div>
+            <div style="color: gray">&nbsp;분</div>
+        </div>
+        <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+            <div style="color: black; width:200px;">목표 공부시간 (일주일)</div>
+            <div th:if="*{goal.weekGoalTimes}"  th:text="${@thymeMath.floor(member.goal.weekGoalTimes, 60)}" style="color: gray">시간</div>
+            <div style="color: gray">&nbsp;시간&nbsp;</div>
+            <div th:if="*{goal.weekGoalTimes}"  th:text="*{goal.weekGoalTimes%60}" style="color: gray">아이디 값</div>
+            <div style="color: gray">&nbsp;분</div>
+        </div>
+        <!--                    <div class="d-sm-flex fw-bold align-items-center my-2"
+                                 style="font-size: 18px;">
+                                <div style="color: black; width:200px;">목표 출석수 (일주일)</div>
+                                <div th:if="*{introduce}" th:text="*{nickname}" style="color: gray;">소개 값</div>
+                            </div>-->
+    </div>
+</div>
 
 </body>
 </html>

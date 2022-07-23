@@ -33,7 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,7 +49,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private final S3Service s3Service;
-    private final PostNativeRepository postNativeRepository;
     private final PostService postService;
 
     // 회원가입 폼
@@ -146,8 +147,7 @@ public class MemberController {
 
     @GetMapping("/my-page")
     public String myPage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId,
-                         Model model,
-                         @RequestParam(name = "month",required = false) Integer month) {
+                         Model model, @RequestParam(name = "month",required = false) Integer month) {
         Member oriMember = memberService.findOne(loginMemberId);
         MemberInfo member = new MemberInfo(oriMember);
         List<Integer> days = getDays(LocalDateTime.now());
@@ -176,6 +176,11 @@ public class MemberController {
             calenderData.put(dayOfMonth, monthPostDto);
         }
         ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
+        int monthDate = dayData[month - 1];
+        if (month == LocalDateTime.now().getMonthValue()) {
+            monthDate = LocalDateTime.now().getDayOfMonth();
+        }
+        AllStatic allStatic = getAllStatus(oriMember, staticsData, monthPosts, monthDate);
 
 
         model.addAttribute("nav", "myPage");
@@ -187,23 +192,81 @@ public class MemberController {
         model.addAttribute("calenderDays", calenderDays);
         model.addAttribute("calenderData", calenderData);
         model.addAttribute("postModals", monthPostDtos);
-        model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("goalDto", new GoalDto());
+        model.addAttribute("allStatic", allStatic);
+
 
 
         return "member/memberDetail";
     }
 
-/*    @GetMapping("/edit/{id}/goal")
+    private AllStatic getAllStatus(Member member, Map<Integer, Times> staticData, List<Post> monthPosts, int monthDate) {
+        AllStatic allStatic = new AllStatic();
+
+        allStatic.setAllTimes(getAllTimes(member));
+
+        int weekAllTimes = 0;
+        for (Times times : staticData.values()) {
+            weekAllTimes = weekAllTimes + (times.getHour()*60 + times.getMin());
+        }
+        allStatic.setWeekAllTimes(new Times(weekAllTimes));
+
+        Times weekAvgTimes = new Times();
+        int weekAvgTime = Math.round(weekAllTimes / 7);
+        weekAvgTimes.setHour(Math.floorDiv(weekAvgTime, 60));
+        weekAvgTimes.setMin(weekAvgTime % 60);
+        allStatic.setWeekAvgTimes(weekAvgTimes);
+
+        int monthAllTimes = 0;
+        for (Post post : monthPosts) {
+            if (post.getTimes().size()%2 != 0) continue;
+            Times times = getTimes(post.getTimes());
+            monthAllTimes = monthAllTimes + (times.getHour() * 60 + times.getMin());
+        }
+        allStatic.setMonthAllTimes(new Times(monthAllTimes));
+
+        Times monthAvgTimes = new Times();
+        int monthAvgTime = Math.round(monthAllTimes / monthDate);
+        monthAvgTimes.setHour(Math.floorDiv(monthAvgTime, 60));
+        monthAvgTimes.setMin(monthAvgTime % 60);
+        allStatic.setMonthAvgTimes(monthAvgTimes);
+
+        allStatic.setMonthAttendanceCnt(monthPosts.size());
+        allStatic.setMonthDate(monthDate);
+        allStatic.setMonthAttendanceRate(Math.round(((float) monthPosts.size()/ (float) monthDate) * 100));
+
+        Optional<Post> optionalPost = postService.getRecentPost(member.getId());
+        PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
+        Times todayStudyTimes = new Times(0);
+        if (memberRecentPostDto != null) {
+            todayStudyTimes = getTotalStudyTimes(memberRecentPostDto);
+        }
+        int todayStudyTime = todayStudyTimes.getHour() * 60 + todayStudyTimes.getMin();
+        int dayGoalTimes = member.getGoal().getDayGoalTimes();
+        allStatic.setGoalAttainmentToday(Math.round( ( (float) todayStudyTime/ (float) dayGoalTimes)*100));
+
+        int weekGoalTimes = member.getGoal().getWeekGoalTimes();
+        allStatic.setGoalAttainmentWeek(Math.round(((float) weekAllTimes/ (float) weekGoalTimes) *100));
+
+        allStatic.setStudyRankRate(Math.floorDiv(allStatic.getMonthAttendanceRate() + allStatic.goalAttainmentToday + allStatic.goalAttainmentWeek, 3));
+
+        return allStatic;
+    }
+
+    @GetMapping("/edit/{id}/goal")
     public String editGoal(@PathVariable(name = "id") Long id, Model model) {
+        Member member = memberService.findOne(id);
+        Goal goal = member.getGoal();
+        GoalDto goalDto = new GoalDto(goal);
         model.addAttribute("id", id);
-        model.addAttribute("goalDto", new GoalDto());
+        model.addAttribute("goalDto", goalDto);
         return "components/editGoal :: #editForm";
     }
 
     @PostMapping("/edit/{id}/goal")
     public String editGoalRedirect(@PathVariable(name = "id") Long id, @ModelAttribute(name = "goalDto") GoalDto goalDto) {
-        log.info(String.valueOf(goalDto));
-        Goal goal = new Goal(goalDto.dayGoalTimes.getHour()*60 + goalDto.dayGoalTimes.getMin(), goalDto.weekGoalTimes.getHour()*60 + goalDto.weekGoalTimes.getMin());
+        log.info("goalDto: "+ goalDto);
+        Goal goal = new Goal(goalDto.getDayHour()*60 + goalDto.getDayMin(), goalDto.getWeekHour()*60 + goalDto.getWeekMin());
         memberService.editMemberGoal(id, goal);
         return "redirect:/members/my-page";
     }
@@ -211,14 +274,151 @@ public class MemberController {
     @Data
     static class GoalDto {
 
-        private Times dayGoalTimes;
-        private Times weekGoalTimes;
+        private int dayHour;
+        private int dayMin;
+        private int weekHour;
+        private int weekMin;
 
-        public GoalDto() {
-
+        public GoalDto(Goal goal) {
+            int day = goal.getDayGoalTimes();
+            this.dayHour = Math.floorDiv(day, 60);
+            this.dayMin = day % 60;
+            int week = goal.getWeekGoalTimes();
+            this.weekHour = Math.floorDiv(week, 60);
+            this.weekMin = week % 60;
         }
-    }*/
 
+        public GoalDto() { }
+    }
+
+    @Data
+    static class AllStatic {
+        /*전체 공부시간
+        일주일 총 공부시간
+        일주일 평균 공부시간
+        한달 총 공부시간
+        한달 평균 공부시간
+        한달 출석률
+        목표 달성률
+        공부 효율
+        공부 랭크*/
+        private Times AllTimes;
+        private Times weekAllTimes;
+        private Times weekAvgTimes;
+        private Times monthAllTimes;
+        private Times monthAvgTimes;
+
+        private int monthAttendanceCnt;
+        private int monthDate;
+        private int monthAttendanceRate;
+
+        private int goalAttainmentToday;
+        private int goalAttainmentWeek;
+
+        private int studyEfficiency;
+        private int studyRankRate;
+    }
+
+    private Times getTotalStudyTimes(PostViewDto memberRecentPostDto) {
+
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        LocalDateTime createDateTime = memberRecentPostDto.getCreateTime();
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH");
+        LocalDate createDate = createDateTime.toLocalDate();
+        LocalDate nowDate = nowDateTime.toLocalDate();
+        int nowTime = Integer.parseInt(nowDateTime.format(timeFormatter));
+        int createTime = Integer.parseInt(createDateTime.format(timeFormatter));
+        Period period = Period.between(createDate, nowDate);
+        List<String> times = memberRecentPostDto.getTimes();
+        Times resultTime = getTimes(nowDateTime, timeFormatter, times);
+
+        if (nowTime > 3 & nowTime < 24) {
+            if (createDate.isEqual(nowDate) & createTime > 3) {
+                return resultTime;
+            }
+        } else {
+            if (nowDate.isEqual(createDate)) {
+                return resultTime;
+            }
+            // 그 전날 작성한 글이 존재하는 지 확인
+            else if (period.getDays() == 1 & createTime > 3) {
+                return resultTime;
+            }
+        }
+
+
+        return null;
+    }
+
+    private Times getTimes(LocalDateTime nowDateTime, DateTimeFormatter timeFormatter, List<String> times) {
+        Times resultTime = null;
+        if (times.size() % 2 == 0) {
+            int total1 = 0;
+            for (int i = 1; i < times.size(); i += 2) {
+                String[] ends = times.get(i).split(":");
+                String[] starts = times.get(i - 1).split(":");
+                int endHour = Integer.parseInt(ends[0]);
+                if (0 <= endHour & endHour < 4) {
+                    endHour += 24;
+                }
+                int endMin = Integer.parseInt(ends[1]);
+                int end = endHour * 60 + endMin;
+
+
+                int startHour = Integer.parseInt(starts[0]);
+                if (0 <= startHour & startHour < 4) {
+                    startHour += 24;
+                }
+                int startMin = Integer.parseInt(starts[1]);
+                int start = startHour * 60 + startMin;
+
+                total1 += (end - start);
+            }
+            resultTime = new Times(total1);
+        } else {
+            int total2 = 0;
+            for (int i = 1; i < times.size(); i += 2) {
+                String[] ends = times.get(i).split(":");
+                String[] starts = times.get(i - 1).split(":");
+                int endHour = Integer.parseInt(ends[0]);
+                if (0 <= endHour & endHour < 4) {
+                    endHour += 24;
+                }
+                int endMin = Integer.parseInt(ends[1]);
+                int end = endHour * 60 + endMin;
+
+                int startHour = Integer.parseInt(starts[0]);
+                if (0 <= startHour & startHour < 4) {
+                    startHour += 24;
+                }
+                int startMin = Integer.parseInt(starts[1]);
+                int start = startHour * 60 + startMin;
+
+                total2 += (end - start);
+            }
+
+            DateTimeFormatter timeFormatter2 = DateTimeFormatter.ofPattern("mm");
+            String[] starts = times.get(times.size() - 1).split(":");
+
+            int endHour = Integer.parseInt(nowDateTime.format(timeFormatter));
+            if (0 <= endHour & endHour < 4) {
+                endHour += 24;
+            }
+            int endMin = Integer.parseInt(nowDateTime.format(timeFormatter2));
+            int end = endHour * 60 + endMin;
+
+            int startHour = Integer.parseInt(starts[0]);
+            if (0 <= startHour & startHour < 4) {
+                startHour += 24;
+            }
+            int startMin = Integer.parseInt(starts[1]);
+            int start = startHour * 60 + startMin;
+
+            total2 += (end - start);
+            resultTime = new Times(total2);
+        }
+        return resultTime;
+    }
 
     private ForCalender getCalenderInfo(List<String> emptyDate, LocalDateTime date) {
 
@@ -337,6 +537,7 @@ public class MemberController {
 
         return new Times(total);
     }
+
 
     private Times getTimes(List<String> times) {
         Times resultTime = null;
