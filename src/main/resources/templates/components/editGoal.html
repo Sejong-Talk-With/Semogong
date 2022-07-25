@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form id="editForm" class="card shadow" method="post" th:action="@{/members/edit/{id}/goal (id=${id})}"
+<form id="editForm" class="card shadow mb-3" method="post" th:action="@{/members/edit/{id}/goal (id=${id})}"
       th:object="${goalDto}">
     <div class="card-header d-sm-flex justify-content-between">
         <div style="margin-top: 5px" class="input-group">

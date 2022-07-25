@@ -67,6 +67,9 @@ public class Post {
         this.image = image;
     }
 
+    public void setTimes(List<String> times) {
+        this.times = new ArrayList<>(times);
+    }
 
     //==수정 메서드==//
     public void edit(PostEditForm postEditForm) {

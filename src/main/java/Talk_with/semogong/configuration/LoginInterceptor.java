@@ -14,11 +14,17 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI = request.getRequestURI();
+        String focus = request.getParameter("focus");
+
+        if (focus==null || !focus.equals("my-posts")) {
+            return true;
+        }
+
         HttpSession session = request.getSession();
 
         if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER)  == null) {
             // 로그인 화면으로 redirect
-            response.sendRedirect("/members/login?redirectURL=" + requestURI);
+            response.sendRedirect("/members/login?redirectURL=" + requestURI +"&focus=" + focus);
             return false; // 더 이상 진행되지 않음.
         }
 

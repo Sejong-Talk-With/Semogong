@@ -10,8 +10,24 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" th:classappend="${nav == 'home'}? 'active' : _" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${nav == 'data'}? 'active' : _" href="/data">Data</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${nav == 'ranking'}? 'active' : _" href="/ranking">Ranking</a></li>
                 <li class="nav-item"><a class="nav-link" th:classappend="${nav == 'myPage'}? 'active' : _" href="/members/my-page">My Page</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<nav th:fragment="navbar2" class="navbar navbar-expand-lg navbar-light" style="padding: 2px 0; background-color: rgba(0, 0, 0, 0.03); border-radius: 0.3rem; border: 1px solid rgba(0, 0, 0, 0.125);">
+    <div class="container" style="padding: 0 12px">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link fw-bold" th:classappend="${nav2 == 'all'}? 'active' : _" href="/">All</a></li>
+                <li class="nav-item"><a class="nav-link fw-bold" th:classappend="${nav2 == 'today'}? 'active' : _" href="/?focus=today">Today</a></li>
+                <li class="nav-item"><a class="nav-link fw-bold" th:classappend="${nav2 == 'my-posts'}? 'active' : _" href="/?focus=my-posts">My Posts</a></li>
+                <li class="nav-item"><a class="nav-link fw-bold" th:classappend="${nav2 == 'all-members'}? 'active' : _" href="/?focus=all-members">All Members</a></li>
             </ul>
         </div>
     </div>

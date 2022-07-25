@@ -15,6 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .order(1) // chain 형식이기때문에 순서 지정
-                .addPathPatterns("/members/my-page", "/members/edit/**"); // url pattern 지정
+                .addPathPatterns("/members/my-page", "/members/edit/**", "/"); // url pattern 지정
     }
 }

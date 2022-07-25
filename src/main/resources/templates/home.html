@@ -27,7 +27,79 @@
             <!-- Featured blog post-->
             <!-- Nested row for non-featured blog posts-->
             <div class="row">
-                <div class="col-lg-6" th:if="${posts != null}" th:each="post:${posts}">
+                <div class="mb-2">
+                    <nav th:replace="fragments/navbar :: navbar2"/>
+                </div>
+                <div class="col-lg-5 mb-4" th:if="${nav2 == 'all-members'}" th:each="member:${allMembers}">
+                    <!-- All Members -->
+                    <div id="profile" class="card shadow">
+                        <div class="card-header d-sm-flex justify-content-between">
+                            <div style="margin-top: 5px" class="input-group">
+                                <h6 class="m-0 font-weight-bold"> <span
+                                        class="ml-1 h5 fw-bold">프로필</span></h6>
+                            </div>
+                            <div class="d-sm-flex justify-content-center">
+                                <a class="btn btn-outline-dark btn-sm" type="button" th:href="@{/members/profile/{id} (id=${member.id})}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body" th:object="${member}">
+                            <div class="d-sm-flex justify-content-center">
+                                <div class="d-sm-flex justify-content-center profile_img_box1">
+                                    <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
+                                         alt="profile img">
+                                    <img th:if="${member.image == null}" src="/images/profile.png">
+                                </div>
+                            </div>
+                            <div class="d-sm-flex justify-content-center fw-bold">
+                                <div class="d-sm-flex justify-content-center fw-bold" th:text="*{name}"
+                                     style="font-size: 20px; margin-top: 10px; color: black">
+                                    NONE
+                                </div>
+                                <div class="d-sm-flex justify-content-center fw-bold" th:text="|(*{nickname})|"
+                                     style="font-size: 15px; margin-top: 15px; color: gray; margin-left: 3px;"></div>
+                            </div>
+                            <hr style="margin: 8px 0 !important;">
+                            <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                                <div style="color: black; width:120px;">아이디</div>
+                                <div th:if="*{loginId}" th:text="*{loginId}" style="color: gray;">아이디 값</div>
+                            </div>
+                            <div class="d-sm-flex fw-bold align-items-center my-2"
+                                 style="font-size: 18px;">
+                                <div style="color: black; width:120px;">희망직무</div>
+                                <div th:if="*{desiredJob}" th:text="*{desiredJob}" style="color: gray;">희망직무 값</div>
+                            </div>
+                            <div class="d-sm-flex fw-bold align-items-center my-2"
+                                 style="font-size: 18px;">
+                                <div style="color: black; width:120px;">자기 소개</div>
+                                <div th:if="*{introduce}" th:text="*{introduce}" style="color: gray;">소개 값</div>
+                            </div>
+                            <div class="d-sm-flex fw-bold my-2" style="font-size: 18px;">
+                                <div style="color: black; width:120px;">링크</div>
+                                <div>
+                                    <a th:if="*{links}" th:href="@{https://{location} (location=${link})}" target="_blank"
+                                       th:each="link:*{links}" class="d-block text-decoration-none" th:text="${link}"
+                                       style="color: gray;">링크 값</a>
+                                </div>
+                            </div>
+                            <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                                <div style="color: black; width:120px;">공부시간</div>
+                                <div th:if="*{totalTime != null}" th:text="|*{totalTime.hour}시간 *{totalTime.min}분|"
+                                     style="color: lightseagreen;">상태 값
+                                </div>
+                                <div th:if="*{totalTime == null}" style="color: gray;">0시간 0분</div>
+                            </div>
+                            <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
+                                <div style="color: black; width:120px;">현재 상태</div>
+                                <div th:if="*{state}" th:text="*{state}" style="color: gray;">상태 값</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" th:if="${nav2 != 'all-members'}" th:each="post:${posts}">
                     <!-- Blog post-->
                     <div th:id="'post'+${post.id}" class="card mb-4" data-bs-toggle="modal"
                          th:attr="data-bs-target='#postModal'+${post.id}">
@@ -105,16 +177,18 @@
             </div>
 
             <!-- Pagination-->
-            <nav aria-label="Pagination">
+            <nav th:if="${nav2 != 'all-members'}" aria-label="Pagination">
                 <hr class="my-0"/>
                 <ul class="pagination justify-content-center my-4">
                     <li class="page-item"><a class="page-link" href="/" tabindex="-1" aria-disabled="true">Newer</a>
                     </li>
                     <li th:each="i: ${#numbers.sequence(1, 5)}" aria-current="page"
                         th:class="${page == i}? 'page-item active' : 'page-item'">
-                        <a class="page-link" th:href="@{/{page} (page=${i})}" th:text="${i}">#</a>
+                        <a class="page-link" th:href="@{/ (page=${i}, focus=${nav2})}" th:text="${i}">#</a>
                     </li>
-                    <li class="page-item"><a class="page-link" th:href="@{/{page} (page=${6})}">Older</a></li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/ (page=${page+1}, focus=${nav2})}">Older</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -285,7 +359,7 @@
 
             <!-- My Post widget-->
             <div class="card mb-4">
-                <div class="card-header">My Post</div>
+                <div class="card-header">My Post <span style="color: gray; font-size: small">(Today)</span></div>
                 <div class="card-body" th:if="${recentPost}">
                     <!-- My post-->
                     <div>

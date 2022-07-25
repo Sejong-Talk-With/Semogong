@@ -82,6 +82,14 @@ public class PostService {
         return postNativeRepository.getMonthPost(id, month);
     }
 
+    public List<Post> getTodayPosts(String date, int offset) {
+        return postNativeRepository.getDatePost(date, offset);
+    }
+
+    public List<Post> getMemberPosts(Long id, int offset) {
+        return postRepository.findByMemberWithPaging(id, offset);
+    }
+
     // 게시글 이미지 업로드 및 변경
     public void editPostImg(Long id, Image image) {
         Post post = postRepository.findOne(id);

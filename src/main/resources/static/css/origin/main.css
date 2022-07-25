@@ -71,10 +71,14 @@
     .col-lg-6{
         width:25% !important;
     }
+    .col-lg-5{
+        width:33.3333% !important;
+    }
     .col-lg-4{
         width:20% !important;
     }
 }
+
 
 .reload {
     transform:             rotate( 360deg );

@@ -40,16 +40,34 @@ public class HomeController {
         return loginMemberId != null;
     }
 
-    @RequestMapping({"/", "/{page}"})
-    public String home_page(@PathVariable(name = "page", required = false) Integer page, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model) {
+    @RequestMapping("/")
+    public String home_page(@RequestParam(name = "page", defaultValue = "1") Integer page, @RequestParam(name = "focus", defaultValue = "all") String focus,
+                            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model) {
         log.info("paging home");
-        if (page == null) page = 1;
-        List<Post> posts = postService.findByPage((page - 1) * 12);
+        List<Post> posts;
+        if (focus.equals("today")){
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
+            String date = now.format(dateTimeFormatter);
+            if (now.getHour() < 4) {
+                date = now.minusDays(1).format(dateTimeFormatter);
+            }
+            posts = postService.getTodayPosts(date, (page - 1) * 12);
+        } else if (focus.equals("my-posts")) {
+            posts = postService.getMemberPosts(loginMemberId, (page - 1) * 12);
+        } else {
+            posts = postService.findByPage((page - 1) * 12);
+        }
         List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
         List<PostViewDto> postModals = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
         Set<Long> ids = postModals.stream().map(PostViewDto::getId).collect(Collectors.toSet());
         List<Member> members = memberService.findAll();
-        List<MemberDto> memberDtos = members.stream().map(MemberDto::new).collect(Collectors.toList());
+        List<MemberDto> memberDtos = new ArrayList<>();
+        for (Member member : members) {
+            MemberDto memberDto = new MemberDto(member);
+            memberDto.setTotalTime(getAllTimes(member));
+            memberDtos.add(memberDto);
+        }
 
         if (loginMemberId != null) {
             Member loginMember = memberService.findOne(loginMemberId);
@@ -95,7 +113,7 @@ public class HomeController {
         model.addAttribute("allMembers", memberDtos);
         model.addAttribute("rankings", memberRanking.subList(0, 3));
         model.addAttribute("nav", "home");
-
+        model.addAttribute("nav2", focus);
 
         return "home";
     }
@@ -111,6 +129,19 @@ public class HomeController {
             totalStudyTimes = getTotalStudyTimes(memberRecentPostDto);
         }
         return totalStudyTimes;
+    }
+
+
+    private Times getAllTimes(Member member) {
+        List<Post> posts = member.getPosts();
+        int total = 0;
+        for (Post post : posts) {
+            if (post.getTimes().size() % 2 != 0) continue;
+            Times times = getTimes(post.getTimes());
+            total += times.getHour() * 60 + times.getMin();
+        }
+
+        return new Times(total);
     }
 
     private MemberForm createMemberForm(Member member) {
@@ -223,6 +254,35 @@ public class HomeController {
 
             total2 += (end - start);
             resultTime = new Times(total2);
+        }
+        return resultTime;
+    }
+
+    private Times getTimes(List<String> times) {
+        Times resultTime = null;
+        if (times.size() % 2 == 0) {
+            int total1 = 0;
+            for (int i = 1; i < times.size(); i += 2) {
+                String[] ends = times.get(i).split(":");
+                String[] starts = times.get(i - 1).split(":");
+                int endHour = Integer.parseInt(ends[0]);
+                if (0 <= endHour & endHour < 4) {
+                    endHour += 24;
+                }
+                int endMin = Integer.parseInt(ends[1]);
+                int end = endHour * 60 + endMin;
+
+
+                int startHour = Integer.parseInt(starts[0]);
+                if (0 <= startHour & startHour < 4) {
+                    startHour += 24;
+                }
+                int startMin = Integer.parseInt(starts[1]);
+                int start = startHour * 60 + startMin;
+
+                total1 += (end - start);
+            }
+            resultTime = new Times(total1);
         }
         return resultTime;
     }

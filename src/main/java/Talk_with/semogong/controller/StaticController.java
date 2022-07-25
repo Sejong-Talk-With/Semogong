@@ -29,7 +29,7 @@ public class StaticController {
     private final MemberService memberService;
     private final PostService postService;
 
-    @GetMapping("/data")
+    @GetMapping("/ranking")
     public String data(Model model) throws IOException {
         List<MemberDto> members = memberService.findAll().stream().map(MemberDto::new).collect(Collectors.toList());
         Map<MemberDto, Map<Integer, Times>> memberStatic = new HashMap<>();
