@@ -30,7 +30,7 @@
                 <div class="mb-2">
                     <nav th:replace="fragments/navbar :: navbar2"/>
                 </div>
-                <div class="col-lg-5 mb-4" th:if="${nav2 == 'all-members'}" th:each="member:${allMembers}">
+                <div class="col-lg-5 mb-4" th:if="${nav2 == 'all-members'}" th:each="mem:${allMembers}">
                     <!-- All Members -->
                     <div id="profile" class="card shadow">
                         <div class="card-header d-sm-flex justify-content-between">
@@ -39,19 +39,24 @@
                                         class="ml-1 h5 fw-bold">프로필</span></h6>
                             </div>
                             <div class="d-sm-flex justify-content-center">
-                                <a class="btn btn-outline-dark btn-sm" type="button" th:href="@{/members/profile/{id} (id=${member.id})}">
+                                <a th:if="${member != null and member.id == mem.id}" class="btn btn-outline-dark btn-sm" type="button" href="/members/my-page">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
+                                    </svg>
+                                </a>
+                                <a th:if="${member == null or member.id != mem.id}" class="btn btn-outline-dark btn-sm" type="button" th:href="@{/members/profile/{id} (id=${mem.id})}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
                                     </svg>
                                 </a>
                             </div>
                         </div>
-                        <div class="card-body" th:object="${member}">
+                        <div class="card-body" th:object="${mem}">
                             <div class="d-sm-flex justify-content-center">
                                 <div class="d-sm-flex justify-content-center profile_img_box1">
-                                    <img th:if="${member.image != null}" th:src="*{image?.imgSrc}"
+                                    <img th:if="${mem.image != null}" th:src="*{image?.imgSrc}"
                                          alt="profile img">
-                                    <img th:if="${member.image == null}" src="/images/profile.png">
+                                    <img th:if="${mem.image == null}" src="/images/profile.png">
                                 </div>
                             </div>
                             <div class="d-sm-flex justify-content-center fw-bold">
@@ -128,13 +133,13 @@
                                class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold"
                                th:text="${post.title}" style="font-size: 20px;  color: gray; height: 30px;">Post
                                 Title</p>
-                            <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
+                            <div class="card-text d-sm-flex align-items-center" style="margin: 3px 0px 5px 3px;">
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${post.memberImg != null}"
                                          th:src="${post.memberImg?.imgSrc}" alt="profile">
                                     <img th:if="${post.memberImg == null}" src="/images/profile.png">
                                 </div>
-                                <div style="display:inline-block;" th:text="${post.memberName}"></div>
+                                <div style="display:inline-block; margin-left: 3px;" th:text="${post.memberName}"></div>
                             </div>
                             <div class="card-text" style="margin: 2px 0px 0px 0px;">
                                 <p class="badge bg-secondary" style="margin: 3px;"
@@ -312,12 +317,14 @@
                         <div class="card-text d-flex justify-content-between" style="margin: 3px 0px 5px 3px;">
                             <div class="d-flex">
                                 <div style="margin-right: 10px" th:text="|${memStat.count}등|">1</div>
-                                <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                    <img th:if="${mem.image != null}"
-                                         th:src="${mem.image.imgSrc}" alt="profile">
-                                    <img th:if="${mem.image == null}" src="/images/profile.png">
-                                </div>
-                                <div style="display:inline-block; margin-left: 3px" th:text="${mem.name}"></div>
+                                <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${mem.id})}">
+                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                        <img th:if="${mem.image != null}"
+                                             th:src="${mem.image.imgSrc}" alt="profile">
+                                        <img th:if="${mem.image == null}" src="/images/profile.png">
+                                    </div>
+                                    <div style="display:inline-block; margin-left: 3px" th:text="${mem.name}"></div>
+                                </a>
                                 <div th:if="${mem.time != null}"
                                      th:text="${mem.time.hour}+ '시간 ' + ${mem.time.min} + '분'"
                                      class="d-sm-flex justify-content-end border small"
@@ -459,12 +466,14 @@
                 <div class="card-body">
                     <div class="row" th:each="otherMember: ${allMembers}">
                         <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
-                            <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                <img th:if="${otherMember.image != null}"
-                                     th:src="${otherMember.image.imgSrc}" alt="profile">
-                                <img th:if="${otherMember.image == null}" src="/images/profile.png">
-                            </div>
-                            <div style="display:inline-block; margin-left: 3px" th:text="${otherMember.name}"></div>
+                            <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${otherMember.id})}">
+                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                    <img th:if="${otherMember.image != null}"
+                                         th:src="${otherMember.image.imgSrc}" alt="profile">
+                                    <img th:if="${otherMember.image == null}" src="/images/profile.png">
+                                </div>
+                                <div style="display:inline-block; margin-left: 3px" th:text="${otherMember.name}"></div>
+                            </a>
                             <div style="margin-left: 10px">
                                 <div th:if="${otherMember.state == T(Talk_with.semogong.domain.att.StudyState).STUDYING}"
                                      class="badge" style="display:inline-block; background-color: #198754;"
@@ -511,11 +520,13 @@
                                         <img width="32px" height="24px" src="/images/user-solid.svg">
                                         <div>작성자</div>
                                     </div>
-                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                        <img th:if="${post.memberImg == null}" src="/images/profile.png">
-                                        <img th:if="${post.memberImg != null}"
-                                             th:src="${post.memberImg?.imgSrc}"></div>
-                                    <div class="card-text" th:text="${post.memberName}"> Member's Name</div>
+                                    <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${post.memberId})}">
+                                        <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                            <img th:if="${post.memberImg == null}" src="/images/profile.png">
+                                            <img th:if="${post.memberImg != null}"
+                                                 th:src="${post.memberImg?.imgSrc}"></div>
+                                        <div style="margin-left: 5px" class="card-text" th:text="${post.memberName}"> Member's Name</div>
+                                    </a>
                                 </div>
 
                                 <div class="d-sm-flex align-items-center my-2">
@@ -568,24 +579,27 @@
                                     <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                         <div class="d-flex bd-highlight">
                                             <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                                <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                                    <img th:if="${comment.memberImg != null}"
-                                                         th:src="${comment.memberImg?.imgSrc}">
-                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
-                                                </div>
-                                                <div class="align-middle" style="margin-left:5px;"><p class="mb-0"
-                                                                                                      th:text="${comment.memberName}">
-                                                    작성자</p></div>
-                                                <div class="align-middle" style="margin-left:20px; margin-top: 2px">
+
+                                                <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
+                                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                                        <img th:if="${comment.memberImg != null}"
+                                                             th:src="${comment.memberImg?.imgSrc}">
+                                                        <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                                    </div>
+                                                    <div class="align-middle" style="margin-left:5px;"><p class="mb-0"
+                                                                                                          th:text="${comment.memberName}">
+                                                        작성자</p></div>
+                                                </a>
+                                                <div style="margin-left:20px; margin-top: 2px">
                                                     <p th:if="${comment.diffMin < 60}"
                                                        th:text="${comment.diffMin} + '분 전'"
-                                                       class=" mb-0 small text-secondary">분 전</p>
+                                                       class=" mb-0 small text-secondary" style="padding-top: 3px;">분 전</p>
                                                     <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}"
                                                        th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'"
-                                                       class="mb-0 small text-secondary">시간 전</p>
+                                                       class=" mb-0 small text-secondary" style="padding-top: 3px;">시간 전</p>
                                                     <p th:if="${comment.diffMin >= 24*60}"
                                                        th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'"
-                                                       class=" mb-0 small text-secondary">분 전</p>
+                                                       class=" mb-0 small text-secondary" style="padding-top: 3px;">분 전</p>
                                                 </div>
                                             </div>
                                             <div class="p-2">
@@ -596,20 +610,25 @@
                                             </div>
                                         </div>
 
-                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1"
+                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" style="margin-left: 4px;"
                                                                                                            th:text="${comment.content}">
                                             댓글 내용</p></div>
                                     </div>
-                                    <div class="input-group mb-3">
+                                    <div th:if="${check}" class="input-group mb-3">
                                         <input th:onkeypress="|javascript:enterKey(${post.id})|"
                                                th:id="'comment_content'+${post.id}" type="text" class="form-control"
                                                placeholder="댓글을 작성해 보세요!">
-                                        <button th:id="'comment_submit_btn'+${post.id}" th:if="${check}"
+                                        <button th:id="'comment_submit_btn'+${post.id}"
                                                 class="btn btn-outline-secondary"
                                                 th:onclick="|javascript:submit_comment(${post.id})|" type="submit">
                                             Submit
                                         </button>
-                                        <button th:id="'comment_submit_btn'+${post.id}" type="button" th:if="${!check}"
+                                    </div>
+                                    <div th:if="${!check}" class="input-group mb-3">
+                                        <input th:onkeypress="|javascript:enterKey(${post.id})|"
+                                               th:id="'comment_content'+${post.id}" type="text" class="form-control"
+                                               placeholder="로그인이 필요합니다!">
+                                        <button th:id="'comment_submit_btn'+${post.id}" type="button"
                                                 class="btn btn-outline-secondary" onclick="alert_error()">Submit
                                         </button>
                                     </div>

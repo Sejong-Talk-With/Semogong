@@ -16,15 +16,21 @@ public class LoginInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         String focus = request.getParameter("focus");
 
-        if (focus==null || !focus.equals("my-posts")) {
-            return true;
-        }
+        if (requestURI.equals("/")) {
+            if (focus == null) { // basic home -> /
+                return true;
+            } else if (!focus.equals("my-posts")) { // parameters -> focus=all, today, all-members
+                return true;
+            }
+        } // my-posts 만 밑으로 넘겨 옴
 
         HttpSession session = request.getSession();
 
         if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER)  == null) {
             // 로그인 화면으로 redirect
-            response.sendRedirect("/members/login?redirectURL=" + requestURI +"&focus=" + focus);
+            String location = "/members/login?redirectURL=" + requestURI;
+            if (focus != null) location = location  +"&focus=" + focus;
+            response.sendRedirect(location);
             return false; // 더 이상 진행되지 않음.
         }
 

@@ -588,7 +588,7 @@
                                     <img th:if="${post.memberImg == null}" src="/images/profile.png">
                                     <img th:if="${post.memberImg != null}"
                                          th:src="${post.memberImg?.imgSrc}"></div>
-                                <div class="card-text" th:text="${post.memberName}"> Member's Name</div>
+                                <div class="card-text" th:text="${post.memberName}" style="margin-left: 4px;"> Member's Name</div>
                             </div>
 
                             <div class="d-sm-flex align-items-center my-2">
@@ -641,39 +641,40 @@
                                 <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                     <div class="d-flex bd-highlight">
                                         <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                            <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                                <img th:if="${comment.memberImg != null}"
-                                                     th:src="${comment.memberImg?.imgSrc}">
-                                                <img th:if="${comment.memberImg == null}" src="/images/profile.png">
-                                            </div>
-                                            <div class="align-middle" style="margin-left:5px;"><p class="mb-0"
-                                                                                                  th:text="${comment.memberName}">
-                                                작성자</p></div>
-                                            <div class="align-middle" style="margin-left:20px; margin-top: 2px">
+                                            <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
+                                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                                    <img th:if="${comment.memberImg != null}"
+                                                         th:src="${comment.memberImg?.imgSrc}">
+                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                                </div>
+                                                <div class="align-middle" style="margin-left:5px;"><p class="mb-0"
+                                                                                                      th:text="${comment.memberName}">
+                                                    작성자</p></div>
+                                            </a>
+                                            <div style="margin-left:20px; margin-top: 2px">
                                                 <p th:if="${comment.diffMin < 60}"
                                                    th:text="${comment.diffMin} + '분 전'"
-                                                   class=" mb-0 small text-secondary">분 전</p>
+                                                   class=" mb-0 small text-secondary" style="padding-top: 3px;">분 전</p>
                                                 <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}"
                                                    th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'"
-                                                   class="mb-0 small text-secondary">시간 전</p>
+                                                   class=" mb-0 small text-secondary" style="padding-top: 3px;">시간 전</p>
                                                 <p th:if="${comment.diffMin >= 24*60}"
                                                    th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'"
-                                                   class=" mb-0 small text-secondary">분 전</p>
+                                                   class=" mb-0 small text-secondary" style="padding-top: 3px;">분 전</p>
                                             </div>
                                         </div>
                                         <div class="p-2">
                                             <a role="button"
-                                               th:if="${member.id == comment.memberId or member.id == post.memberId}"
+                                               th:if="${loginId == comment.memberId or loginId == post.memberId}"
                                                th:onclick="|javascript:delete_check(${post.id},${comment.id})|"
                                                class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
                                         </div>
                                     </div>
 
-                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1"
-                                                                                                       th:text="${comment.content}">
-                                        댓글 내용</p></div>
+                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" style="margin-left: 4px;" th:text="${comment.content}"> 댓글 내용</p></div>
+
                                 </div>
-                                <div class="input-group mb-3">
+                                <div th:if="${loginId}" class="input-group mb-3">
                                     <input th:onkeypress="|javascript:enterKey(${post.id})|"
                                            th:id="'comment_content'+${post.id}" type="text" class="form-control"
                                            placeholder="댓글을 작성해 보세요!">
@@ -683,15 +684,18 @@
                                         Submit
                                     </button>
                                 </div>
+                                <div th:if="${loginId == null}" class="input-group mb-3">
+                                    <input th:onkeypress="|javascript:enterKey(${post.id})|"
+                                           th:id="'comment_content'+${post.id}" type="text" class="form-control"
+                                           placeholder="로그인이 필요합니다!">
+                                    <button th:id="'comment_submit_btn'+${post.id}" type="button"
+                                            class="btn btn-outline-secondary" onclick="alert_error()">Submit
+                                    </button>
+                                </div>
                             </div>
                             <hr>
                             <div class="content_text">
                                 <p class="mb-4" th:utext="${post.html}"> Content by HTML </p>
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
-                                    <a th:if="${member.id == post.memberId}"
-                                       class="btn btn-secondary btn-sm"
-                                       th:onclick="|javascript:edit_post(${post.id})|" type="button">Edit</a>
-                                </div>
                             </div>
                         </div>
                     </div>

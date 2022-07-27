@@ -114,8 +114,8 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/", name = "redirectURL") String redirectURL,
-                        @RequestParam(defaultValue = "/", name = "focus") String focus,
+                        @RequestParam(name = "redirectURL", defaultValue = "/") String redirectURL,
+                        @RequestParam(name = "focus", required = false) String focus,
                         HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
 
@@ -136,7 +136,7 @@ public class MemberController {
         HttpSession session = request.getSession();
         // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.get().getId());
-        redirectAttributes.addAttribute("focus", focus);
+        if (focus != null) redirectAttributes.addAttribute("focus", focus);
         return "redirect:" + redirectURL;
     }
 
@@ -207,6 +207,7 @@ public class MemberController {
 
     @GetMapping("/profile/{id}")
     public String memberProfile(@PathVariable(name = "id") Long memberId, Model model,
+                                @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId,
                                 @RequestParam(name = "month", required = false) Integer month) {
         Member oriMember = memberService.findOne(memberId);
         MemberDto member = new MemberDto(oriMember);
@@ -247,7 +248,7 @@ public class MemberController {
         AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, nowMonthPostsLen);
 
 
-        model.addAttribute("nav", "myPage");
+        model.addAttribute("loginId", loginMemberId);
         model.addAttribute("member", member);
         model.addAttribute("staticDays", days);
         model.addAttribute("staticData", staticsData);
