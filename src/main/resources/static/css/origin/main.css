@@ -30,10 +30,17 @@
 
 /* animation */
 
-.col-lg-6:hover .card_box {
+.col-lg-6:hover .card_box, #recentPost:hover .card_box {
     background-color: #f8f9fa;
 }
 
+.member-profile-link:hover {
+    font-weight: 700 !important;
+}
+
+.member-profile-link2:hover {
+    color: lightseagreen !important;
+}
 
 /* boot 수정 */
 

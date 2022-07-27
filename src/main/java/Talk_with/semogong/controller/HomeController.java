@@ -8,7 +8,6 @@ import Talk_with.semogong.domain.att.Times;
 import Talk_with.semogong.domain.dto.MemberDto;
 import Talk_with.semogong.domain.dto.PostViewDto;
 import Talk_with.semogong.domain.form.CommentForm;
-import Talk_with.semogong.domain.form.MemberForm;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +44,7 @@ public class HomeController {
                             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model) {
         log.info("paging home");
         List<Post> posts;
-        if (focus.equals("today")){
+        if (focus.equals("today")) {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDateTime now = LocalDateTime.now();
             String date = now.format(dateTimeFormatter);
@@ -71,8 +70,8 @@ public class HomeController {
 
         if (loginMemberId != null) {
             Member loginMember = memberService.findOne(loginMemberId);
-            MemberForm memberForm = createMemberForm(loginMember);
-            model.addAttribute("member", memberForm);
+            MemberDto memberDto = new MemberDto(loginMember);
+            model.addAttribute("member", memberDto);
             Optional<Post> optionalPost = postService.getRecentPost(loginMember.getId());
             PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
 
@@ -144,19 +143,6 @@ public class HomeController {
         return new Times(total);
     }
 
-    private MemberForm createMemberForm(Member member) {
-        MemberForm memberForm = new MemberForm();
-        memberForm.setId(member.getId());
-        memberForm.setLoginId(member.getLoginId());
-        memberForm.setName(member.getName());
-        memberForm.setNickname(member.getNickname());
-        memberForm.setDesiredJob(member.getDesiredJob());
-        memberForm.setIntroduce(member.getIntroduce());
-        memberForm.setState(member.getState());
-        memberForm.setImage(member.getImage());
-        return memberForm;
-    }
-
     private Times getTotalStudyTimes(PostViewDto memberRecentPostDto) {
 
         LocalDateTime nowDateTime = LocalDateTime.now();
@@ -189,7 +175,7 @@ public class HomeController {
     }
 
     private Times getTimes(LocalDateTime nowDateTime, DateTimeFormatter timeFormatter, List<String> times) {
-        Times resultTime = null;
+        Times resultTime;
         if (times.size() % 2 == 0) {
             int total1 = 0;
             for (int i = 1; i < times.size(); i += 2) {

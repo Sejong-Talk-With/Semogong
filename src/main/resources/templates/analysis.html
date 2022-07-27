@@ -49,12 +49,14 @@
                                         <rect rx="5" ry="5" width="30" height="10"/>
                                     </svg>
                                 </div>
-                                <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                    <img th:if="${mem.image != null}"
-                                         th:src="${mem.image.imgSrc}" alt="profile">
-                                    <img th:if="${mem.image == null}" src="/images/profile.png">
-                                </div>
-                                <div class="fw-bold" style="display:inline-block; margin-left: 5px" th:text="${mem.name}"></div>
+                                <a class="member-profile-link2 d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${mem.id})}">
+                                    <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                        <img th:if="${mem.image != null}"
+                                             th:src="${mem.image.imgSrc}" alt="profile">
+                                        <img th:if="${mem.image == null}" src="/images/profile.png">
+                                    </div>
+                                    <div class="fw-bold" style="display:inline-block; margin-left: 5px" th:text="${mem.name}"></div>
+                                </a>
                                 <div th:if="${mem.time != null}" th:text="${mem.time.hour}+ '시간 ' + ${mem.time.min} + '분'" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 0px; margin-left: 10px"></div>
                                 <div th:if="${mem.time == null}" class="d-sm-flex justify-content-end border small" style="background-color: #f6f6f6; border-radius: 0.2em; padding: 2.5px 0px 2.5px 5px; margin-left: 10px" > 0시간 0분 </div>
                             </div>
@@ -73,14 +75,14 @@
                                     class="ml-1 h6 fw-bold">금주의 공부왕👑</span></h6>
                         </div>
                         <div class="card-body" th:with="mem=${members[0]}">
-                            <div class="d-flex justify-content-center">
+                            <a class="member-profile-link2 d-sm-flex align-items-center justify-content-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${mem.id})}">
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${mem.image != null}"
                                          th:src="${mem.image.imgSrc}" alt="profile">
                                     <img th:if="${mem.image == null}" src="/images/profile.png">
                                 </div>
                                 <div style="display:inline-block; margin-left: 3px; font-size: larger" class="fw-bold" th:text="${mem.name}"></div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -91,14 +93,14 @@
                                     class="ml-1 h6 fw-bold">금주의 출석왕🏅</span></h6>
                         </div>
                         <div class="card-body" th:with="mem=${attendTop}">
-                            <div class="d-flex justify-content-center">
+                            <a class="member-profile-link2 d-sm-flex align-items-center justify-content-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${mem.id})}">
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${mem.image != null}"
                                          th:src="${mem.image.imgSrc}" alt="profile">
                                     <img th:if="${mem.image == null}" src="/images/profile.png">
                                 </div>
                                 <div style="display:inline-block; margin-left: 3px; font-size: larger" class="fw-bold" th:text="${mem.name}"></div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>

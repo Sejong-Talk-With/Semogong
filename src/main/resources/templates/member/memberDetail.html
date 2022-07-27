@@ -395,13 +395,13 @@
                                 class="ml-1 h5 fw-bold">공부 캘린더</span></h6>
                     </div>
                     <div class="d-sm-flex justify-content-center">
-                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/profile/{id} (id=${member.id}, month=(${month}-1))}">
+                        <a class="member-profile-link btn btn-outline-dark btn-sm" th:href="@{/members/profile/{id} (id=${member.id}, month=(${month}-1))}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-caret-left" viewBox="0 0 16 16">
                                 <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
                             </svg>
                         </a>
-                        <a class="btn btn-outline-dark btn-sm" th:href="@{/members/profile/{id} (id=${member.id}, month=(${month}+1))}">
+                        <a class="member-profile-link btn btn-outline-dark btn-sm" th:href="@{/members/profile/{id} (id=${member.id}, month=(${month}+1))}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-caret-right" viewBox="0 0 16 16">
                                 <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
@@ -641,7 +641,7 @@
                                 <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                     <div class="d-flex bd-highlight">
                                         <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                            <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
+                                            <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
                                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                                     <img th:if="${comment.memberImg != null}"
                                                          th:src="${comment.memberImg?.imgSrc}">

@@ -267,7 +267,7 @@
                                     class="btn btn-warning" type="button" onclick="state_error()">BREAK
                             </button>
                             <a th:if="${member.state != T(Talk_with.semogong.domain.att.StudyState).END}"
-                               class="btn btn-secondary" href="/end">END</a>
+                               class="btn btn-secondary" th:onclick="|javascript:check_end(${member.id})|">END</a>
                             <button th:if="${member.state == T(Talk_with.semogong.domain.att.StudyState).END}"
                                     class="btn btn-secondary" type="button" onclick="state_error()">END
                             </button>
@@ -317,7 +317,7 @@
                         <div class="card-text d-flex justify-content-between" style="margin: 3px 0px 5px 3px;">
                             <div class="d-flex">
                                 <div style="margin-right: 10px" th:text="|${memStat.count}등|">1</div>
-                                <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${mem.id})}">
+                                <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${mem.id})}">
                                     <div class="profile_img_box2 d-sm-flex justify-content-center">
                                         <img th:if="${mem.image != null}"
                                              th:src="${mem.image.imgSrc}" alt="profile">
@@ -369,7 +369,7 @@
                 <div class="card-header">My Post <span style="color: gray; font-size: small">(Today)</span></div>
                 <div class="card-body" th:if="${recentPost}">
                     <!-- My post-->
-                    <div>
+                    <div id="recentPost">
                         <div class="card mb-4" style="margin: 0px!important;" data-bs-toggle="modal"
                              th:attr="data-bs-target='#postModal'+${recentPost.id}">
                             <div class="overflow-hidden d-sm-flex justify-content-center align-items-center"
@@ -466,7 +466,7 @@
                 <div class="card-body">
                     <div class="row" th:each="otherMember: ${allMembers}">
                         <div class="card-text d-sm-flex" style="margin: 3px 0px 5px 3px;">
-                            <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${otherMember.id})}">
+                            <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${otherMember.id})}">
                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                     <img th:if="${otherMember.image != null}"
                                          th:src="${otherMember.image.imgSrc}" alt="profile">
@@ -520,7 +520,7 @@
                                         <img width="32px" height="24px" src="/images/user-solid.svg">
                                         <div>작성자</div>
                                     </div>
-                                    <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${post.memberId})}">
+                                    <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${post.memberId})}">
                                         <div class="profile_img_box2 d-sm-flex justify-content-center">
                                             <img th:if="${post.memberImg == null}" src="/images/profile.png">
                                             <img th:if="${post.memberImg != null}"
@@ -580,7 +580,7 @@
                                         <div class="d-flex bd-highlight">
                                             <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
 
-                                                <a class="d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
+                                                <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
                                                     <div class="profile_img_box2 d-sm-flex justify-content-center">
                                                         <img th:if="${comment.memberImg != null}"
                                                              th:src="${comment.memberImg?.imgSrc}">
@@ -658,6 +658,7 @@
     <script th:inline="javascript" type="text/javascript">
         var recentPostId = [[ ${recentPost?.id}]];
         var focuedPostId = [[ ${focusedId}]];
+        var memberTodayGoalTotal = [[ ${member.goal.dayGoalTimes} ]];
         var simplemde;
     </script>
     <script src="/js/origin/main.js"></script>

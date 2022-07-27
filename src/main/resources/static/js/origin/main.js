@@ -11,6 +11,25 @@ function state_error(){
     alert("현재 상태를 확인해주세요!")
 }
 
+function check_end(memberId) {
+
+
+    $.ajax({
+        url: '/members/times/' + memberId,
+        type: "GET"
+    })
+        .done(function (response) {
+            var currTotal = response.hour * 60 + response.min;
+            if (currTotal < memberTodayGoalTotal) {
+                var timeDiff = memberTodayGoalTotal - currTotal;
+                var check = confirm("아직 목표 시간에 도달하지 못하셨습니다. (" + Math.floor(timeDiff/60) + "시간 " + timeDiff%60 + "분 부족)\n사용을 종료하시겠습니까?");
+                if (check) {
+                    window.location.href = "/end";
+                }
+            }
+        })
+}
+
 function delete_check(postId, commentId) {
 
     var deleteForm = {
