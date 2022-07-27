@@ -100,7 +100,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" th:text="${comment.content}">댓글 내용</p></div>
+                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="m-1" th:text="${comment.content}">댓글 내용</p></div>
                                 </div>
                                 <div class="input-group mb-3">
                                     <input th:onkeypress="|javascript:enterKey(${post.id})|" th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">

@@ -610,9 +610,9 @@
                                             </div>
                                         </div>
 
-                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="mb-1" style="margin-left: 4px;"
-                                                                                                           th:text="${comment.content}">
-                                            댓글 내용</p></div>
+                                        <div class="modal_comments" style="margin: -10px 0px 0px 40px;">
+                                            <p class="m-1" th:text="${comment.content}">댓글 내용</p>
+                                        </div>
                                     </div>
                                     <div th:if="${check}" class="input-group mb-3">
                                         <input th:onkeypress="|javascript:enterKey(${post.id})|"
@@ -658,7 +658,9 @@
     <script th:inline="javascript" type="text/javascript">
         var recentPostId = [[ ${recentPost?.id}]];
         var focuedPostId = [[ ${focusedId}]];
-        var memberTodayGoalTotal = [[ ${member.goal.dayGoalTimes} ]];
+        var member = [[ ${member} ]];
+        var memberTodayGoalTotal;
+        if (member != null) { memberTodayGoalTotal = [[ ${member?.goal?.dayGoalTimes} ]];}
         var simplemde;
     </script>
     <script src="/js/origin/main.js"></script>
