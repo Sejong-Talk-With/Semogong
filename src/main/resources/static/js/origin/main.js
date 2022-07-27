@@ -22,10 +22,12 @@ function check_end(memberId) {
             var currTotal = response.hour * 60 + response.min;
             if (currTotal < memberTodayGoalTotal) {
                 var timeDiff = memberTodayGoalTotal - currTotal;
-                var check = confirm("아직 목표 시간에 도달하지 못하셨습니다. (" + Math.floor(timeDiff/60) + "시간 " + timeDiff%60 + "분 부족)\n사용을 종료하시겠습니까?");
+                var check = confirm("아직 목표 시간에 도달하지 못하셨습니다. (" + Math.floor(timeDiff / 60) + "시간 " + timeDiff % 60 + "분 부족)\n사용을 종료하시겠습니까?");
                 if (check) {
                     window.location.href = "/end";
                 }
+            } else {
+                window.location.href = "/end";
             }
         })
 }
