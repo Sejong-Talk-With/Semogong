@@ -67,6 +67,7 @@ public class MemberController {
         }
         Member member = Member.createMember(memberForm.getLoginId(), memberForm.getPassword(), memberForm.getName(), memberForm.getNickname(), memberForm.getDesiredJob(), null, memberForm.getIntroduce(), null, null);
         member.setRole("USER");
+        member.setGoal(new Goal(300, 1500));
         memberService.save(member);
         return "redirect:/";
     }
