@@ -8,9 +8,9 @@
 
 Demo version : [SeMoGong](http://semogong.site)
 
-Description : [Description](https://bob8dod.github.io/TID/)
+Description : [Description](https://bob8dod.github.io/2022/04/23/SEMOGONG-Description/)
 
-Development log : [Log](https://bob8dod.github.io/2022/04/15/SEMOGONG/)
+Development log : [Log](https://bob8dod.github.io/tid/)
 
 <br>
 
