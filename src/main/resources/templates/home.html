@@ -187,7 +187,7 @@
                 <ul class="pagination justify-content-center my-4">
                     <li class="page-item"><a class="page-link" href="/" tabindex="-1" aria-disabled="true">Newer</a>
                     </li>
-                    <li th:each="i: ${#numbers.sequence(1, 5)}" aria-current="page"
+                    <li th:each="i: ${#numbers.sequence(5*((page -1)/5)+1, 5*((page -1)/5)+5)}" aria-current="page"
                         th:class="${page == i}? 'page-item active' : 'page-item'">
                         <a class="page-link" th:href="@{/ (page=${i}, focus=${nav2})}" th:text="${i}">#</a>
                     </li>
@@ -662,6 +662,7 @@
         var memberTodayGoalTotal;
         if (member != null) { memberTodayGoalTotal = [[ ${member?.goal?.dayGoalTimes} ]];}
         var simplemde;
+
     </script>
     <script src="/js/origin/main.js"></script>
 

@@ -11,6 +11,7 @@ function state_error(){
     alert("현재 상태를 확인해주세요!")
 }
 
+
 function check_end(memberId) {
 
 
@@ -183,6 +184,7 @@ function post_edit(id) {
     var result_hour = 0;
     var result_min = 0;
     for (var step = 1; step < formData.length-3; idx++, step++) {
+        if (formData[step].value == "") continue;
         times[idx] = formData[step];
     }
 
@@ -273,8 +275,19 @@ function post_edit(id) {
         var titleHtml = document.getElementById("title");
         titleHtml.setAttribute('class','form-control is-invalid');
         document.getElementById("times0").scrollIntoView();
-    }
-    else {
+    } else if (state == 'STUDYING' & times_len % 2 == 0) {
+        alert("[STUDYING] 상태입니다. 시간 개수를 확인해주세요!");
+        var times_id = "times" + (times_len-1);
+        var timeInput = document.getElementById(times_id);
+        timeInput.setAttribute('class','form-control is-invalid');
+        document.getElementById("postEdit_container").scrollIntoView();
+    } else if ((state == 'BREAKING' || state == 'END') & times_len % 2 != 0) {
+        alert("[BREAKING] 혹은 [END] 상태입니다. 시간 개수를 확인해주세요!");
+        var times_id = "times" + (times_len-1);
+        var titleHtml = document.getElementById(times_id);
+        titleHtml.setAttribute('class', 'form-control is-invalid');
+        document.getElementById("postEdit_container").scrollIntoView();
+    } else {
         $.ajax({
             url: '/posts/edit/' + id,
             type: "POST",
@@ -283,32 +296,32 @@ function post_edit(id) {
             .done(function (fragment) {
                 $('#postEdit_container').replaceWith(fragment);
                 var postModal_content = document.getElementById("postModal_content");
-                postModal_content.setAttribute("id", "postModal_content"+id.toString());
+                postModal_content.setAttribute("id", "postModal_content" + id.toString());
 
 
-                var obj = document.getElementById("post"+ id);
+                var obj = document.getElementById("post" + id);
                 if (obj) {
-                    $('#post_title'+ id).replaceWith(
-                        '<p id="post_title'+ id +'" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" style="font-size: 20px;  color: gray; height: 30px;">'+ title +'</p>'
+                    $('#post_title' + id).replaceWith(
+                        '<p id="post_title' + id + '" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" style="font-size: 20px;  color: gray; height: 30px;">' + title + '</p>'
                     );
                     $('#post_introduce' + id).replaceWith(
-                        '<p id="post_introduce'+ id +'" class="small" style="margin: 3px">'+ introduce +'</p>'
+                        '<p id="post_introduce' + id + '" class="small" style="margin: 3px">' + introduce + '</p>'
                     )
                     $('#post_times' + id).replaceWith(
-                        '<div id="post_times'+ id +'" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;"></div>'
+                        '<div id="post_times' + id + '" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;"></div>'
                     )
                     var cnt = 0;
-                    for (var i = 1; i < times.length; i+=2, cnt++) {
+                    for (var i = 1; i < times.length; i += 2, cnt++) {
                         if (cnt % 2 != 0) {
                             $('#post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
-                                times[i-1].value + '&nbsp;~&nbsp;' + times[i].value
+                                times[i - 1].value + '&nbsp;~&nbsp;' + times[i].value
                                 + '</p>'
                             );
                         } else {
                             $('#post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
-                                times[i-1].value + '&nbsp;~&nbsp;' + times[i].value
+                                times[i - 1].value + '&nbsp;~&nbsp;' + times[i].value
                                 + '</p>'
                             );
                         }
@@ -317,13 +330,13 @@ function post_edit(id) {
                         if ((times.length - 1) % 4 == 0) {
                             $('#post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
-                                times[times.length-1].value + '&nbsp;~'
+                                times[times.length - 1].value + '&nbsp;~'
                                 + '</p>'
                             );
                         } else {
                             $('#post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
-                                times[times.length-1].value + '&nbsp;~'
+                                times[times.length - 1].value + '&nbsp;~'
                                 + '</p>'
                             );
                         }
@@ -332,32 +345,32 @@ function post_edit(id) {
 
                 if (focuedPostId == id) {
                     $('#member_time').replaceWith(
-                        '<div id="member_time"> 오늘의 학습 시간 : ' + result_hour + '시간 '+ result_min +'분 </div>'
+                        '<div id="member_time"> 오늘의 학습 시간 : ' + result_hour + '시간 ' + result_min + '분 </div>'
                     )
                 }
 
-                if (recentPostId == id){
-                    $('#recent_post_title'+ id).replaceWith(
-                        '<h2 id="recent_post_title'+id+'" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" style="font-size: 20px; color: gray; height: 40px;">'+ title +'</h2>'
+                if (recentPostId == id) {
+                    $('#recent_post_title' + id).replaceWith(
+                        '<h2 id="recent_post_title' + id + '" class="card-title h5 d-sm-flex align-items-center text-truncate fw-bold" style="font-size: 20px; color: gray; height: 40px;">' + title + '</h2>'
                     );
                     $('#recent_post_introduce' + id).replaceWith(
-                        '<p id="recent_post_introduce' + id +'" class="small" style="margin: 3px">'+ introduce +'</p>'
+                        '<p id="recent_post_introduce' + id + '" class="small" style="margin: 3px">' + introduce + '</p>'
                     );
                     $('#recent_post_times' + id).replaceWith(
-                        '<div id="recent_post_times'+ id +'" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;"></div>'
+                        '<div id="recent_post_times' + id + '" class="card-text overflow-hidden d-sm-flex" style="margin: 2px 0px 0px 0px; max-width: 100%;"></div>'
                     );
                     var cnt1 = 0;
-                    for (var j = 1; j < times.length; j+=2, cnt1++) {
+                    for (var j = 1; j < times.length; j += 2, cnt1++) {
                         if (cnt1 % 2 != 0) {
                             $('#recent_post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
-                                times[j-1].value + '&nbsp;~&nbsp;' + times[j].value
+                                times[j - 1].value + '&nbsp;~&nbsp;' + times[j].value
                                 + '</p>'
                             );
                         } else {
                             $('#recent_post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
-                                times[j-1].value + '&nbsp;~&nbsp;' + times[j].value
+                                times[j - 1].value + '&nbsp;~&nbsp;' + times[j].value
                                 + '</p>'
                             );
                         }
@@ -366,20 +379,20 @@ function post_edit(id) {
                         if ((times.length - 1) % 4 == 0) {
                             $('#recent_post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#A1A185;">' +
-                                times[times.length-1].value + '&nbsp;~'
+                                times[times.length - 1].value + '&nbsp;~'
                                 + '</p>'
                             );
                         } else {
                             $('#recent_post_times' + id).append(
                                 '<p class="badge" style="margin: 3px; background-color:#8AA6A3;">' +
-                                times[times.length-1].value + '&nbsp;~'
+                                times[times.length - 1].value + '&nbsp;~'
                                 + '</p>'
                             );
                         }
                     }
                 }
 
-                document.getElementById("postModal_content"+id).scrollIntoView();
+                document.getElementById("postModal_content" + id).scrollIntoView();
             });
     }
 

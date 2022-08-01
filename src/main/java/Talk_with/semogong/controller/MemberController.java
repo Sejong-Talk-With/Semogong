@@ -160,10 +160,8 @@ public class MemberController {
         LocalDateTime focusedDate;
         if (month == null) {
             month = LocalDateTime.now().getMonthValue();
-            focusedDate = LocalDateTime.of(year, month, 1, 0, 0);
-        } else {
-            focusedDate = LocalDateTime.of(year, month, 1, 0, 0);
         }
+        focusedDate = LocalDateTime.of(year, month, 1, 0, 0);
         List<Post> monthPosts = postService.getMonthPosts(member.getId(), month);
         List<PostViewDto> monthPostDtos = monthPosts.stream().map(PostViewDto::new).collect(Collectors.toList());
         int[] dayData = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};

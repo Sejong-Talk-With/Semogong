@@ -80,6 +80,8 @@ public class PostController {
     @PostMapping("/posts/edit/{id}")
     public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute("postForm") PostEditForm postEditForm, Model model, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId) {
         postEditForm.setHtml(markdownToHTML(postEditForm.getContent()));
+        List<String> times = postEditForm.getTimes();
+        while (times.remove("")) {}
         postService.edit(postEditForm);
         Member loginMember = memberService.findOne(loginMemberId);
 

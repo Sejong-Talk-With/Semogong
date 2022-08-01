@@ -31,16 +31,26 @@
 
     <form role="form" id="formPost" th:action="@{/posts/edit/{id} (id=${postForm.id})}" th:object="${postForm}" method="post">
         <input type="hidden" th:field="*{id}"/>
-        <div>
-            <label class="form-label" th:for="times"><strong>학습 시간</strong></label>
-            <div class="card-text mb-3">
-                <th:block th:id="timeNum+${i}" th:each="i: ${#numbers.sequence(0, #lists.size(postForm.times)-1)}">
-                    <div style="display: inline-block; flex: 0 0 auto; width: 70px;">
+        <div id="time_input">
+            <label class="form-label mb-3" th:for="times"><strong>학습 시간</strong></label>
+            <button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2" style="padding: 1px 6px; margin-left: 3px;"
+                    onclick="add_box()">
+                +
+            </button>
+            <div class="card-text mb-3" id="add_group">
+                <span th:id="timeNum+${i}" th:each="i: ${#numbers.sequence(0, #lists.size(postForm.times)-1)}">
+                    <div style="display: inline-block; flex: 0 0 auto; width: 70px;" class="position-relative">
                         <input type="text" th:field="*{times[__${iStat.index}__]}" class="form-control">
+                        <button th:onclick="|javascript:remove_box(${i})|" style="border: none; padding: 3px 5px;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            x
+                        </button>
                     </div>
+<!--                    <button class="btn btn-outline-danger" type="button"
+                            th:onclick="|javascript:remove_box(${i})|">X
+                    </button>-->
                     <p class="mb-0" style="display: inline-block" th:if="${i % 2 == 0}">~</p>
                     <p class="mb-0" style="display: inline-block" th:if="${i % 2 != 0}">&nbsp;&nbsp;</p>
-                </th:block>
+                </span>
             </div>
         </div>
         <label class="form-label" th:for="title"><strong>제목</strong></label>
@@ -67,6 +77,41 @@
             <button class="btn btn-primary" type="button" th:onclick="|javascript:post_edit(${postForm.id})|">Submit</button> <!-- th:onclick="|javascript:post_edit(${postForm.id})|" -->
         </div>
     </form>
+    <script th:inline="javascript" type="text/javascript">
+        var state = [[${postForm.state}]];
+        var times = [[${postForm.times}]];
+        var times_len = times.length;
+        function add_box() {
+            if (times_len % 2 == 0) {
+                $("#add_group").append(
+                    '<span id="timeNum' + times_len + '"> ' +
+                    '<div style="display: inline-block; flex: 0 0 auto; width: 70px;" class="position-relative"> ' +
+                    '<input type="text" id="times' + times_len + '"' + 'name="times[' + times_len + ']" class="form-control" >' +
+                    '<button style="border: none; padding: 3px 5px;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" type="button" onclick="remove_box(' + times_len + ')">x</button>' +
+                    '</div>' +
+                    '<p class="mb-0" style="display: inline-block">~</p>' +
+                    '</span>'
+                );
+            } else {
+                $("#add_group").append(
+                    '<span id="timeNum' + times_len + '"> ' +
+                    '<div style="display: inline-block; flex: 0 0 auto; width: 70px;" class="position-relative"> ' +
+                    '<input type="text" id="times' + times_len + '"' + 'name="times[' + times_len + ']" class="form-control" >' +
+                    '<button style="border: none; padding: 3px 5px;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" type="button" onclick="remove_box(' + times_len + ')">x</button>' +
+                    '</div>' +
+                    '<p class="mb-0" style="display: inline-block">&nbsp;&nbsp;</p>' +
+                    '</span>'
+                );
+            }
+            times_len++;
+        }
+
+        function remove_box(i) {
+            const to_remove = document.getElementById('timeNum' + i);
+            to_remove.remove();
+            times_len--;
+        }
+    </script>
 </div>
 
 <div th:replace="fragments/footer :: footer"/>
@@ -155,6 +200,7 @@
             }
         });
     }
+
 
 
 

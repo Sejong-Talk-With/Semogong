@@ -17,9 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String focus = request.getParameter("focus");
 
         if (requestURI.equals("/")) {
-            if (focus == null) { // basic home -> /
-                return true;
-            } else if (!focus.equals("my-posts")) { // parameters -> focus=all, today, all-members
+            if (focus == null || !focus.equals("my-posts")) { // basic home -> / or parameters -> focus=all, today, all-members
                 return true;
             }
         } // my-posts 만 밑으로 넘겨 옴
