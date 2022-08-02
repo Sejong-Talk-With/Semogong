@@ -3,7 +3,6 @@ package Talk_with.semogong.controller;
 import Talk_with.semogong.configuration.SessionConst;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
-import Talk_with.semogong.domain.att.Goal;
 import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.att.Times;
 import Talk_with.semogong.domain.dto.MemberDto;
@@ -62,19 +61,19 @@ public class HomeController {
             if (searchForm.getSelected() == null) {
                 posts = postService.getTodayPosts(date, (page - 1) * 12);
             } else {
-                posts = postService.findByTodaySearch(searchForm.getSelected(), searchForm.getContent(), date, (page - 1) * 12);
+                posts = postService.findByTodaySearch(searchForm.getSelected(), searchForm.getInputContent(), date, (page - 1) * 12);
             }
         } else if (focus.equals("my-posts")) {
             if (searchForm.getSelected() == null) {
                 posts = postService.getMemberPosts(loginMemberId, (page - 1) * 12);
             } else {
-                posts = postService.findBySearchMy(loginMemberId, searchForm.getSelected(), searchForm.getContent(), (page - 1) * 12);
+                posts = postService.findBySearchMy(loginMemberId, searchForm.getSelected(), searchForm.getInputContent(), (page - 1) * 12);
             }
         } else {
             if (searchForm.getSelected() == null) {
                 posts = postService.findByPage((page - 1) * 12);
             } else {
-                posts = postService.findBySearch(searchForm.getSelected(), searchForm.getContent(), (page - 1) * 12);
+                posts = postService.findBySearch(searchForm.getSelected(), searchForm.getInputContent(), (page - 1) * 12);
             }
         }
 
@@ -85,7 +84,7 @@ public class HomeController {
         List<Member> members = memberService.findAll();
         List<Member> bySearchMembers = memberService.findAll();;
         if (focus.equals("all-members") && searchForm.getSelected() != null) {
-            bySearchMembers = memberService.findBySearch(searchForm.getSelected(), searchForm.getContent());
+            bySearchMembers = memberService.findBySearch(searchForm.getSelected(), searchForm.getInputContent());
         }
         List<MemberDto> allMembers = members.stream().map(MemberDto::new).collect(Collectors.toList());
         List<MemberDto> memberDtos = new ArrayList<>();
@@ -162,7 +161,7 @@ public class HomeController {
     static class SearchForm {
 
         private String selected;
-        private String content;
+        private String inputContent;
 
     }
 
