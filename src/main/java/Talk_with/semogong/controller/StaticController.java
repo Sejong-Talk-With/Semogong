@@ -54,7 +54,7 @@ public class StaticController {
         attendSorted.sort(new AttendSorter());
 
         model.addAttribute("staticDays", days);
-        model.addAttribute("nav", "data");
+        model.addAttribute("nav", "ranking");
         model.addAttribute("check", true);
         model.addAttribute("staticsDataMap", memberStatic);
         model.addAttribute("members",members.subList(0,4));
@@ -108,8 +108,6 @@ public class StaticController {
             dayTimes.put(post.getCreateTime().getDayOfMonth(), totalTimes);
         }
 
-/*        List<Integer> array = new ArrayList<>(dayTimes.keySet());
-        array.sort(Comparator.naturalOrder());*/
         int cnt = 0;
         for (int i = 0; i < days.size(); i++) {
             Times times = dayTimes.get(days.get(i));

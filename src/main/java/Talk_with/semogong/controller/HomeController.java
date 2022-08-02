@@ -39,6 +39,11 @@ public class HomeController {
         return loginMemberId != null;
     }
 
+    @GetMapping("/error-ex")
+    public void errorEx() {
+        throw new RuntimeException("예외 발생!");
+    }
+
     @RequestMapping("/")
     public String home_page(@RequestParam(name = "page", defaultValue = "1") Integer page, @RequestParam(name = "focus", defaultValue = "all") String focus,
                             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model) {
