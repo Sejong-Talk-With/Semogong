@@ -96,4 +96,12 @@ public class MemberService{
         member.setGoal(goal);
     }
 
+    public List<Member> findBySearch(String selected, String content) {
+        String searchKeyword = '%' + content + '%'; // .toUpperCase(Locale.ROOT)
+        if (selected.equals("writer")) {
+            return memberRepository.findSearchByName(searchKeyword);
+        } else {
+            return memberRepository.findSearchByJob(searchKeyword);
+        }
+    }
 }

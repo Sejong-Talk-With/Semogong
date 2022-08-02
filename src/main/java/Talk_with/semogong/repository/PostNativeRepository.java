@@ -29,4 +29,41 @@ public interface PostNativeRepository extends JpaRepository<Post, Long> {
             "LIMIT 12 OFFSET :offset ;", nativeQuery = true)
     List<Post> getDatePost(@Param(value="date") String date, @Param(value = "offset") int offset);
 
+    @Query(value = "SELECT * " +
+            "FROM post p " +
+            "where DATE_FORMAT(p.create_time , '%Y-%m-%d') = :date " +
+            "and p.title like :content " +
+            "ORDER BY p.create_time DESC " +
+            "LIMIT 12 OFFSET :offset ;", nativeQuery = true)
+    List<Post> findByTitleToday( @Param(value ="content") String content, @Param(value="date") String date, @Param(value = "offset") int offset);
+
+    @Query(value = "SELECT * " +
+            "FROM post p " +
+            "left join member m " +
+            "on p.member_id = m.member_id " +
+            "where DATE_FORMAT(p.create_time , '%Y-%m-%d') = :date " +
+            "and m.name like :content " +
+            "ORDER BY p.create_time DESC " +
+            "LIMIT 12 OFFSET :offset ;", nativeQuery = true)
+    List<Post> findByWriterToday(@Param(value ="content") String content, @Param(value="date") String date, @Param(value = "offset") int offset);
+
+    @Query(value = "SELECT * " +
+            "FROM post p " +
+            "left join member m " +
+            "on p.member_id = m.member_id " +
+            "where DATE_FORMAT(p.create_time , '%Y-%m-%d') = :date " +
+            "and m.desired_job like :content " +
+            "ORDER BY p.create_time DESC " +
+            "LIMIT 12 OFFSET :offset ;", nativeQuery = true)
+    List<Post> findByJobToday(@Param(value ="content") String content, @Param(value="date") String date, @Param(value = "offset") int offset);
+
+
+    @Query(value = "SELECT * " +
+            "FROM post p " +
+            "where DATE_FORMAT(p.create_time , '%Y-%m-%d') = :date " +
+            "and p.content like :content " +
+            "ORDER BY p.create_time DESC " +
+            "LIMIT 12 OFFSET :offset ;", nativeQuery = true)
+    List<Post> findByContentToday(@Param(value ="content") String content, @Param(value="date") String date, @Param(value = "offset") int offset);
+
 }

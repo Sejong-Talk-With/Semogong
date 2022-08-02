@@ -1,6 +1,16 @@
 
 /* css 추가 */
 
+#search-form {
+    width: 60%;
+}
+
+@media (max-width: 990px) {
+    #search-form {
+        width: 100%;
+    }
+}
+
 .member-detail {
     text-decoration: none;
 }

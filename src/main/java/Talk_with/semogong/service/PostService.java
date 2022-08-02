@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -95,6 +97,47 @@ public class PostService {
         Post post = postRepository.findOne(id);
         post.setImage(image);
     }
+
+    @Transactional(readOnly = true)
+    public List<Post> findBySearch(String selected, String content, int offset) {
+        String searchKeyword = '%' + content + '%'; // .toUpperCase(Locale.ROOT)
+        if (selected.equals("title")) {
+            return postRepository.findByTitle(searchKeyword, offset);
+        } else if (selected.equals("writer")) {
+            return postRepository.findSearchByMember(searchKeyword, offset);
+        } else if (selected.equals("desiredJob")) {
+            return postRepository.findByJob(searchKeyword, offset);
+        } else {
+            return postRepository.findByContent(searchKeyword, offset);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> findByTodaySearch(String selected, String content, String date, int offset) {
+        String searchKeyword = '%' + content + '%'; // .toUpperCase(Locale.ROOT)
+
+        if (selected.equals("title")) {
+            return postNativeRepository.findByTitleToday(searchKeyword, date, offset);
+        } else if (selected.equals("writer")) {
+            return postNativeRepository.findByWriterToday(searchKeyword, date, offset);
+        } else if (selected.equals("desiredJob")) {
+            return postNativeRepository.findByJobToday(searchKeyword, date, offset);
+        } else {
+            return postNativeRepository.findByContentToday(searchKeyword, date, offset);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> findBySearchMy(Long memberId, String selected, String content, int offset) {
+        String searchKeyword = '%' + content + '%'; // .toUpperCase(Locale.ROOT)
+
+        if (selected.equals("title")) {
+            return postRepository.findByTitleMy(memberId, searchKeyword, offset);
+        } else {
+            return postRepository.findByContentMy(memberId, searchKeyword, offset);
+        }
+    }
+
 
     // 게시글 삭제
     public void deletePost(Post post) {

@@ -3,6 +3,7 @@ package Talk_with.semogong.controller;
 import Talk_with.semogong.configuration.SessionConst;
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
+import Talk_with.semogong.domain.att.Goal;
 import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.domain.att.Times;
 import Talk_with.semogong.domain.dto.MemberDto;
@@ -10,6 +11,7 @@ import Talk_with.semogong.domain.dto.PostViewDto;
 import Talk_with.semogong.domain.form.CommentForm;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.PostService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -46,6 +48,7 @@ public class HomeController {
 
     @RequestMapping("/")
     public String home_page(@RequestParam(name = "page", defaultValue = "1") Integer page, @RequestParam(name = "focus", defaultValue = "all") String focus,
+                            @ModelAttribute(name = "searchForm") SearchForm searchForm,
                             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model) {
         log.info("paging home");
         List<Post> posts;
@@ -56,18 +59,37 @@ public class HomeController {
             if (now.getHour() < 4) {
                 date = now.minusDays(1).format(dateTimeFormatter);
             }
-            posts = postService.getTodayPosts(date, (page - 1) * 12);
+            if (searchForm.getSelected() == null) {
+                posts = postService.getTodayPosts(date, (page - 1) * 12);
+            } else {
+                posts = postService.findByTodaySearch(searchForm.getSelected(), searchForm.getContent(), date, (page - 1) * 12);
+            }
         } else if (focus.equals("my-posts")) {
-            posts = postService.getMemberPosts(loginMemberId, (page - 1) * 12);
+            if (searchForm.getSelected() == null) {
+                posts = postService.getMemberPosts(loginMemberId, (page - 1) * 12);
+            } else {
+                posts = postService.findBySearchMy(loginMemberId, searchForm.getSelected(), searchForm.getContent(), (page - 1) * 12);
+            }
         } else {
-            posts = postService.findByPage((page - 1) * 12);
+            if (searchForm.getSelected() == null) {
+                posts = postService.findByPage((page - 1) * 12);
+            } else {
+                posts = postService.findBySearch(searchForm.getSelected(), searchForm.getContent(), (page - 1) * 12);
+            }
         }
+
         List<PostViewDto> postDtos = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
         List<PostViewDto> postModals = posts.stream().map(PostViewDto::new).collect(Collectors.toList());
         Set<Long> ids = postModals.stream().map(PostViewDto::getId).collect(Collectors.toSet());
+
         List<Member> members = memberService.findAll();
+        List<Member> bySearchMembers = memberService.findAll();;
+        if (focus.equals("all-members") && searchForm.getSelected() != null) {
+            bySearchMembers = memberService.findBySearch(searchForm.getSelected(), searchForm.getContent());
+        }
+        List<MemberDto> allMembers = members.stream().map(MemberDto::new).collect(Collectors.toList());
         List<MemberDto> memberDtos = new ArrayList<>();
-        for (Member member : members) {
+        for (Member member : bySearchMembers) {
             MemberDto memberDto = new MemberDto(member);
             memberDto.setTotalTime(getAllTimes(member));
             memberDtos.add(memberDto);
@@ -96,7 +118,7 @@ public class HomeController {
         }
 
 
-        for (MemberDto m : memberDtos) {
+        for (MemberDto m : allMembers) {
             Optional<Post> eachOptionalPost = postService.getRecentPost(m.getId());
             PostViewDto memberRecentPostDto = eachOptionalPost.map(PostViewDto::new).orElse(null);
             if (memberRecentPostDto != null) {
@@ -106,7 +128,7 @@ public class HomeController {
             }
         }
 
-        List<MemberDto> memberRanking = new ArrayList<>(memberDtos);
+        List<MemberDto> memberRanking = new ArrayList<>(allMembers);
         memberRanking.sort(new TimeSorter());
 
 
@@ -114,7 +136,8 @@ public class HomeController {
         model.addAttribute("posts", postDtos);
         model.addAttribute("postModals", postModals);
         model.addAttribute("commentForm", new CommentForm());
-        model.addAttribute("allMembers", memberDtos);
+        model.addAttribute("allMembers", allMembers);
+        model.addAttribute("members", memberDtos);
         model.addAttribute("rankings", memberRanking.subList(0, 3));
         model.addAttribute("nav", "home");
         model.addAttribute("nav2", focus);
@@ -135,6 +158,13 @@ public class HomeController {
         return totalStudyTimes;
     }
 
+    @Data
+    static class SearchForm {
+
+        private String selected;
+        private String content;
+
+    }
 
     private Times getAllTimes(Member member) {
         List<Post> posts = member.getPosts();

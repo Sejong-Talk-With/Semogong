@@ -32,8 +32,9 @@ public class MemberRepository {
 
     // 이름을 통해 회원 조회
     public Member findByName(String name){
-        return em.createQuery("select m from Member m where m.name = :name", Member.class) // name을 parameter로 바인딩
-                .setParameter("name", name)
+        String keyName = "%" + name + "%";
+        return em.createQuery("select m from Member m where m.name like :name", Member.class) // name을 parameter로 바인딩
+                .setParameter("name", keyName)
                 .getSingleResult();
     }
 
@@ -42,5 +43,18 @@ public class MemberRepository {
         return em.createQuery("select m from Member as m where m.loginId = :login_id", Member.class)
                 .setParameter("login_id", loginId)
                 .getResultList().stream().findAny();
+    }
+
+
+    public List<Member> findSearchByName(String searchKeyword) {
+        return em.createQuery("select m from Member m where m.name like :searchKeyword", Member.class)
+                .setParameter("searchKeyword", searchKeyword)
+                .getResultList();
+    }
+
+    public List<Member> findSearchByJob(String searchKeyword) {
+        return em.createQuery("select m from Member m where m.desiredJob like :searchKeyword", Member.class)
+                .setParameter("searchKeyword", searchKeyword)
+                .getResultList();
     }
 }
