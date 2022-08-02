@@ -82,6 +82,7 @@ public class StaticController {
 
         List<Post> posts;
         Map<Integer, Times> dayTimes = new HashMap<>();
+        List<Integer> days = getDays(LocalDateTime.now());
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // 0-4 사이 요청 (이틀전까지의 데이터)
         if (LocalDateTime.now().getHour() < 4) {
@@ -107,14 +108,14 @@ public class StaticController {
             dayTimes.put(post.getCreateTime().getDayOfMonth(), totalTimes);
         }
 
-        List<Integer> array = new ArrayList<>(dayTimes.keySet());
-        array.sort(Comparator.naturalOrder());
+/*        List<Integer> array = new ArrayList<>(dayTimes.keySet());
+        array.sort(Comparator.naturalOrder());*/
         int cnt = 0;
-        for (int i = 0; i < array.size(); i++) {
-            Times times = dayTimes.get(array.get(i));
+        for (int i = 0; i < days.size(); i++) {
+            Times times = dayTimes.get(days.get(i));
             if (times.getHour() == 0 & times.getMin() == 0) {
                 cnt += 1;
-                if (i != 0) dayTimes.put(array.get(i), dayTimes.get(array.get(i-1)));
+                if (i != 0) dayTimes.put(days.get(i), dayTimes.get(days.get(i-1)));
             }
         }
         member.setWorkCnt(7-cnt);

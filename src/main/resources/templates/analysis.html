@@ -127,6 +127,7 @@
     var datasets = [];
     [# th:each="user, stat : ${staticsDataMap}"]
     var user[[${stat.count}]] = [[${user.value}]];
+    console.log(user[[${stat.count}]]);
     if (user[[${stat.count}]][staticDays[6]].hour !== 0) {
         datasets.push({
             label: [[${user.key.name}]],
