@@ -51,7 +51,7 @@
                                 <option th:if="${nav2 != 'all-members'}" value="content">내용</option>
                             </select>
                             <input type="search" th:field="*{inputContent}" class="form-control" placeholder="검색할 키워드를 입력하세요"/>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-secondary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                 </svg>
@@ -605,7 +605,7 @@
 
                                 <!-- comment -->
                                 <div th:id="'commentPart'+${post.id}">
-                                    <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
+                                    <div th:id="'comment'+${comment.id}" th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                         <div class="d-flex bd-highlight">
                                             <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
 
@@ -633,6 +633,12 @@
                                             </div>
                                             <div class="p-2">
                                                 <a role="button"
+                                                   th:if="${check and member.id == comment.memberId}"
+                                                   th:onclick="|javascript:edit_comment_form(${post.id},${comment.id})|"
+                                                   class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">수정</a>
+                                            </div>
+                                            <div class="p-2">
+                                                <a role="button"
                                                    th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}"
                                                    th:onclick="|javascript:delete_check(${post.id},${comment.id})|"
                                                    class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
@@ -643,7 +649,7 @@
                                             <p class="m-1" th:text="${comment.content}">댓글 내용</p>
                                         </div>
                                     </div>
-                                    <div th:if="${check}" class="input-group mb-3">
+                                    <div th:if="${check}" th:id="'postCommentInput'+${post.id}" class="input-group mb-3">
                                         <input th:onkeypress="|javascript:enterKey(${post.id})|"
                                                th:id="'comment_content'+${post.id}" type="text" class="form-control"
                                                placeholder="댓글을 작성해 보세요!">
