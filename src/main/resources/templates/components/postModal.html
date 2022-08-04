@@ -10,7 +10,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body pb-5"> <!-- text-center-->
-                <div th:id="postModal_content+${post.id}" class="container">
+                <div id="postModal_content" class="container">
                     <div class="row justify-content-center"> <!--justify-content-center-->
                         <div class="col-lg-8">
                             <!-- Post Modal - Image-->
@@ -80,7 +80,7 @@
 
                             <!-- comment -->
                             <div th:id="'commentPart'+${post.id}">
-                                <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
+                                <div th:id="'comment'+${comment.id}" th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                     <div class="d-flex bd-highlight">
                                         <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
                                             <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
