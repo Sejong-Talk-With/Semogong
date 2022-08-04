@@ -50,7 +50,7 @@
                                 <option th:if="${nav2 != 'my-posts'}" value="desiredJob">희망직무</option>
                                 <option th:if="${nav2 != 'all-members'}" value="content">내용</option>
                             </select>
-                            <input type="search" th:field="*{inputContent}" class="form-control" placeholder="검색할 키워드를 입력하세요"/>
+                            <input type="search" th:field="*{inputContent}" class="form-control" th:placeholder="'['+ ${nav2} + ']' + ' 에서 검색'"/>
                             <button type="submit" class="btn btn-secondary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -214,14 +214,14 @@
             <nav th:if="${nav2 != 'all-members'}" aria-label="Pagination">
                 <hr class="my-0"/>
                 <ul class="pagination justify-content-center my-4">
-                    <li class="page-item"><a class="page-link" th:href="@{/ (page=1, focus=${nav2},  selected=${searchForm.selected}, content=${searchForm.inputContent})}" tabindex="-1" aria-disabled="true">Newer</a>
+                    <li class="page-item"><a class="page-link" th:href="@{/ (page=1, focus=${nav2},  selected=${searchForm.selected}, inputContent=${searchForm.inputContent})}" tabindex="-1" aria-disabled="true">Newer</a>
                     </li>
                     <li th:each="i: ${#numbers.sequence(5*((page -1)/5)+1, 5*((page -1)/5)+5)}" aria-current="page"
                         th:class="${page == i}? 'page-item active' : 'page-item'">
-                        <a class="page-link" th:href="@{/ (page=${i}, focus=${nav2}, selected=${searchForm.selected}, content=${searchForm.inputContent})}" th:text="${i}">#</a>
+                        <a class="page-link" th:href="@{/ (page=${i}, focus=${nav2}, selected=${searchForm.selected}, inputContent=${searchForm.inputContent})}" th:text="${i}">#</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/ (page=${page+1}, focus=${nav2},  selected=${searchForm.selected}, content=${searchForm.inputContent})}">Older</a>
+                        <a class="page-link" th:href="@{/ (page=${page+1}, focus=${nav2},  selected=${searchForm.selected}, inputContent=${searchForm.inputContent})}">Older</a>
                     </li>
                 </ul>
             </nav>
