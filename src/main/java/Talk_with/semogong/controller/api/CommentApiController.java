@@ -58,6 +58,34 @@ public class CommentApiController {
 
     }
 
+    // 댓글 수정 get
+    @GetMapping("/comment/api/edit/{id}/{commentId}")
+    public String editForm(@PathVariable("id") Long postId, @PathVariable("commentId") Long commentId, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId,Model model) {
+        Post post = postService.findOne(postId);
+        PostViewDto postViewDto = new PostViewDto(post);
+        Comment comment = commentService.findOne(commentId);
+        CommentViewDto commentDto = new CommentViewDto(comment);
+        model.addAttribute("post", postViewDto);
+        model.addAttribute("check", true);
+        model.addAttribute("comment", commentDto);
+        return "components/commentList :: #comment";
+    }
+
+    @PostMapping("/comment/api/edit/{id}/{commentId}")
+    public String edit(@PathVariable("id") Long postId, @PathVariable("commentId") Long commentId, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model, @RequestParam Map<String, Object> paramMap) {
+        Member member = memberService.findOne(loginMemberId);
+        Post post = postService.findOne(postId);
+        commentService.edit(commentId, paramMap.get("comment").toString());
+        PostViewDto postViewDto = new PostViewDto(post);
+        MemberDto memberDto = new MemberDto(member);
+
+        model.addAttribute("post", postViewDto);
+        model.addAttribute("check", true);
+        model.addAttribute("member", memberDto);
+        return "components/commentList :: #commentPart";
+
+    }
+
     // 댓글 삭제
     @DeleteMapping("/comment/delete/{id}")
     public String commentDelete(@PathVariable("id") Long id, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long loginMemberId, Model model, @RequestParam Long postId) {

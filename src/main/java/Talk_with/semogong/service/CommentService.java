@@ -20,8 +20,16 @@ public class CommentService {
         return comment.getId();
     }
 
+    public void edit(Long commentId, String content) {
+        commentRepository.edit(commentId, content);
+    }
+
     // 댓글 삭제 (리포지토리 단순 위임)
     public void deleteComment(Long id) {
         commentRepository.deleteOne(id);
+    }
+
+    public Comment findOne(Long commentId) {
+        return commentRepository.findOne(commentId);
     }
 }

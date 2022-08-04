@@ -178,14 +178,26 @@ public class MemberController {
         }
         ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
         int monthDate = dayData[month - 1];
-        int nowMonthPostsLen = 0;
         if (month == LocalDateTime.now().getMonthValue()) {
             monthDate = LocalDateTime.now().getDayOfMonth();
-            nowMonthPostsLen = monthPosts.size();
-        } else {
-            nowMonthPostsLen = postService.getMonthPosts(loginMemberId, LocalDateTime.now().getMonthValue()).size();
         }
-        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, nowMonthPostsLen);
+        List<Post> nowMonthPosts = postService.getMonthPosts(member.getId(), LocalDateTime.now().getMonthValue());
+        int focusedDay;
+        int nowMonthPostsLen = 0;
+        if (LocalDateTime.now().getHour() < 4) {
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
+        } else {
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
+        }
+        for (Post post : nowMonthPosts) {
+            if (post.getCreateTime().getDayOfMonth() > focusedDay) {
+                break;
+            }
+            nowMonthPostsLen = nowMonthPostsLen + 1;
+        }
+
+        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, focusedDay, nowMonthPostsLen);
+
 
 
         model.addAttribute("nav", "myPage");
@@ -221,7 +233,7 @@ public class MemberController {
         } else {
             focusedDate = LocalDateTime.of(year, month, 1, 0, 0);
         }
-        List<Post> monthPosts = postService.getMonthPosts(member.getId(), month);
+        List<Post> monthPosts = postService.getMonthPosts(memberId, month);
         List<PostViewDto> monthPostDtos = monthPosts.stream().map(PostViewDto::new).collect(Collectors.toList());
         int[] dayData = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         List<String> weekDay = Arrays.asList("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
@@ -237,14 +249,26 @@ public class MemberController {
         }
         ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
         int monthDate = dayData[month - 1];
-        int nowMonthPostsLen = 0;
         if (month == LocalDateTime.now().getMonthValue()) {
             monthDate = LocalDateTime.now().getDayOfMonth();
-            nowMonthPostsLen = monthPosts.size();
-        } else {
-            nowMonthPostsLen = postService.getMonthPosts(memberId, LocalDateTime.now().getMonthValue()).size();
         }
-        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, nowMonthPostsLen);
+        List<Post> nowMonthPosts = postService.getMonthPosts(memberId, LocalDateTime.now().getMonthValue());
+        int focusedDay;
+        int nowMonthPostsLen = 0;
+        if (LocalDateTime.now().getHour() < 4) {
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
+        } else {
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
+        }
+        for (Post post : nowMonthPosts) {
+            if (post.getCreateTime().getDayOfMonth() > focusedDay) {
+                break;
+            }
+            nowMonthPostsLen = nowMonthPostsLen + 1;
+        }
+
+
+        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, focusedDay, nowMonthPostsLen);
 
 
         model.addAttribute("loginId", loginMemberId);
@@ -263,7 +287,7 @@ public class MemberController {
         return "member/memberDetail";
     }
 
-    private AllStatic getAllStatus(Member member, Map<Integer, Times> staticData, Integer date, List<Post> monthPosts, int monthDate, int nowMonthPostsLen) {
+    private AllStatic getAllStatus(Member member, Map<Integer, Times> staticData, Integer date, List<Post> monthPosts, int monthDate, int focusedDay, int nowMonthPostsLen) {
         AllStatic allStatic = new AllStatic();
 
         allStatic.setAllTimes(getAllTimes(member));
@@ -306,7 +330,7 @@ public class MemberController {
         int weekGoalTimes = member.getGoal().getWeekGoalTimes();
         allStatic.setGoalAttainmentWeek(Math.round(((float) weekAllTimes / (float) weekGoalTimes) * 100));
 
-        allStatic.setNowMonthAttRate(Math.round(((float) nowMonthPostsLen / (float) LocalDateTime.now().getDayOfMonth()) * 100));
+        allStatic.setNowMonthAttRate(Math.round(((float) nowMonthPostsLen / (float) focusedDay) * 100));
 
         allStatic.setStudyRankRate(Math.floorDiv(allStatic.getNowMonthAttRate() + allStatic.getGoalAttainmentToday() + allStatic.getGoalAttainmentWeek(), 3));
 

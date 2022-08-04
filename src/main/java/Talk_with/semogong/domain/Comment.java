@@ -43,4 +43,8 @@ public class Comment {
         comment.createTime = createTime;
         return comment;
     }
+
+    public void editContent(String content) {
+        this.content = content;
+    }
 }

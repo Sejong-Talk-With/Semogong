@@ -780,9 +780,10 @@
 
                             <!-- comment -->
                             <div th:id="'commentPart'+${post.id}">
-                                <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
+                                <div th:id="'comment'+${comment.id}" th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                     <div class="d-flex bd-highlight">
                                         <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
+
                                             <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
                                                 <div class="profile_img_box2 d-sm-flex justify-content-center">
                                                     <img th:if="${comment.memberImg != null}"
@@ -807,15 +808,23 @@
                                         </div>
                                         <div class="p-2">
                                             <a role="button"
-                                               th:if="${member.id == comment.memberId or member.id == post.memberId}"
+                                               th:if="${member.id == comment.memberId}"
+                                               th:onclick="|javascript:edit_comment_form(${post.id},${comment.id})|"
+                                               class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">수정</a>
+                                        </div>
+                                        <div class="p-2">
+                                            <a role="button"
+                                               th:if="${(member.id == comment.memberId or member.id == post.memberId)}"
                                                th:onclick="|javascript:delete_check(${post.id},${comment.id})|"
                                                class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
                                         </div>
                                     </div>
 
-                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;"><p class="m-1" th:text="${comment.content}"> 댓글 내용</p></div>
+                                    <div class="modal_comments" style="margin: -10px 0px 0px 40px;">
+                                        <p class="m-1" th:text="${comment.content}">댓글 내용</p>
+                                    </div>
                                 </div>
-                                <div class="input-group mb-3">
+                                <div th:id="'postCommentInput'+${post.id}" class="input-group mb-3">
                                     <input th:onkeypress="|javascript:enterKey(${post.id})|"
                                            th:id="'comment_content'+${post.id}" type="text" class="form-control"
                                            placeholder="댓글을 작성해 보세요!">

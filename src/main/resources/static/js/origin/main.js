@@ -82,6 +82,13 @@ function enterKey(id) {
 
 }
 
+function editEnterKey(id) {
+    if (window.event.keyCode == 13) {
+        $("#edit_comment_submit_btn" + id).click();
+    }
+
+}
+
 
 function submit_comment(id) {
 
@@ -144,6 +151,37 @@ function submit_comment(id) {
                 }
             }
 
+        });
+}
+
+function edit_comment_form(id, commentId) {
+    $.ajax({
+        url: '/comment/api/edit/' + id +'/' + commentId,
+        type: "GET",
+    })
+        .done(function (fragment) {
+            $('#comment'+commentId).replaceWith(fragment);
+            var comment = document.getElementById("comment");
+            comment.setAttribute("id", "comment" + commentId.toString());
+        })
+}
+
+function edit_comment(id, commentId) {
+
+    var commentForm = {
+        postId : id,
+        comment : $("#edit_comment_content"+commentId).val()
+    };
+
+    $.ajax({
+        url: '/comment/api/edit/' + id +'/' + commentId,
+        type: "POST",
+        data: commentForm,
+    })
+        .done(function (fragment) {
+            $('#commentPart' + id).replaceWith(fragment);
+            var commentPart = document.getElementById("commentPart");
+            commentPart.setAttribute("id", "commentPart"+id.toString());
         });
 }
 

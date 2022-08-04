@@ -10,7 +10,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body pb-5"> <!-- text-center-->
-                <div id="postModal_content" class="container">
+                <div th:id="postModal_content+${post.id}" class="container">
                     <div class="row justify-content-center"> <!--justify-content-center-->
                         <div class="col-lg-8">
                             <!-- Post Modal - Image-->
@@ -83,17 +83,27 @@
                                 <div th:each="comment:${post.comments}" height="25px;" class="mb-2">
                                     <div class="d-flex bd-highlight">
                                         <div class="d-sm-flex p-2 flex-grow-1 bd-highlight">
-                                            <div class="profile_img_box2 d-sm-flex justify-content-center">
-                                                <img th:if="${comment.memberImg != null}"
-                                                     th:src="${comment.memberImg?.imgSrc}">
-                                                <img th:if="${comment.memberImg == null}" src="/images/profile.png">
-                                            </div>
-                                            <div class="align-middle" style="margin-left:5px;"> <p class="mb-0" th:text="${comment.memberName}">작성자</p> </div>
+                                            <a class="member-profile-link d-sm-flex align-items-center text-decoration-none text-dark" th:href="@{/members/profile/{id} (id=${comment.memberId})}">
+                                                <div class="profile_img_box2 d-sm-flex justify-content-center">
+                                                    <img th:if="${comment.memberImg != null}"
+                                                         th:src="${comment.memberImg?.imgSrc}">
+                                                    <img th:if="${comment.memberImg == null}" src="/images/profile.png">
+                                                </div>
+                                                <div class="align-middle" style="margin-left:5px;"><p class="mb-0"
+                                                                                                      th:text="${comment.memberName}">
+                                                    작성자</p></div>
+                                            </a>
                                             <div class="align-middle" style="margin-left:20px; margin-top: 2px">
-                                                <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary">분 전</p>
-                                                <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary">시간 전</p>
-                                                <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary">분 전</p>
+                                                <p th:if="${comment.diffMin < 60}" th:text="${comment.diffMin} + '분 전'" class=" mb-0 small text-secondary" style="padding-top: 3px;">분 전</p>
+                                                <p th:if="${comment.diffMin >= 60 and comment.diffMin < 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60)} + '시간 전'" class="mb-0 small text-secondary" style="padding-top: 3px;">시간 전</p>
+                                                <p th:if="${comment.diffMin >= 24*60}" th:text="${@thymeMath.round(comment.diffMin, 60*24)} + '일 전'" class=" mb-0 small text-secondary" style="padding-top: 3px;">분 전</p>
                                             </div>
+                                        </div>
+                                        <div class="p-2">
+                                            <a role="button"
+                                               th:if="${check and member.id == comment.memberId}"
+                                               th:onclick="|javascript:edit_comment_form(${post.id},${comment.id})|"
+                                               class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">수정</a>
                                         </div>
                                         <div class="p-2">
                                             <a role="button" th:if="${check and (member.id == comment.memberId or member.id == post.memberId)}" th:onclick="|javascript:delete_check(${post.id},${comment.id})|" class="p-2 bd-highlight badge bg-light text-dark align-middle text-decoration-none">삭제</a>
@@ -104,7 +114,7 @@
                                 </div>
                                 <div class="input-group mb-3">
                                     <input th:onkeypress="|javascript:enterKey(${post.id})|" th:id="'comment_content'+${post.id}" type="text" class="form-control" placeholder="댓글을 작성해 보세요!">
-                                    <button th:id="'comment_submit_btn'+${post.id}"th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
+                                    <button th:id="'comment_submit_btn'+${post.id}" th:if="${check}" class="btn btn-outline-secondary" th:onclick="|javascript:submit_comment(${post.id})|" type="submit">Submit</button>
                                     <button th:id="'comment_submit_btn'+${post.id}" type="button" th:if="${!check}" class="btn btn-outline-secondary" onclick="alert_error()">Submit</button>
                                 </div>
                             </div>
