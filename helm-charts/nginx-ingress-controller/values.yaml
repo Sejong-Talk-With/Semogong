@@ -104,7 +104,7 @@ electionID: ingress-controller-leader
 reportNodeInternalIp: false
 ## @param watchIngressWithoutClass Process Ingress objects without ingressClass annotation/ingressClassName field
 ##
-watchIngressWithoutClass: false
+watchIngressWithoutClass: true
 ## Configuring this doesn't affect `kubernetes.io/ingress.class` annotation. See `extraArgs` below how to configure processing of custom annotation.
 ## @param ingressClassResource.name Name of the IngressClass resource
 ## @param ingressClassResource.enabled Create the IngressClass resource
@@ -115,7 +115,7 @@ watchIngressWithoutClass: false
 ingressClassResource:
   name: nginx
   enabled: true
-  default: false
+  default: true
   controllerClass: "k8s.io/ingress-nginx"
   parameters: {}
 ## Allows customization of the external service
@@ -778,7 +778,8 @@ service:
   ## This can be used to set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
-  annotations: {}
+  annotations:
+    cloud.google.com/load-balancer-type: "External"
   ## @param service.labels Labels for controller service
   ##
   labels: {}
@@ -792,11 +793,12 @@ service:
   ## @param service.loadBalancerIP Kubernetes LoadBalancerIP to request for Controller (optional, cloud specific)
   ## ref: https://kubernetes.io/docs/user-guide/services/#type-loadbalancer
   ##
-  loadBalancerIP: ""
+  loadBalancerIP: 34.64.198.21
   ## @param service.loadBalancerSourceRanges List of IP CIDRs allowed access to load balancer (if supported)
   ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
   ##
-  loadBalancerSourceRanges: []
+  loadBalancerSourceRanges:
+    - 0.0.0.0/0
   ## @param service.extraPorts Extra ports to expose (normally used with the `sidecar` value)
   ##
   extraPorts: []
