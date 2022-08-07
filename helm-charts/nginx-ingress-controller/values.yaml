@@ -179,11 +179,11 @@ args: []
 lifecycleHooks: {}
 ## @param extraArgs Additional command line arguments to pass to nginx-ingress-controller
 ## E.g. to specify the default SSL certificate you can use
-## extraArgs:
-##   default-ssl-certificate: "<namespace>/<secret_name>"
-##   ingress-class: nginx
+extraArgs:
+  default-ssl-certificate: "cert-manager/certificate-by-letsencrypt"
+  ingress-class: nginx
 ##
-extraArgs: {}
+
 ## @param extraEnvVars Extra environment variables to be set on Nginx Ingress container
 ## E.g:
 ## extraEnvs:
