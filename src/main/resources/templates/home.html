@@ -692,7 +692,7 @@
     <!-- Custome JS -->
     <script th:inline="javascript" type="text/javascript">
         var recentPostId = [[ ${recentPost?.id}]];
-        var focuedPostId = [[ ${focusedId}]];
+        var focusedPostId = [[ ${focusedId}]];
         var member = [[ ${member} ]];
         var memberTodayGoalTotal;
         if (member != null) { memberTodayGoalTotal = [[ ${member?.goal?.dayGoalTimes} ]];}

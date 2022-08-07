@@ -224,6 +224,9 @@ function post_edit(id) {
     var reg = /^\d{1,2}:\d{1,2}$/;
     let todayTime = new Date();
     let hoursToday = todayTime.getHours(); // 시
+    if (hoursToday < 4) {
+        hoursToday += 24;
+    }
     let minutesToday = todayTime.getMinutes();  // 분
     let totalTimeToday = hoursToday*60 + minutesToday;
 
@@ -241,9 +244,13 @@ function post_edit(id) {
             return;
         }
         var curr = times[idx].value.split(':')
-        var currTime = parseInt(curr[0])*60 + parseInt(curr[1])
+        var currHour = parseInt(curr[0]);
+        if (currHour < 4) {
+            currHour += 24
+        }
+        var currTime = currHour*60 + parseInt(curr[1]);
 
-        if (currTime > totalTimeToday) {
+        if ( recentPostId === id && currTime > totalTimeToday) {
             alert("현재시간을 초과한 시간값이 있습니다.");
             timeHtml.setAttribute('class', 'form-control is-invalid');
             timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
@@ -252,7 +259,11 @@ function post_edit(id) {
         }
         if (idx !== 0){
             var before = times[idx-1].value.split(':');
-            var beforeTime = parseInt(before[0])*60 + parseInt(before[1]);
+            var beforeHour = parseInt(before[0]);
+            if (beforeHour < 4) {
+                beforeHour += 24
+            }
+            var beforeTime = beforeHour*60 + parseInt(before[1]);
             if (beforeTime > currTime) {
                 alert("이후 시간이 이전시간보다 작습니다. 수정해주세요!");
                 var timeBefore = "times" + (idx-1);
@@ -271,7 +282,7 @@ function post_edit(id) {
 
 
 
-    if (focuedPostId == id) {
+    if (focusedPostId == id) {
         if (times.length % 2 == 0) {
             var total1 = 0;
 
@@ -426,7 +437,7 @@ function post_edit(id) {
                     }
                 }
 
-                if (focuedPostId == id) {
+                if (focusedPostId == id) {
                     $('#member_time').replaceWith(
                         '<div id="member_time"> 오늘의 학습 시간 : ' + result_hour + '시간 ' + result_min + '분 </div>'
                     )
