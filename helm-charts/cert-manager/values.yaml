@@ -856,6 +856,10 @@ clusterIssuer:
   server: https://acme-v02.api.letsencrypt.org/directory
   secretName: letsencrypt-prod
 
+issuer:
+  cloudDNS:
+    project: stone-history-352204
+
 certificate:
   certificateName: certificate-by-letsencrypt
   enabled: true

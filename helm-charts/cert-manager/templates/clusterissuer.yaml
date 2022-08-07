@@ -9,6 +9,9 @@ spec:
     privateKeySecretRef:
       name: {{ .Values.clusterIssuer.secretName }}
     solvers:
-    - http01:
-        ingress:
-          class: nginx
+      - dns01:
+          cloudDNS:
+            project: {{ .Values.issuer.cloudDNS.project }}
+            serviceAccountSecretRef:
+              name: clouddns-dns01-solver-svc-acct
+              key: key.json
