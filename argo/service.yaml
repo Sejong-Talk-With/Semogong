@@ -9,8 +9,3 @@ spec:
     targetPort: 8080
   selector:
     app: web
-  sessionAffinity: ClientIP
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 43200
-  type: ClusterIP
