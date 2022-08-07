@@ -43,7 +43,7 @@ leaderElection:
   namespace: "kube-system"
 ## @param installCRDs Flag to install Cert Manager CRDs
 ##
-installCRDs: false
+installCRDs: true
 ## @param replicaCount Number of Cert Manager replicas
 ##
 replicaCount: 1
@@ -849,3 +849,19 @@ metrics:
 ##
 rbac:
   create: true
+
+clusterIssuer:
+  name: letsencrypt-prod
+  email: wjdqlsdlsp@naver.com
+  server: https://acme-v02.api.letsencrypt.org/directory
+  secretName: letsencrypt-prod
+
+issuer:
+  cloudDNS:
+    project: stone-history-352204
+
+certificate:
+  certificateName: certificate-by-letsencrypt
+  enabled: true
+  dnsNames:
+    - "*.semogong.com"
