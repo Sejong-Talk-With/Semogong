@@ -849,3 +849,15 @@ metrics:
 ##
 rbac:
   create: true
+
+clusterIssuer:
+  name: letsencrypt-prod
+  email: wjdqlsdlsp@naver.com
+  server: https://acme-v02.api.letsencrypt.org/directory
+  secretName: letsencrypt-prod
+
+certificate:
+  certificateName: certificate-by-letsencrypt
+  enabled: true
+  dnsNames:
+    - "*.semogong.com"
