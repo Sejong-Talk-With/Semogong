@@ -221,10 +221,58 @@ function post_edit(id) {
     var idx = 0
     var result_hour = 0;
     var result_min = 0;
+    var reg = /^\d{1,2}:\d{1,2}$/;
+    let todayTime = new Date();
+    let hoursToday = todayTime.getHours(); // 시
+    let minutesToday = todayTime.getMinutes();  // 분
+    let totalTimeToday = hoursToday*60 + minutesToday;
+
     for (var step = 1; step < formData.length-3; idx++, step++) {
-        if (formData[step].value == "") continue;
+        if (formData[step].value === "") continue;
         times[idx] = formData[step];
+
+        if (!reg.test(times[idx].value)) {
+            alert('잘못된 형식의 시간이 입력되었습니다.\n올바른 형식: "시간:분" ex) 17:20');
+            var temp_times_id = "times" + idx;
+            var timeHtml = document.getElementById(temp_times_id);
+            timeHtml.setAttribute('class', 'form-control is-invalid');
+            timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
+            document.getElementById("postEdit_container").scrollIntoView();
+            return;
+        }
+        var curr = times[idx].value.split(':')
+        var currTime = parseInt(curr[0])*60 + parseInt(curr[1])
+        if (currTime > totalTimeToday) {
+            alert("현재시간을 초과한 시간값이 있습니다.");
+            var curr_times_id = "times" + idx;
+            var timeHtmlCurr = document.getElementById(curr_times_id);
+            timeHtmlCurr.setAttribute('class', 'form-control is-invalid');
+            timeHtmlCurr.setAttribute('style', 'background-image: none; padding: 6px;');
+            document.getElementById("postEdit_container").scrollIntoView();
+            return;
+        }
+        if (idx !== 0){
+            var before = times[idx-1].value.split(':');
+            var beforeTime = parseInt(before[0])*60 + parseInt(before[1]);
+            if (beforeTime > currTime) {
+                alert("이후 시간이 이전시간보다 작습니다. 수정해주세요!");
+                var timeAfter = "times" + idx;
+                var timeBefore = "times" + (idx-1);
+                var timeHtmlAfter = document.getElementById(timeAfter);
+                var timeHtmlBefore = document.getElementById(timeBefore);
+                timeHtmlAfter.setAttribute('class', 'form-control is-invalid');
+                timeHtmlAfter.setAttribute('style', 'background-image: none; padding: 6px;');
+                timeHtmlBefore.setAttribute('class', 'form-control is-invalid');
+                timeHtmlBefore.setAttribute('style', 'background-image: none; padding: 6px;');
+                document.getElementById("postEdit_container").scrollIntoView();
+                return;
+            }
+        }
+
+
     }
+
+
 
     if (focuedPostId == id) {
         if (times.length % 2 == 0) {
@@ -306,6 +354,7 @@ function post_edit(id) {
     var title = formData[formData.length - 3].value;
     var introduce = formData[formData.length - 2].value;
     var content = formData[formData.length - 1].value;
+
 
 
     if (formData[formData.length - 3].value == '') { // title

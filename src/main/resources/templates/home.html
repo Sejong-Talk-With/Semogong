@@ -111,14 +111,14 @@
                                 <div style="color: black; width:120px;">자기 소개</div>
                                 <div th:if="*{introduce}" th:text="*{introduce}" style="color: gray;">소개 값</div>
                             </div>
-                            <div class="d-sm-flex fw-bold my-2" style="font-size: 18px;">
+<!--                            <div class="d-sm-flex fw-bold my-2" style="font-size: 18px;">
                                 <div style="color: black; width:120px;">링크</div>
                                 <div>
                                     <a th:if="*{links}" th:href="@{https://{location} (location=${link})}" target="_blank"
                                        th:each="link:*{links}" class="d-block text-decoration-none" th:text="${link}"
                                        style="color: gray;">링크 값</a>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="d-sm-flex fw-bold align-items-center my-2" style="font-size: 18px;">
                                 <div style="color: black; width:120px;">공부시간</div>
                                 <div th:if="*{totalTime != null}" th:text="|*{totalTime.hour}시간 *{totalTime.min}분|"

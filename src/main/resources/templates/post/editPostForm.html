@@ -41,7 +41,7 @@
                 <span th:id="timeNum+${i}" th:each="i: ${#numbers.sequence(0, #lists.size(postForm.times)-1)}">
                     <div style="display: inline-block; flex: 0 0 auto; width: 70px;" class="position-relative">
                         <input type="text" th:field="*{times[__${iStat.index}__]}" class="form-control">
-                        <button th:onclick="|javascript:remove_box(${i})|" style="border: none; padding: 3px 5px;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <button th:if="${i != 0}" th:onclick="|javascript:remove_box(${i})|" style="border: none; padding: 3px 5px;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             x
                         </button>
                     </div>
