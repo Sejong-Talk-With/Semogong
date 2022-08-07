@@ -865,3 +865,4 @@ certificate:
   enabled: true
   dnsNames:
     - "*.semogong.com"
+    - "semogong.com"
