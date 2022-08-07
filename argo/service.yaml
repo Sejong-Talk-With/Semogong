@@ -13,4 +13,4 @@ spec:
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 43200
-  type: LoadBalancer
+  type: ClusterIP
