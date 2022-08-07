@@ -230,11 +230,11 @@ function post_edit(id) {
     for (var step = 1; step < formData.length-3; idx++, step++) {
         if (formData[step].value === "") continue;
         times[idx] = formData[step];
+        var temp_times_id = "times" + idx;
+        var timeHtml = document.getElementById(temp_times_id);
 
         if (!reg.test(times[idx].value)) {
             alert('잘못된 형식의 시간이 입력되었습니다.\n올바른 형식: "시간:분" ex) 17:20');
-            var temp_times_id = "times" + idx;
-            var timeHtml = document.getElementById(temp_times_id);
             timeHtml.setAttribute('class', 'form-control is-invalid');
             timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
             document.getElementById("postEdit_container").scrollIntoView();
@@ -242,12 +242,11 @@ function post_edit(id) {
         }
         var curr = times[idx].value.split(':')
         var currTime = parseInt(curr[0])*60 + parseInt(curr[1])
+
         if (currTime > totalTimeToday) {
             alert("현재시간을 초과한 시간값이 있습니다.");
-            var curr_times_id = "times" + idx;
-            var timeHtmlCurr = document.getElementById(curr_times_id);
-            timeHtmlCurr.setAttribute('class', 'form-control is-invalid');
-            timeHtmlCurr.setAttribute('style', 'background-image: none; padding: 6px;');
+            timeHtml.setAttribute('class', 'form-control is-invalid');
+            timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
             document.getElementById("postEdit_container").scrollIntoView();
             return;
         }
@@ -256,12 +255,10 @@ function post_edit(id) {
             var beforeTime = parseInt(before[0])*60 + parseInt(before[1]);
             if (beforeTime > currTime) {
                 alert("이후 시간이 이전시간보다 작습니다. 수정해주세요!");
-                var timeAfter = "times" + idx;
                 var timeBefore = "times" + (idx-1);
-                var timeHtmlAfter = document.getElementById(timeAfter);
                 var timeHtmlBefore = document.getElementById(timeBefore);
-                timeHtmlAfter.setAttribute('class', 'form-control is-invalid');
-                timeHtmlAfter.setAttribute('style', 'background-image: none; padding: 6px;');
+                timeHtml.setAttribute('class', 'form-control is-invalid');
+                timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
                 timeHtmlBefore.setAttribute('class', 'form-control is-invalid');
                 timeHtmlBefore.setAttribute('style', 'background-image: none; padding: 6px;');
                 document.getElementById("postEdit_container").scrollIntoView();
@@ -354,7 +351,8 @@ function post_edit(id) {
     var title = formData[formData.length - 3].value;
     var introduce = formData[formData.length - 2].value;
     var content = formData[formData.length - 1].value;
-
+    var times_id = "times" + (times_len-1);
+    var timeInput = document.getElementById(times_id);
 
 
     if (formData[formData.length - 3].value == '') { // title
@@ -364,15 +362,13 @@ function post_edit(id) {
         document.getElementById("times0").scrollIntoView();
     } else if (state == 'STUDYING' & times_len % 2 == 0) {
         alert("[STUDYING] 상태입니다. 시간 개수를 확인해주세요!");
-        var times_id = "times" + (times_len-1);
-        var timeInput = document.getElementById(times_id);
         timeInput.setAttribute('class','form-control is-invalid');
+        timeInput.setAttribute('style', 'background-image: none; padding: 6px;');
         document.getElementById("postEdit_container").scrollIntoView();
     } else if ((state == 'BREAKING' || state == 'END') & times_len % 2 != 0) {
         alert("[BREAKING] 혹은 [END] 상태입니다. 시간 개수를 확인해주세요!");
-        var times_id = "times" + (times_len-1);
-        var titleHtml = document.getElementById(times_id);
-        titleHtml.setAttribute('class', 'form-control is-invalid');
+        timeInput.setAttribute('class', 'form-control is-invalid');
+        timeInput.setAttribute('style', 'background-image: none; padding: 6px;');
         document.getElementById("postEdit_container").scrollIntoView();
     } else {
         $.ajax({
