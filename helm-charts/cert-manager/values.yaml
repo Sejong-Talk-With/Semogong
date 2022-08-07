@@ -43,7 +43,7 @@ leaderElection:
   namespace: "kube-system"
 ## @param installCRDs Flag to install Cert Manager CRDs
 ##
-installCRDs: false
+installCRDs: true
 ## @param replicaCount Number of Cert Manager replicas
 ##
 replicaCount: 1
