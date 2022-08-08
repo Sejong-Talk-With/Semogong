@@ -696,7 +696,9 @@
         var member = [[ ${member} ]];
         var memberTodayGoalTotal;
         if (member != null) { memberTodayGoalTotal = [[ ${member?.goal?.dayGoalTimes} ]];}
-        var simplemde;
+        [# th:each="post, stat : ${postDtos}"]
+        var simplemde[[${post.id}]];
+        [/]
 
     </script>
     <script src="/js/origin/main.js"></script>

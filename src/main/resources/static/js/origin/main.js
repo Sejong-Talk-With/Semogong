@@ -192,8 +192,10 @@ function edit_post(id) {
     })
         .done(function (fragment) {
             $('#postModal_content' + id).replaceWith(fragment);
-            simplemde = new SimpleMDE({element: document.getElementById("content"),spellChecker: false});
-            document.getElementById("postEdit_container").scrollIntoView();
+            eval("simplemde" + id + "= new SimpleMDE({element: document.getElementById(\"content\"+id.toString()),spellChecker: false})");
+            /*simplemde = new SimpleMDE({element: document.getElementById("content"+id.toString()),spellChecker: false});*/
+            document.getElementById("postEdit_container").setAttribute("id", "postEdit_container" + id.toString());
+            document.getElementById("postEdit_container"+id.toString()).scrollIntoView();
         });
 }
 
@@ -214,9 +216,9 @@ function post_delete_check(id) {
 }
 
 function post_edit(id) {
-    var formData = $("#formPost").serializeArray();
-    formData[formData.length - 1].value = simplemde.value(); // content
-
+    var formData = $("#formPost"+id).serializeArray();
+    eval("formData[formData.length - 1].value =" + "simplemde"+id+".value()");
+    // formData[formData.length - 1].value = simplemde.value(); // content
     var times = [];
     var idx = 0
     var result_hour = 0;
@@ -240,7 +242,7 @@ function post_edit(id) {
             alert('잘못된 형식의 시간이 입력되었습니다.\n올바른 형식: "시간:분" ex) 17:20');
             timeHtml.setAttribute('class', 'form-control is-invalid');
             timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
-            document.getElementById("postEdit_container").scrollIntoView();
+            document.getElementById("postEdit_container"+id.toString()).scrollIntoView();
             return;
         }
         var curr = times[idx].value.split(':')
@@ -250,11 +252,11 @@ function post_edit(id) {
         }
         var currTime = currHour*60 + parseInt(curr[1]);
 
-        if ( recentPostId === id && currTime > totalTimeToday) {
+        if ( focusedPostId === id && currTime > totalTimeToday) {
             alert("현재시간을 초과한 시간값이 있습니다.");
             timeHtml.setAttribute('class', 'form-control is-invalid');
             timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
-            document.getElementById("postEdit_container").scrollIntoView();
+            document.getElementById("postEdit_container"+id.toString()).scrollIntoView();
             return;
         }
         if (idx !== 0){
@@ -272,7 +274,7 @@ function post_edit(id) {
                 timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
                 timeHtmlBefore.setAttribute('class', 'form-control is-invalid');
                 timeHtmlBefore.setAttribute('style', 'background-image: none; padding: 6px;');
-                document.getElementById("postEdit_container").scrollIntoView();
+                document.getElementById("postEdit_container"+id.toString()).scrollIntoView();
                 return;
             }
         }
@@ -375,12 +377,12 @@ function post_edit(id) {
         alert("[STUDYING] 상태입니다. 시간 개수를 확인해주세요!");
         timeInput.setAttribute('class','form-control is-invalid');
         timeInput.setAttribute('style', 'background-image: none; padding: 6px;');
-        document.getElementById("postEdit_container").scrollIntoView();
+        document.getElementById("postEdit_container"+id.toString()).scrollIntoView();
     } else if ((state == 'BREAKING' || state == 'END') & times_len % 2 != 0) {
         alert("[BREAKING] 혹은 [END] 상태입니다. 시간 개수를 확인해주세요!");
         timeInput.setAttribute('class', 'form-control is-invalid');
         timeInput.setAttribute('style', 'background-image: none; padding: 6px;');
-        document.getElementById("postEdit_container").scrollIntoView();
+        document.getElementById("postEdit_container"+id.toString()).scrollIntoView();
     } else {
         $.ajax({
             url: '/posts/edit/' + id,
@@ -388,7 +390,7 @@ function post_edit(id) {
             data: formData
         })
             .done(function (fragment) {
-                $('#postEdit_container').replaceWith(fragment);
+                $('#postEdit_container'+id).replaceWith(fragment);
                 var postModal_content = document.getElementById("postModal_content");
                 postModal_content.setAttribute("id", "postModal_content" + id.toString());
 

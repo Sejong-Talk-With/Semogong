@@ -29,7 +29,7 @@
     </div>
 <!--    </form>-->
 
-    <form role="form" id="formPost" th:action="@{/posts/edit/{id} (id=${postForm.id})}" th:object="${postForm}" method="post">
+    <form role="form" th:id="|formPost${postForm.id}|" th:action="@{/posts/edit/{id} (id=${postForm.id})}" th:object="${postForm}" method="post">
         <input type="hidden" th:field="*{id}"/>
         <div id="time_input">
             <label class="form-label mb-3" th:for="times"><strong>학습 시간</strong></label>
@@ -67,7 +67,7 @@
         </div>
         <label class="form-label" th:for="content"><strong>내용</strong></label>
         <div class="mb-2">
-            <textarea type="text" rows="4" th:field="*{content}" placeholder="Content" class="form-control"
+            <textarea type="text" rows="4" th:field="*{content}" th:id="'content'+${postForm.id}" placeholder="Content" class="form-control"
                       autocomplete="off"></textarea>
         </div>
 
