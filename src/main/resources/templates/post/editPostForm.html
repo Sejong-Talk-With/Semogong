@@ -74,7 +74,7 @@
         <div class="d-sm-flex justify-content-between mb-2">
             <button class="btn btn-danger" type="button"
                     th:onclick="|javascript:post_delete_check(${postForm.id})|">Delete</button>
-            <button class="btn btn-primary" type="button" th:onclick="|javascript:post_edit(${postForm.id})|">Submit</button> <!-- th:onclick="|javascript:post_edit(${postForm.id})|" -->
+            <button class="btn btn-primary" type="button" th:onclick="|javascript:post_edit(${postForm.id})|">Submit</button>
         </div>
     </form>
     <script th:inline="javascript" type="text/javascript">
@@ -117,7 +117,10 @@
 <div th:replace="fragments/footer :: footer"/>
 
 <script th:inline="javascript" type="text/javascript">
-    var simplemde = new SimpleMDE({element: document.getElementById("content"), spellChecker: false});
+
+    var postId = [[${postForm.id}]];
+
+    var simplemde[[${postForm.id}]] = new SimpleMDE({element: document.getElementById("content"+postId), spellChecker: false});
 
     function post_delete_check(id) {
         var check = confirm("정말 삭제하시겠습니까?");
@@ -140,8 +143,9 @@
     }
 
     function post_edit(id) {
-        var formData = $("#formPost").serializeArray();
-        formData[formData.length - 1].value = simplemde.value();
+        var formData = $("#formPost"+id).serializeArray();
+        eval("formData[formData.length - 1].value =" + "simplemde"+id+".value()");
+        // formData[formData.length - 1].value = simplemde.value(); // content
 
         if (formData[formData.length - 3].value == '') { // title
             alert("제목을 입력해주세요!");
