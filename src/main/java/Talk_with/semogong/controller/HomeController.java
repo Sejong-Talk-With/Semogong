@@ -101,7 +101,7 @@ public class HomeController {
             Optional<Post> optionalPost = postService.getRecentPost(loginMember.getId());
             PostViewDto memberRecentPostDto = optionalPost.map(PostViewDto::new).orElse(null);
 
-            if ((loginMember.getState() == StudyState.STUDYING || loginMember.getState() == StudyState.BREAKING) & memberRecentPostDto != null) {
+            if (loginMember.getState() != StudyState.END & memberRecentPostDto != null) {
                 model.addAttribute("recentPost", memberRecentPostDto);
                 if (!ids.contains(memberRecentPostDto.getId())) postModals.add(memberRecentPostDto);
             }

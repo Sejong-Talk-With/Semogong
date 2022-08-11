@@ -176,27 +176,31 @@ public class MemberController {
             int dayOfMonth = monthPostDto.getCreateTime().getDayOfMonth();
             calenderData.put(dayOfMonth, monthPostDto);
         }
-        ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
-        int monthDate = dayData[month - 1];
-        if (month == LocalDateTime.now().getMonthValue()) {
-            monthDate = LocalDateTime.now().getDayOfMonth();
-        }
-        List<Post> nowMonthPosts = postService.getMonthPosts(member.getId(), LocalDateTime.now().getMonthValue());
+
+        List<Post> nowMonthPosts = postService.getMonthPosts(loginMemberId, LocalDateTime.now().getMonthValue());
         int focusedDay;
-        int nowMonthPostsLen = 0;
         if (LocalDateTime.now().getHour() < 4) {
             focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
         } else {
             focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
         }
+        List<Post> calculatedNowMonthPosts = new ArrayList<>();
         for (Post post : nowMonthPosts) {
             if (post.getCreateTime().getDayOfMonth() > focusedDay) {
                 break;
             }
-            nowMonthPostsLen = nowMonthPostsLen + 1;
+            calculatedNowMonthPosts.add(post);
         }
 
-        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, focusedDay, nowMonthPostsLen);
+        ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
+        int monthDate = dayData[month - 1];
+        if (month == LocalDateTime.now().getMonthValue()) {
+            monthDate = focusedDay;
+            monthPosts = new ArrayList<>(calculatedNowMonthPosts);
+        }
+
+
+        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, focusedDay, calculatedNowMonthPosts.size());
 
 
 
@@ -247,28 +251,31 @@ public class MemberController {
             int dayOfMonth = monthPostDto.getCreateTime().getDayOfMonth();
             calenderData.put(dayOfMonth, monthPostDto);
         }
-        ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
-        int monthDate = dayData[month - 1];
-        if (month == LocalDateTime.now().getMonthValue()) {
-            monthDate = LocalDateTime.now().getDayOfMonth();
-        }
+
         List<Post> nowMonthPosts = postService.getMonthPosts(memberId, LocalDateTime.now().getMonthValue());
         int focusedDay;
-        int nowMonthPostsLen = 0;
         if (LocalDateTime.now().getHour() < 4) {
             focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
         } else {
             focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
         }
+        List<Post> calculatedNowMonthPosts = new ArrayList<>();
         for (Post post : nowMonthPosts) {
             if (post.getCreateTime().getDayOfMonth() > focusedDay) {
                 break;
             }
-            nowMonthPostsLen = nowMonthPostsLen + 1;
+            calculatedNowMonthPosts.add(post);
+        }
+
+        ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
+        int monthDate = dayData[month - 1];
+        if (month == LocalDateTime.now().getMonthValue()) {
+            monthDate = focusedDay;
+            monthPosts = new ArrayList<>(calculatedNowMonthPosts);
         }
 
 
-        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, focusedDay, nowMonthPostsLen);
+        AllStatic allStatic = getAllStatus(oriMember, staticsData, days.get(days.size() - 1), monthPosts, monthDate, focusedDay, calculatedNowMonthPosts.size());
 
 
         model.addAttribute("loginId", loginMemberId);
