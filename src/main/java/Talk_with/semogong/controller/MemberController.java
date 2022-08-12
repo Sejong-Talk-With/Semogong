@@ -421,6 +421,7 @@ public class MemberController {
             }
         }
         for (Post post : posts) {
+//            if (post.getTimes().size() % 2 != 0)  continue;
             Times time = getTimes(post.getTimes());
             int today = (time.getHour() * 60 + time.getMin());
             Times totalTimes = new Times(today);
@@ -436,7 +437,7 @@ public class MemberController {
         List<Post> posts = member.getPosts();
         int total = 0;
         for (Post post : posts) {
-            if (post.getTimes().size() % 2 != 0) continue;
+//            if (post.getTimes().size() % 2 != 0)  continue;
             Times times = getTimes(post.getTimes());
             total += times.getHour() * 60 + times.getMin();
         }
@@ -469,6 +470,8 @@ public class MemberController {
                 total1 += (end - start);
             }
             resultTime = new Times(total1);
+        } else {
+            resultTime = new Times(0);
         }
         return resultTime;
     }

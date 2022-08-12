@@ -683,8 +683,8 @@
                     <div class="d-sm-flex fw-bold align-items-center my-2"
                          style="font-size: 18px;">
                         <div style="color: black; width:180px;">공부 랭크</div>
-                        <div th:if="*{studyRankRate >= 90}" style="color: lightgoldenrodyellow;">다이아&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
-                        <div th:if="*{studyRankRate >= 80 and studyRankRate < 90}" style="color: lightblue;">플레티넘&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate >= 90}" style="color: #b6effb;">다이아&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
+                        <div th:if="*{studyRankRate >= 80 and studyRankRate < 90}" style="color: #86b7fe;">플레티넘&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
                         <div th:if="*{studyRankRate >= 70 and studyRankRate < 80}" style="color: gold;">골드&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
                         <div th:if="*{studyRankRate >= 60 and studyRankRate < 70}" style="color: silver;">실버&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
                         <div th:if="*{studyRankRate >= 50 and studyRankRate < 60}" style="color: darkgoldenrod;">브론즈&nbsp;<span style="color: gray;" th:text="|(점수: *{studyRankRate})|"></span></div>
