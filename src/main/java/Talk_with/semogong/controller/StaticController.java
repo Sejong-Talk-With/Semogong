@@ -30,7 +30,7 @@ public class StaticController {
     private final PostService postService;
 
     @GetMapping("/ranking")
-    public String data(Model model) throws IOException {
+    public String data(Model model) {
         List<MemberDto> members = memberService.findAll().stream().map(MemberDto::new).collect(Collectors.toList());
         Map<MemberDto, Map<Integer, Times>> memberStatic = new HashMap<>();
         List<Integer> days = getDays(LocalDateTime.now());
@@ -146,6 +146,8 @@ public class StaticController {
                 total1 += (end - start);
             }
             resultTime = new Times(total1);
+        } else {
+            resultTime = new Times(0);
         }
         return resultTime;
     }
