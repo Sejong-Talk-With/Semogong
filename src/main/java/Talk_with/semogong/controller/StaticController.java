@@ -3,7 +3,6 @@ package Talk_with.semogong.controller;
 import Talk_with.semogong.domain.Post;
 import Talk_with.semogong.domain.att.Times;
 import Talk_with.semogong.domain.dto.MemberDto;
-import Talk_with.semogong.repository.PostNativeRepository;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.awt.*;
-import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -57,9 +54,9 @@ public class StaticController {
         model.addAttribute("nav", "ranking");
         model.addAttribute("check", true);
         model.addAttribute("staticsDataMap", memberStatic);
-        model.addAttribute("members",members.subList(0,4));
+        model.addAttribute("members",members.subList(0,5));
         model.addAttribute("attendTop", attendSorted.get(0));
-        return "analysis";
+        return "ranking";
     }
 
     private List<Integer> getDays(LocalDateTime now) {

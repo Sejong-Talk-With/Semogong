@@ -12,19 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class DbChange {
+public class DbController {
 
     private final InitService initService;
 
 
     @PostConstruct
     public void dbInit() {
-        initService.dbInit1();
+//        initService.dbInit1();
+//        initService.dbInit2();
+        initService.dbInit3();
     }
 
     @Component
@@ -33,14 +36,12 @@ public class DbChange {
     static class InitService {
 
         private final MemberService memberService;
-        private final PostNativeRepository postNativeRepository;
         private final PostService postService;
 
         public void dbInit1() {
-            // 5/1 - 5/7
             List<Member> all = memberService.findAll();
             for (Member member : all) {
-                List<Post> posts = postNativeRepository.getBetween(member.getId(), "2022-04-17", "2022-06-01");
+                List<Post> posts = postService.getLast7(member.getId(), "2022-04-17", "2022-06-01");
                 for (Post post : posts) {
                     Post one = postService.findOne(post.getId());
                     List<String> times = one.getTimes();
@@ -54,7 +55,26 @@ public class DbChange {
                     one.setTimes(newTimes);
                 }
             }
+        }
 
+        public void dbInit2() {
+            Post post = postService.findOne(755L);
+            List<String> times = new ArrayList<>();
+            times.add("01:00");
+            times.add("03:59");
+            post.setTimes(times);
+
+            Post post2 = postService.findOne(763L);
+            List<String> times2 = new ArrayList<>();
+            times2.add("04:00");
+            times2.add("06:00");
+            times2.add("12:08");
+            post2.setTimes(times2);
+        }
+
+        public void dbInit3() {
+            Post post = postService.findOne(755L);
+            post.setCreateTime(LocalDateTime.of(2022,8,13,23,59));
         }
     }
 }

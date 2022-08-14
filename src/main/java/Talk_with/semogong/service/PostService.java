@@ -8,14 +8,11 @@ import Talk_with.semogong.repository.MemberRepository;
 import Talk_with.semogong.repository.PostNativeRepository;
 import Talk_with.semogong.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -77,7 +74,7 @@ public class PostService {
     }
 
     public List<Post> getLast7(Long id, String start, String end) {
-        return postNativeRepository.getLast7(id, start, end);
+        return postNativeRepository.getBetween(id, start, end);
     }
 
     public List<Post> getMonthPosts(Long id, int month) {
