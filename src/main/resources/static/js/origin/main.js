@@ -252,13 +252,13 @@ function post_edit(id) {
         }
         var currTime = currHour*60 + parseInt(curr[1]);
 
-        if ( focusedPostId === id && currTime > totalTimeToday) {
+/*        if ( focusedPostId === id && currTime > totalTimeToday) {
             alert("현재시간을 초과한 시간값이 있습니다.");
             timeHtml.setAttribute('class', 'form-control is-invalid');
             timeHtml.setAttribute('style', 'background-image: none; padding: 6px;');
             document.getElementById("postEdit_container"+id.toString()).scrollIntoView();
             return;
-        }
+        }*/
         if (idx !== 0){
             var before = times[idx-1].value.split(':');
             var beforeHour = parseInt(before[0]);

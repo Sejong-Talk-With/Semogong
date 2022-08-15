@@ -73,11 +73,15 @@ public class StateController {
                     }
                     // 현재 시점이 4시 이후 -> 걍 새 글 작성
                 }
-                // 00 - 04시에 시작해서 00 - 04시에 end를 누르고 다시 00 - 04시에 study를 누른 경우에 대한 처리 불가. -> 그냥 자라.
             }
 
             memberService.changeState(loginMember.getId(), StudyState.STUDYING); // posting 후 state change 필요 (오류 처리해야 됨)
-            Long postId = postService.save(loginMember.getId(), LocalDateTime.now()); // 저장할 때는 해당 글의 작성자 Member 연결, creatTime만 설정해줌
+            LocalDateTime createDate = LocalDateTime.now();
+            if (createDate.getHour() < 4) { // 0 - 4 시 사이에 글을 작성할 경우, 전 날의 23:59 에 글을 작성한 것과 동일하게 취급.
+                LocalDateTime toChange = createDate.minusDays(1);
+                createDate = LocalDateTime.of(toChange.getYear(), toChange.getMonthValue(), toChange.getDayOfMonth(), 23, 59, 59);
+            }
+            Long postId = postService.save(loginMember.getId(), createDate); // 저장할 때는 해당 글의 작성자 Member 연결, creatTime만 설정해줌
             return "redirect:/posts/new/" + postId.toString(); // 저장 후 바로 edit을 통해서 그 글을 작성하도록 설정
         }
 
