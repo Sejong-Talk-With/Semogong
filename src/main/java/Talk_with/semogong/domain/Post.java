@@ -90,7 +90,9 @@ public class Post {
         this.state = state;
     }
 
-
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 
 
 }

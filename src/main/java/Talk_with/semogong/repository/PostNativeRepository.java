@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostNativeRepository extends JpaRepository<Post, Long> {
@@ -14,7 +13,7 @@ public interface PostNativeRepository extends JpaRepository<Post, Long> {
             "FROM post p " +
             "where p.member_id = :m_id " +
             "and p.create_time BETWEEN :start_date and :end_date ;", nativeQuery = true)
-    List<Post> getLast7(@Param(value = "m_id") Long id, @Param(value="start_date") String start, @Param(value = "end_date") String end);
+    List<Post> getBetween(@Param(value = "m_id") Long id, @Param(value="start_date") String start, @Param(value = "end_date") String end);
 
     @Query(value = "SELECT * " +
             "FROM post p " +

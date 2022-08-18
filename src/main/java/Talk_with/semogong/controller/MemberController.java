@@ -330,9 +330,9 @@ public class MemberController {
         allStatic.setMonthAttendanceRate(Math.round(((float) monthPosts.size() / (float) monthDate) * 100));
 
         Times yesterdayStudyTimes = staticData.get(date);
-        int yesterdayStudyTime = yesterdayStudyTimes.getHour() * 60 + yesterdayStudyTimes.getMin();
+//        int yesterdayStudyTime = yesterdayStudyTimes.getHour() * 60 + yesterdayStudyTimes.getMin();
         int dayGoalTimes = member.getGoal().getDayGoalTimes();
-        allStatic.setGoalAttainmentToday(Math.round(((float) yesterdayStudyTime / (float) dayGoalTimes) * 100));
+        allStatic.setGoalAttainmentToday(Math.round(((float) weekAvgTime / (float) dayGoalTimes) * 100));
 
         int weekGoalTimes = member.getGoal().getWeekGoalTimes();
         allStatic.setGoalAttainmentWeek(Math.round(((float) weekAllTimes / (float) weekGoalTimes) * 100));

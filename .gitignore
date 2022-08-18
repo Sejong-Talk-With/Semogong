@@ -1,6 +1,8 @@
-HELP.md
-README.md
-structure.png
+/HELP.md
+/README.md
+/structure1.png
+/src/main/java/Talk_with/semogong/DbController.java
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
