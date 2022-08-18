@@ -58,7 +58,7 @@ public class Post {
         post.setMember(member);
         post.createTime = createTime;
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        post.times.add(createTime.format(timeFormatter));
+        post.times.add(LocalDateTime.now().format(timeFormatter));
         post.state = StudyState.STUDYING;
         return post;
     }
