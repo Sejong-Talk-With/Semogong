@@ -180,9 +180,9 @@ public class MemberController {
         List<Post> nowMonthPosts = postService.getMonthPosts(loginMemberId, LocalDateTime.now().getMonthValue());
         int focusedDay;
         if (LocalDateTime.now().getHour() < 4) {
-            focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
+            focusedDay = LocalDateTime.now().minusDays(2).getDayOfMonth();
         } else {
-            focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
+            focusedDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
         }
         List<Post> calculatedNowMonthPosts = new ArrayList<>();
         for (Post post : nowMonthPosts) {
@@ -255,9 +255,9 @@ public class MemberController {
         List<Post> nowMonthPosts = postService.getMonthPosts(memberId, LocalDateTime.now().getMonthValue());
         int focusedDay;
         if (LocalDateTime.now().getHour() < 4) {
-            focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
+            focusedDay = LocalDateTime.now().minusDays(2).getDayOfMonth();
         } else {
-            focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
+            focusedDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
         }
         List<Post> calculatedNowMonthPosts = new ArrayList<>();
         for (Post post : nowMonthPosts) {
