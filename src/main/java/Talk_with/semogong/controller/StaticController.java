@@ -119,7 +119,7 @@ public class StaticController {
     }
 
     private Times getTimes(List<String> times) {
-        Times resultTime = null;
+        Times resultTime;
         if (times.size() % 2 == 0) {
             int total1 = 0;
             for (int i = 1; i < times.size(); i += 2) {

@@ -3,7 +3,9 @@ package Talk_with.semogong;
 
 import Talk_with.semogong.domain.Member;
 import Talk_with.semogong.domain.Post;
+import Talk_with.semogong.domain.att.StudyState;
 import Talk_with.semogong.repository.PostNativeRepository;
+import Talk_with.semogong.repository.PostRepository;
 import Talk_with.semogong.service.MemberService;
 import Talk_with.semogong.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,8 @@ public class DbController {
     public void dbInit() {
 //        initService.dbInit1();
 //        initService.dbInit2();
-        initService.dbInit3();
+//        initService.dbInit3();
+        initService.dbInit4();
     }
 
     @Component
@@ -37,6 +40,7 @@ public class DbController {
 
         private final MemberService memberService;
         private final PostService postService;
+        private final PostRepository postRepository;
 
         public void dbInit1() {
             List<Member> all = memberService.findAll();
@@ -75,6 +79,15 @@ public class DbController {
         public void dbInit3() {
             Post post = postService.findOne(755L);
             post.setCreateTime(LocalDateTime.of(2022,8,13,23,59));
+        }
+
+        @Transactional
+        public void dbInit4() {
+            Member lee = memberService.findByName("이재훈");
+            Post post = Post.createPost(lee, LocalDateTime.of(2022, 9, 1, 10, 30, 23));
+            post.setTimes(List.of(new String[]{"10:30", "21:00"}));
+            post.editState(StudyState.END);
+            postRepository.save(post);
         }
     }
 }

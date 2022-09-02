@@ -40,7 +40,7 @@ public class PostRepository {
 
     // Member Id에 따른 최근 게시글 단일 조회
     public List<Post> findByMemberWithPaging(Long memberId, Integer offset) {
-        return em.createQuery("select p from Post p join p.member m where m.id = :id order by p.createTime DESC", Post.class)
+        return em.createQuery("select p from Post p join fetch p.member m where m.id = :id order by p.createTime DESC", Post.class)
                 .setParameter("id", memberId)
                 .setFirstResult(Integer.parseInt(offset.toString()))
                 .setMaxResults(12)
