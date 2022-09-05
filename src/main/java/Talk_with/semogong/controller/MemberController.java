@@ -157,7 +157,7 @@ public class MemberController {
         Map<Integer, Times> staticsData = getStaticsData(member);
         member.setTotalTime(getAllTimes(oriMember));
         int year = LocalDateTime.now().getYear();
-        LocalDateTime focusedDate;
+        LocalDateTime focusedDate; // 캘린더용 변수
         if (month == null) {
             month = LocalDateTime.now().getMonthValue();
         }
@@ -180,10 +180,11 @@ public class MemberController {
         List<Post> nowMonthPosts = postService.getMonthPosts(loginMemberId, LocalDateTime.now().getMonthValue());
         int focusedDay;
         if (LocalDateTime.now().getHour() < 4) {
-            focusedDay = LocalDateTime.now().minusDays(2).getDayOfMonth();
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
         } else {
-            focusedDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
         }
+        if (focusedDay <= 0) focusedDay = 0;
         List<Post> calculatedNowMonthPosts = new ArrayList<>();
         for (Post post : nowMonthPosts) {
             if (post.getCreateTime().getDayOfMonth() > focusedDay) {
@@ -191,6 +192,7 @@ public class MemberController {
             }
             calculatedNowMonthPosts.add(post);
         }
+
 
         ForCalender CalenderInfo = getCalenderInfo(weekDay, focusedDate);
         int monthDate = dayData[month - 1];
@@ -255,9 +257,9 @@ public class MemberController {
         List<Post> nowMonthPosts = postService.getMonthPosts(memberId, LocalDateTime.now().getMonthValue());
         int focusedDay;
         if (LocalDateTime.now().getHour() < 4) {
-            focusedDay = LocalDateTime.now().minusDays(2).getDayOfMonth();
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 2;
         } else {
-            focusedDay = LocalDateTime.now().minusDays(1).getDayOfMonth();
+            focusedDay = LocalDateTime.now().getDayOfMonth() - 1;
         }
         List<Post> calculatedNowMonthPosts = new ArrayList<>();
         for (Post post : nowMonthPosts) {
@@ -320,15 +322,19 @@ public class MemberController {
         allStatic.setMonthAllTimes(new Times(monthAllTimes));
 
         Times monthAvgTimes = new Times();
-        int monthAvgTime = monthAllTimes / monthDate;
+        int monthAvgTime = 0; // (만약 현재 보고 있는 달이 현재 월과 동일할 때) 매달 1일 ~ 2일 새벽 4시 전
+        if(monthDate > 0) monthAvgTime = monthAllTimes / monthDate;  // 평상 시
         monthAvgTimes.setHour(Math.floorDiv(monthAvgTime, 60));
         monthAvgTimes.setMin(monthAvgTime % 60);
         allStatic.setMonthAvgTimes(monthAvgTimes);
 
         allStatic.setMonthAttendanceCnt(monthPosts.size());
         allStatic.setMonthDate(monthDate);
-        allStatic.setMonthAttendanceRate(Math.round(((float) monthPosts.size() / (float) monthDate) * 100));
-
+        if (monthDate <= 0) { // (만약 현재 보고 있는 달이 현재 월과 동일할 때) 매달 1일 ~ 2일 새벽 4시 전
+            allStatic.setMonthAttendanceRate(0);
+        } else {
+            allStatic.setMonthAttendanceRate(Math.round(((float) monthPosts.size() / (float) monthDate) * 100));
+        }
         Times yesterdayStudyTimes = staticData.get(date);
 //        int yesterdayStudyTime = yesterdayStudyTimes.getHour() * 60 + yesterdayStudyTimes.getMin();
         int dayGoalTimes = member.getGoal().getDayGoalTimes();
@@ -337,9 +343,13 @@ public class MemberController {
         int weekGoalTimes = member.getGoal().getWeekGoalTimes();
         allStatic.setGoalAttainmentWeek(Math.round(((float) weekAllTimes / (float) weekGoalTimes) * 100));
 
-        allStatic.setNowMonthAttRate(Math.round(((float) nowMonthPostsLen / (float) focusedDay) * 100));
-
-        allStatic.setStudyRankRate(Math.floorDiv(allStatic.getNowMonthAttRate() + allStatic.getGoalAttainmentToday() + allStatic.getGoalAttainmentWeek(), 3));
+        if (focusedDay <= 0) { // 매달 1일 ~ 2일 새벽 4시 전
+            allStatic.setNowMonthAttRate(0);
+            allStatic.setStudyRankRate(Math.floorDiv(allStatic.getGoalAttainmentToday() + allStatic.getGoalAttainmentWeek(), 2));
+        } else { // 평상 시
+            allStatic.setNowMonthAttRate(Math.round(((float) nowMonthPostsLen / (float) focusedDay) * 100));
+            allStatic.setStudyRankRate(Math.floorDiv(allStatic.getNowMonthAttRate() + allStatic.getGoalAttainmentToday() + allStatic.getGoalAttainmentWeek(), 3));
+        }
 
         return allStatic;
     }

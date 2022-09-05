@@ -1,7 +1,7 @@
 /HELP.md
 /README.md
 /structure1.png
-/src/main/java/Talk_with/semogong/DbController.java
+src/main/java/Talk_with/semogong/DbController.java
 
 .gradle
 build/

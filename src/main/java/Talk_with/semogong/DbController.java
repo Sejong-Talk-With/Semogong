@@ -84,10 +84,17 @@ public class DbController {
         @Transactional
         public void dbInit4() {
             Member lee = memberService.findByName("이재훈");
-            Post post = Post.createPost(lee, LocalDateTime.of(2022, 9, 1, 10, 30, 23));
-            post.setTimes(List.of(new String[]{"10:30", "21:00"}));
+            Post post = Post.createPost(lee, LocalDateTime.of(2022, 9, 3, 10, 30, 23));
+            post.setTimes(List.of(new String[]{"10:30","13:00","15:00", "21:00"}));
             post.editState(StudyState.END);
             postRepository.save(post);
+
+            Post post2 = Post.createPost(lee, LocalDateTime.of(2022, 9, 4, 10, 30, 23));
+            post2.setTimes(List.of(new String[]{"10:30","13:00","15:00", "21:00"}));
+            post2.editState(StudyState.END);
+            postRepository.save(post2);
+
+            lee.changeState(StudyState.END);
         }
     }
 }
