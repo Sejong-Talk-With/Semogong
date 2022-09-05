@@ -793,7 +793,7 @@ service:
   ## @param service.loadBalancerIP Kubernetes LoadBalancerIP to request for Controller (optional, cloud specific)
   ## ref: https://kubernetes.io/docs/user-guide/services/#type-loadbalancer
   ##
-  loadBalancerIP: 34.64.198.21
+  loadBalancerIP: ""
   ## @param service.loadBalancerSourceRanges List of IP CIDRs allowed access to load balancer (if supported)
   ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
   ##

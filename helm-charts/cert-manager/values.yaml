@@ -858,7 +858,7 @@ clusterIssuer:
 
 issuer:
   cloudDNS:
-    project: stone-history-352204
+    project: oval-campaign-361612
 
 certificate:
   certificateName: certificate-by-letsencrypt
